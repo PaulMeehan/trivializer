@@ -8,6 +8,20 @@ import Detail from "./pages/Detail";
 import NoMatch from "./pages/NoMatch";
 import AUTH from './utils/AUTH';
 
+// BH 20190508
+// new pages
+// separate files at the moment, need to be combined later:
+import BoardWelcome from "./pages/BigBoard/BoardWelcome";
+import BoardQMultiLive from "./pages/BigBoard/BoardQMultiLive";
+import BoardQMultiPost from "./pages/BigBoard/BoardQMultiPost";
+import BoardQTFLive from "./pages/BigBoard/BoardQTFLive";
+import BoardQTFPost from "./pages/BigBoard/BoardQTFPost";
+import BoardQOpenLive from "./pages/BigBoard/BoardQOpenLive";
+import BoardQOpenPost from "./pages/BigBoard/BoardQOpenPost";
+import BoardHalfTime from "./pages/BigBoard/BoardHalfTime";
+import BoardGameOver from "./pages/BigBoard/BoardGameOver";
+
+
 class App extends Component {
   
   constructor() {
@@ -73,7 +87,20 @@ class App extends Component {
                 <Route exact path="/" component={() => <Books user={this.state.user}/>} />
                 <Route exact path="/books" component={() => <Books user={this.state.user}/>} />
                 <Route exact path="/books/:id" component={Detail} />
+
+								{/* BH Additions (Temp): */}
+								<Route exact path="/board-welcome" component={BoardWelcome} />
+								<Route exact path="/board-multi-live" component={BoardQMultiLive} />
+								<Route exact path="/board-multi-post" component={BoardQMultiPost} />
+								<Route exact path="/board-tf-live" component={BoardQTFLive} />
+								<Route exact path="/board-tf-post" component={BoardQTFPost} />
+								<Route exact path="/board-open-live" component={BoardQOpenLive} />
+								<Route exact path="/board-open-post" component={BoardQOpenPost} />
+								<Route exact path="/board-halftime" component={BoardHalfTime} />
+								<Route exact path="/board-gameover" component={BoardGameOver} />
+								
                 <Route component={NoMatch} />
+								
               </Switch>
             </div>
           </div>
