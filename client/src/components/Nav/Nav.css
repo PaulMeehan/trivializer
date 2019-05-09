@@ -1,3 +1,10 @@
 .logout {
   color: #fff;
+  
+}
+.bg-primary {
+  background-color: #9800FF !important;
+}
+.logo {
+  width: 500px;
 }

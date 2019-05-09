@@ -1,0 +1,7 @@
+.correctAnswer {
+    background-color: green;
+    color: #ffffff;
+}
+.deadQuestion {
+    background-color: gray;
+}

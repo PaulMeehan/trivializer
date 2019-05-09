@@ -25,7 +25,8 @@ const Nav = (props) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <Col size="md-2">
-        <Link to="/" className="navbar-brand">React Reading List</Link>
+        <Link to="/" className="navbar-brand"><img src="/trivializer-logo.png" className="logo"/></Link>
+        
       </Col>
       <Col size="md-7"></Col>
       <Col size="md-3">
