@@ -5,3 +5,6 @@
 .deadQuestion {
     background-color: gray;
 }
+.hidden {
+    visibility:hidden;
+}
