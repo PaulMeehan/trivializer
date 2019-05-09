@@ -20,7 +20,8 @@ import BoardQOpenLive from "./pages/BigBoard/BoardQOpenLive";
 import BoardQOpenPost from "./pages/BigBoard/BoardQOpenPost";
 import BoardHalfTime from "./pages/BigBoard/BoardHalfTime";
 import BoardGameOver from "./pages/BigBoard/BoardGameOver";
-import Admin from "./pages/GameMaster/Admin";
+import GameMasterAdmin from "./pages/GameMaster/Admin";
+import GameMasterLiveGame from "./pages/GameMaster/LiveGame";
 
 
 class App extends Component {
@@ -99,7 +100,8 @@ class App extends Component {
 								<Route exact path="/board-open-post" component={BoardQOpenPost} />
 								<Route exact path="/board-halftime" component={BoardHalfTime} />
 								<Route exact path="/board-gameover" component={BoardGameOver} />
-								<Route exact path="/admin" component={Admin} />
+								<Route exact path="/admin" component={GameMasterAdmin} />
+								<Route exact path="/live-game" component={GameMasterLiveGame} />
 
                 <Route component={NoMatch} />
 								
