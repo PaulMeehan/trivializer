@@ -7,7 +7,7 @@ mongoose.promise = Promise;
 const userSchema = new Schema({
 	firstName: { type: String, unique: false },
 	lastName: { type: String, unique: false },
-  username: { type: String, unique: false, required: false },
+  username: { type: String, unique: true, required: true },
   password: { type: String, unique: false, required: false },
   books: [
     {
@@ -16,7 +16,7 @@ const userSchema = new Schema({
       // The ObjectIds will refer to the ids in the Book model
       ref: "Book"
     }
-  ]
+	]
 });
 
 // Define schema methods
