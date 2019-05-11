@@ -4,56 +4,56 @@ import {Pie} from "react-chartjs-2";
 import AdminLiveQDiv from "../../components/Admin/AdminLiveQDiv";
 import axios from 'axios';
 
-// let preQuestions = [
-//     [
-//         "According to a Beatles song, who kept her face in a jar by the door?",
-//         "Eleanor Rigby",
-//         "Loretta Martin",
-//         "Molly Jones",
-//         "Lady Madonna",
-//         "A"
-//     ],
-//     [
-//         "What is the stage name of English female rapper Mathangi Arulpragasam, who is known for the song &quot;Paper Planes&quot;?",
-//         "K.I.A.",
-//         "C.I.A.",
-//         "M.I.A.",
-//         "A.I.A.",
-//         "C"
-//     ],
-//     [
-//         "Which one of these Rammstein songs has two official music videos?",
-//         "Du Hast",
-//         "Benzin",
-//         "Mein Teil",
-//         "Du Riechst So Gut",
-//         "D"
-//     ],
-//     [
-//         "Which rock band released the album &quot;The Bends&quot; in March 1995?",
-//         "Nirvana",
-//         "Radiohead",
-//         "Lemonheads",
-//         "U2",
-//         "B"
-//     ],
-//     [
-//         "Which band recorded the album &quot;Parallel Lines&quot;?",
-//         "The Police",
-//         "Coldplay",
-//         "Paramore",
-//         "Blondie",
-//         "D"
-//     ],
-//     [
-//         "Which of these aliases has NOT been used by electronic musician Aphex Twin?",
-//         "Burial",
-//         "Caustic Window",
-//         "Bradley Strider",
-//         "GAK",
-//         "A"
-//     ]
-// ]
+let preQuestions = [
+    [
+        "According to a Beatles song, who kept her face in a jar by the door?",
+        "Eleanor Rigby",
+        "Loretta Martin",
+        "Molly Jones",
+        "Lady Madonna",
+        "A"
+    ],
+    [
+        "What is the stage name of English female rapper Mathangi Arulpragasam, who is known for the song &quot;Paper Planes&quot;?",
+        "K.I.A.",
+        "C.I.A.",
+        "M.I.A.",
+        "A.I.A.",
+        "C"
+    ],
+    [
+        "Which one of these Rammstein songs has two official music videos?",
+        "Du Hast",
+        "Benzin",
+        "Mein Teil",
+        "Du Riechst So Gut",
+        "D"
+    ],
+    [
+        "Which rock band released the album &quot;The Bends&quot; in March 1995?",
+        "Nirvana",
+        "Radiohead",
+        "Lemonheads",
+        "U2",
+        "B"
+    ],
+    [
+        "Which band recorded the album &quot;Parallel Lines&quot;?",
+        "The Police",
+        "Coldplay",
+        "Paramore",
+        "Blondie",
+        "D"
+    ],
+    [
+        "Which of these aliases has NOT been used by electronic musician Aphex Twin?",
+        "Burial",
+        "Caustic Window",
+        "Bradley Strider",
+        "GAK",
+        "A"
+    ]
+]
 
 
 
@@ -81,8 +81,8 @@ const GameMasterLiveGame = () => {
     }
 
     
-    // const [questions, setQuestions] = useState(preQuestions);
-    const [questions, setQuestions] = useState();
+    const [questions, setQuestions] = useState(preQuestions);
+    // const [questions, setQuestions] = useState();
     const [currentQNumber,setCurrentQNumber] = useState(); // 
     const [isActive,setIsActive] = useState();
     const [timerData, setTimerData] = useState(baseTimerData); // not doing anything at the moment
