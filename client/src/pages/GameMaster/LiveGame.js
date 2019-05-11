@@ -104,11 +104,34 @@ const GameMasterLiveGame = () => {
             })
     }
 
+    useEffect( () => {
+        getQuestions()
+    },[]
+    // 1st arg: callback
+    // 2nd arg: array of variables to watch
+        // if empty, runs once. 
+    )
+
     const launchQuestion = (qNum) => {
-        // clearInterval(timerInterval);
-        setCurrentQNumber(qNum);
-        setTimerData(baseTimerData);
-        timerControl();
+        axios.post("/api/next","")
+            .then(response => {
+                console.log("positive response from DB");
+                getQuestions();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    const showAnswer = () => {
+        axios.post("/api/end","")
+            .then(response => {
+                console.log("positive response from DB");
+                getQuestions();
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
     const decrementTimer = () => {
@@ -158,6 +181,9 @@ const GameMasterLiveGame = () => {
             
                 <div className="col-md-12">
                     <div className="container">
+                        <button
+                            onClick={() => launchQuestion()}
+                        >Start Game</button>
                         {questions.map( (item, index) => (
                             <AdminLiveQDiv
                                 realQNumber = {index}
@@ -171,6 +197,7 @@ const GameMasterLiveGame = () => {
                                 timerData = {timerData}
                                 currentQNumber = {currentQNumber}
                                 launchQuestion = {launchQuestion}
+                                showAnswer = {showAnswer}
                             />
                         ))}
                     </div>

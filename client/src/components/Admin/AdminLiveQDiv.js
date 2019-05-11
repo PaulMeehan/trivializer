@@ -21,7 +21,7 @@ return (
             </div>
             <div className={ (props.currentQNumber === props.realQNumber) ? "col-md-2" : "col-md-2 hidden" }>
                 <button className="btn-success btn" onClick={() => props.launchQuestion(props.qNumber)}>Launch Question</button>
-                <button className="btn-danger btn mt-4">Show Answer</button>
+                <button className="btn-danger btn mt-4" onClick={() => props.showAnswer(props.showAnswer)}>Show Answer</button>
             </div>
             <div className={ (props.currentQNumber === props.realQNumber) ? "col-md-3" : "col-md-3 hidden" }>
                 <Pie 
