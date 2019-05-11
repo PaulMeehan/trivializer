@@ -1,4 +1,4 @@
-const db = require('../db')
+// const db = require('../db')
 const Pusher = require('pusher');
 const pusher = new Pusher({
   appId: '780018',
@@ -32,18 +32,29 @@ module.exports = {
     // get from host on 'create game' screen
     // need: host userId
     // get /api/question
+    // response: {
+    //  questions: [question list{}]
+    //  qNum: integer
+    //  isActive: t/f
+    //  time: int
+    // }
   },
   addQuestion: (req, res) => {
     // post from host on 'create game' screen
     // need: host userId
     // post /api/question
-
+    // response: {
+    //  questions: [question list{}]
+    // }
   },
   nextQuestion: (req, res) => {
     // post from host on 'game management' screen
     // need: host userId
     // TODO: will require pusher to broadcast new question
     // post /api/next
+    // respones: {
+    //  
+    // }
 
   },
   deleteQuestion: (req, res) => {
