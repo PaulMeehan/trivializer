@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './Admin.css';
 import AdminGameDiv from "../../components/Admin/AdminGameDiv";
+import axios from "axios";
 
 
 let preQuestions = [
@@ -61,6 +62,7 @@ let preQuestions = [
 const GameMasterAdmin = () => {
 
     const [questions, setQuestions] = useState(preQuestions);
+    // const [questions, setQuestions] = useState();
     const [newQ, setNewQ] = useState();
     const [newA1, setNewA1] = useState();
     const [newA2, setNewA2] = useState();
@@ -68,15 +70,50 @@ const GameMasterAdmin = () => {
     const [newA4, setNewA4] = useState();
     const [newCorrect, setNewCorrect] = useState();
 
+    const getQuestions = () => {
+        // /api/questions
+        // GET request
+        console.log("getQuestions triggered");
+        axios.get("/api/questions")
+            .then(response => {
+                console.log(response.data.questions);
+                setQuestions(response.data.questions);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    useEffect( () => {
+        getQuestions()
+    },[]
+    // 1st arg: callback
+    // 2nd arg: array of variables to watch
+        // if empty, runs once. 
+    )
 
     const deleteQuestion = (id) => {
         // TODO: replace w/ actual route request
-        let tempQuestions = questions;
+        console.log("deleteQuestion triggered");
+        let tempQuestions = [...questions];
         let throwAway = tempQuestions.splice(id,1);
-        console.log(throwAway);
-        console.log(tempQuestions);
+        // console.log(throwAway);
+        // console.log(tempQuestions);
         setQuestions(tempQuestions);
         // not sure why it will write throwAway to state but not tempQuestions
+        axios.post("/api/question",tempQuestions)
+            .then(response => {
+                console.log("positive response to delete question");
+                console.log(response);
+                getQuestions();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+        // /api/question
+        // "delete" call
+        // send the question position in the array
     }
 
     const handleInputChange = event => {
@@ -109,19 +146,38 @@ const GameMasterAdmin = () => {
 
     const addQuestion = () => {
         // event.preventDefault();
-        let tempQuestions = questions;
+        let tempQuestions = [...questions];
         let newAddition = [
             newQ,
             newA1,
             newA2,
             newA3,
             newA4,
-            newCorrect
+            newCorrect,
+            180 // this is the time alloted
         ];
         tempQuestions.push(newAddition);
         console.log(tempQuestions);
         setQuestions(tempQuestions);
-        // ^^ why does this not work?
+        
+
+        axios.post("/api/question",tempQuestions)
+            .then(response => {
+                console.log("positive response to delete question");
+                console.log(response);
+                getQuestions();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+
+        // /api/question
+        // include the array in the body
+    }
+
+    const startGame = () => {
+        // /api/next
+        // send an empty post
     }
 
     return(
@@ -149,22 +205,22 @@ const GameMasterAdmin = () => {
                             <tr>
                                 <td>A.</td>
                                 <td><input type="text" id="answerA" name="answerA" onChange={handleInputChange}></input></td>
-                                <td><input type="radio" name="correctAnswer" value="a" onChange={handleInputChange}></input></td>
+                                <td><input type="radio" name="correctAnswer" value="A" onChange={handleInputChange}></input></td>
                             </tr>
                             <tr>
                                 <td>B.</td>
                                 <td><input type="text" id="answerB" name="answerB" onChange={handleInputChange}></input></td>
-                                <td><input type="radio" name="correctAnswer" value="b"  onChange={handleInputChange}></input></td>
+                                <td><input type="radio" name="correctAnswer" value="B"  onChange={handleInputChange}></input></td>
                             </tr>
                             <tr>
                                 <td>C.</td>
                                 <td><input type="text" id="answerC" name="answerC" onChange={handleInputChange}></input></td>
-                                <td><input type="radio" name="correctAnswer" value="c"  onChange={handleInputChange}></input></td>
+                                <td><input type="radio" name="correctAnswer" value="C"  onChange={handleInputChange}></input></td>
                             </tr>
                             <tr>
                                 <td>D.</td>
                                 <td><input type="text" id="answerD" name="answerD" onChange={handleInputChange}></input></td>
-                                <td><input type="radio" name="correctAnswer" value="d"  onChange={handleInputChange}></input></td>
+                                <td><input type="radio" name="correctAnswer" value="D"  onChange={handleInputChange}></input></td>
                             </tr>
                             </tbody>
                         </table>
@@ -180,8 +236,11 @@ const GameMasterAdmin = () => {
                 </div>
                 <div className="col-md-4 border">
                     <button 
-                        onClick={() => printState()}
+                        onClick={() => startGame()}
                     >Start Your Game</button>
+                    <button 
+                        onClick={() => printState()}
+                    >Print State</button>
                 </div>
             
             </div>

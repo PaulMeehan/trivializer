@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './Admin.css';
 import {Pie} from "react-chartjs-2";
 import AdminLiveQDiv from "../../components/Admin/AdminLiveQDiv";
+import axios from 'axios';
 
 let preQuestions = [
     [
@@ -79,9 +80,59 @@ const GameMasterLiveGame = () => {
         }
     }
 
-    const [currentQNumber,setCurrentQNumber] = useState(0);
+    
     const [questions, setQuestions] = useState(preQuestions);
-    const [timerData, setTimerData] = useState(baseTimerData);
+    // const [questions, setQuestions] = useState();
+    const [currentQNumber,setCurrentQNumber] = useState(); // 
+    const [isActive,setIsActive] = useState();
+    const [timerData, setTimerData] = useState(baseTimerData); // not doing anything at the moment
+
+    const getQuestions = () => { // pull questions from DB
+        // /api/questions
+        // GET request
+        console.log("getQuestions triggered");
+        axios.get("/api/questions")
+            .then(response => {
+                console.log(response.data);
+                setQuestions(response.data.questions);
+                setIsActive(response.data.isActive);
+                setCurrentQNumber(response.data.qNum);
+                // response.data.time
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    useEffect( () => {
+        getQuestions()
+    },[]
+    // 1st arg: callback
+    // 2nd arg: array of variables to watch
+        // if empty, runs once. 
+    )
+
+    const launchQuestion = (qNum) => {
+        axios.post("/api/next","")
+            .then(response => {
+                console.log("positive response from DB");
+                getQuestions();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    const showAnswer = () => {
+        axios.post("/api/end","")
+            .then(response => {
+                console.log("positive response from DB");
+                getQuestions();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
 
     const decrementTimer = () => {
         console.log("decrement run");
@@ -112,12 +163,7 @@ const GameMasterLiveGame = () => {
     }
     
 
-    const launchQuestion = (qNum) => {
-        // clearInterval(timerInterval);
-        setCurrentQNumber(qNum);
-        setTimerData(baseTimerData);
-        timerControl();
-    }
+    
 
     return(
 
@@ -135,6 +181,9 @@ const GameMasterLiveGame = () => {
             
                 <div className="col-md-12">
                     <div className="container">
+                        <button
+                            onClick={() => launchQuestion()}
+                        >Start Game</button>
                         {questions.map( (item, index) => (
                             <AdminLiveQDiv
                                 realQNumber = {index}
@@ -148,6 +197,7 @@ const GameMasterLiveGame = () => {
                                 timerData = {timerData}
                                 currentQNumber = {currentQNumber}
                                 launchQuestion = {launchQuestion}
+                                showAnswer = {showAnswer}
                             />
                         ))}
                     </div>

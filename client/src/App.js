@@ -22,6 +22,9 @@ import BoardHalfTime from "./pages/BigBoard/BoardHalfTime";
 import BoardGameOver from "./pages/BigBoard/BoardGameOver";
 import GameMasterAdmin from "./pages/GameMaster/Admin";
 import GameMasterLiveGame from "./pages/GameMaster/LiveGame";
+import StatsBoard from "./pages/BigBoard/StatsBoard";
+import BoardQuestion from "./pages/BigBoard/BoardQuestion";
+import User from "./pages/User/User";
 
 
 class App extends Component {
@@ -102,7 +105,9 @@ class App extends Component {
 								<Route exact path="/board-gameover" component={BoardGameOver} />
 								<Route exact path="/admin" component={GameMasterAdmin} />
 								<Route exact path="/live-game" component={GameMasterLiveGame} />
-
+								<Route exact path="/board-stats" component={StatsBoard} />
+								<Route exact path="/board-question" component={BoardQuestion} />
+								<Route exact path="/user" component={User} />
                 <Route component={NoMatch} />
 								
               </Switch>
