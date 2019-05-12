@@ -18,8 +18,8 @@ import BoardQTFLive from "./pages/BigBoard/BoardQTFLive";
 import BoardQTFPost from "./pages/BigBoard/BoardQTFPost";
 import BoardQOpenLive from "./pages/BigBoard/BoardQOpenLive";
 import BoardQOpenPost from "./pages/BigBoard/BoardQOpenPost";
-import BoardHalfTime from "./pages/BigBoard/BoardHalfTime";
-import BoardGameOver from "./pages/BigBoard/BoardGameOver";
+// import BoardHalfTime from "./pages/BigBoard/BoardHalfTime";
+// import BoardGameOver from "./pages/BigBoard/BoardGameOver";
 import GameMasterAdmin from "./pages/GameMaster/Admin";
 import GameMasterLiveGame from "./pages/GameMaster/LiveGame";
 import StatsBoard from "./pages/BigBoard/StatsBoard";
@@ -101,11 +101,11 @@ class App extends Component {
 								<Route exact path="/board-tf-post" component={BoardQTFPost} />
 								<Route exact path="/board-open-live" component={BoardQOpenLive} />
 								<Route exact path="/board-open-post" component={BoardQOpenPost} />
-								<Route exact path="/board-halftime" component={BoardHalfTime} />
-								<Route exact path="/board-gameover" component={BoardGameOver} />
+								{/* <Route exact path="/board-halftime" component={BoardHalfTime} /> */}
+								{/* <Route exact path="/board-gameover" component={BoardGameOver} /> */}
 								<Route exact path="/admin" component={GameMasterAdmin} />
 								<Route exact path="/live-game" component={GameMasterLiveGame} />
-								<Route exact path="/board-stats" component={StatsBoard} />
+								<Route exact path="/statsboard" component={StatsBoard} />
 								<Route exact path="/board-question" component={BoardQuestion} />
 								<Route exact path="/user" component={User} />
                 <Route component={NoMatch} />
