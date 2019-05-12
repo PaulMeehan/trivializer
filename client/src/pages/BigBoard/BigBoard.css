@@ -1,0 +1,13 @@
+body {
+    /* background-color: #00ffcc; */
+    background-color: #971DFF;
+}
+
+h1 {
+    font-size: 3em;
+    color: #ffffff;
+}
+
+canvas {
+    height: 85vh !important;
+}
