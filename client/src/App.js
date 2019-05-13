@@ -25,19 +25,19 @@ import GameMasterLiveGame from "./pages/GameMaster/LiveGame";
 import StatsBoard from "./pages/BigBoard/StatsBoard";
 import BoardQuestion from "./pages/BigBoard/BoardQuestion";
 import User from "./pages/User/User";
+import LandingPage from './pages/LandingPage'
 
 
 class App extends Component {
-  
+
   constructor() {
     super();
-    
 		this.state = {
 			loggedIn: false,
 			user: null
     };
   }
-  
+
 	componentDidMount() {
 		AUTH.getUser().then(response => {
 			if (!!response.data.user) {
@@ -56,7 +56,6 @@ class App extends Component {
 
 	logout = (event) => {
     event.preventDefault();
-    
 		AUTH.logout().then(response => {
 			console.log(response.data);
 			if (response.status === 200) {
@@ -89,7 +88,7 @@ class App extends Component {
             <Nav user={this.state.user} logout={this.logout}/>
             <div className="main-view">
               <Switch>
-                <Route exact path="/" component={() => <Books user={this.state.user}/>} />
+                <Route exact path="/" component={() => <LandingPage user={this.state.user}/>} />
                 <Route exact path="/books" component={() => <Books user={this.state.user}/>} />
                 <Route exact path="/books/:id" component={Detail} />
 
