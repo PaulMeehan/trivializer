@@ -53,7 +53,7 @@ module.exports = {
     // TODO: will require pusher to broadcast new question
     // post /api/next
     // respones: {
-    //  
+    //
     // }
 
   },
@@ -86,8 +86,29 @@ module.exports = {
     // TODO: will require pusher to broadcast end game
   },
   scoreBoard: (req, res) => {
-    // get from host
-    // need: host userId
-    // get /api/scoreBoard
+    /*  get from host
+        need: host userId
+        get /api/scoreBoard
+        Client needs:
+          {
+            labels: [team names],
+            datasets: [
+              { data: [team scores] },
+              { backgroundColor: [colors of bars] }, // leader - #34edaf", everyone else #ed4634"
+            ],
+            options: {
+              responsive: true,
+              scales : {
+                xAxes: [{
+                  ticks:  {
+                    beginAtZero: true,
+                    min: 0,
+                    max: {TOTAL NUMBER OF QUESTIONS IN GAME}
+                  }
+                }]
+              }
+            }
+          }
+    */
   }
 }
