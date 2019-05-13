@@ -108,7 +108,6 @@ class App extends Component {
 								<Route exact path="/board-question" component={BoardQuestion} />
 								<Route exact path="/user" component={User} />
                 <Route component={NoMatch} />
-								
               </Switch>
             </div>
           </div>

@@ -38,6 +38,8 @@ module.exports = {
     //  isActive: t/f
     //  time: int
     // }
+    console.log('\n****\ngetAllGameQuestions\n****\n')
+    res.send(200)
   },
   addQuestion: (req, res) => {
     // post from host on 'create game' screen
@@ -46,6 +48,8 @@ module.exports = {
     // response: {
     //  questions: [question list{}]
     // }
+    console.log('\n****\naddQuestion\n****\n')
+    res.send(200)
   },
   nextQuestion: (req, res) => {
     // post from host on 'game management' screen
@@ -55,35 +59,39 @@ module.exports = {
     // respones: {
     //
     // }
-
-  },
-  deleteQuestion: (req, res) => {
-    // delete from host on 'game management' screen
-    // need: host userId, new question array
-    // delete /api/question
+    console.log('\n****\nnextQuestion\n****\n')
+    pusher.trigger('game-question', 'new-question', {message: 'nextQuestion fired from trigger'})
+    res.send(200)
   },
   endQuestion: (req, res) => {
     // post from host on 'game management' screen
     // need: host userId
     // post  /api/end
     // TODO: will require pusher to broadcast end question
+    console.log('\n****\nendQuestion\n****\n')
+    res.send(200)
   },
   submitAnswer: (req, res) => {
     // post from player on game-play screen
     // need: player userId, gameId or hostId, question number, answer
     // post /api/:GAMEID/:qNum/:choice
+    console.log('\n****\nsubmitAnswer\n****\n')
+    res.send(200)
   },
   getQuestion: (req, res) => {
     // get from player on game-play screen
     // need: gameId or hostId
     // get /api/:GAMEID
-
+    console.log('\n****\ngetQuestion\n****\n')
+    res.send(200)
   },
   endGame: (req, res) => {
     // post from host
     // need: host userId
     // post /api/endGame
     // TODO: will require pusher to broadcast end game
+    console.log('\n****\nendGame\n****\n')
+    res.send(200)
   },
   scoreBoard: (req, res) => {
     /*  get from host
@@ -110,5 +118,7 @@ module.exports = {
             }
           }
     */
+   console.log('\n****\nscoreBoard\n****\n')
+   res.send(200)
   }
 }
