@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import Pusher from 'pusher-js'
+
 
 class LandingPage extends React.Component {
   constructor(props) {
@@ -7,11 +9,21 @@ class LandingPage extends React.Component {
     this.state = { game: '' }
   }
 
+  componentWillMount () {
+    Pusher.logToConsole = true
+    const pusher = new Pusher('e5795cf1dfac2a8aee31', {
+      cluster: 'us2',
+      forceTLS: true
+    })
+    const question = pusher.subscribe('game-question')
+  }
+
   handleInputChange = e => {
     console.log(e.target.value)
     this.setState({game: e.target.value})
-
   }
+
+
 
   render() {
     return (

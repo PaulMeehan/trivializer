@@ -60,6 +60,7 @@ module.exports = {
     //
     // }
     console.log('\n****\nnextQuestion\n****\n')
+    pusher.trigger('game-question', 'new-question', {message: 'nextQuestion fired from trigger'})
     res.send(200)
   },
   endQuestion: (req, res) => {
