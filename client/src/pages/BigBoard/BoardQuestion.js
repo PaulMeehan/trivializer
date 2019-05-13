@@ -1,35 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {Pie} from "react-chartjs-2";
+import {Pie, Bar} from "react-chartjs-2";
 import '../../pages/BigBoard/BigBoard.css';
+import './BoardQuestion.css';
 import LiveQuestion from "../../components/BigBoard/LiveQuestion"
+import PostQuestion from '../../components/BigBoard/PostQuestion';
 
-// state = {
-    //     url: "http://trivializer.com/g/username",
-    //     qTotal: 15,
-    //     qMultiple: 11,
-    //     qTF: 1,
-    //     qOpen: 3,
-    //     timerData: {
-    //         labels: [
-    //             'Time Remaining',
-    //         ],
-    //         datasets: [
-    //             {
-    //                 data: [
-    //                     27,
-    //                     33
-    //                 ],
-    //                 backgroundColor: [
-    //                     "#34edaf",
-    //                     "#ed4634"
-    //                 ]
-    //             }
-    //         ],
-    //         options: {
-    //             responsive: true
-    //         }
-    //     }
-    // }
+
+    
+
 
     let preQuestions = [
         [
@@ -83,80 +61,190 @@ import LiveQuestion from "../../components/BigBoard/LiveQuestion"
     ]
 
     const fakeResponses = [
-        "I am Smarticus",
-        "The Quizzard of Oz",
-        "Team Sewer Cougar",
-        "The Decepticons",
-        "#AlternativeFacts",
-        "Taking Care of Quizness",
-        "Multiple Scoregasms",
-        "Rebel Scum"
+        ["I am Smarticus","A"],
+        ["The Quizzard of Oz","B"],
+        ["Team Sewer Cougar","C"],
+        ["The Decepticons","D"],
+        ["#AlternativeFacts","D"],
+        ["Taking Care of Quizness","C"],
+        ["Multiple Scoregasms","B"],
+        ["Rebel Scum","A"]
     ]
 
+    const fakeTimerData = {
+        datasets: [
+            {
+                data: [
+                    15,
+                    0
+                ],
+                backgroundColor: [
+                    "#34edaf",
+                    "#ed4634"
+                ]
+            }
+        ]
+    }
+
+    const fakeBarGraph = {
+        labels: [
+            'Little Richard',
+            'Carl Perkins',
+            'Elvis Presley',
+            'Jerry Lee Lewis'
+        ],
+        datasets: [
+            {
+                data: [
+                    2,
+                    4,
+                    1,
+                    1
+                ],
+                backgroundColor: [
+                    "#ed4634",
+                    "#34edaf",
+                    "#ed4634",
+                    "#ed4634"
+                ]
+            }
+        ]
+    }
+
 const BoardQuestion = () => {
+
+    const decrementTimer = () => {
+        console.log("decrement run");
+        if (timerData.datasets[0].data[0] > 0) {
+            let currentTime = [ timerData.datasets[0].data[0], timerData.datasets[0].data[1] ];
+            currentTime = [(currentTime[0] - 1),(currentTime[1] + 1)]
+            setTimerData(
+                {
+                    datasets: [
+                        {
+                            data: currentTime,
+                            backgroundColor: [
+                                "#34edaf",
+                                "#ed4634"
+                            ]
+                        }
+                    ]
+                }
+            )
+        } else {
+            setTimesUp(true);
+        }
+    }
+
+    const timerControl = () => {
+        const timerInterval = setInterval(decrementTimer,1000);
+    }
+
+    const toggleStatus = () => {
+        if ( qStatus === "live" ) {
+            setQStatus("post")
+        }
+        if ( qStatus === "post" ) {
+            setQStatus("live")
+        }
+    }
     
+    const [numTeams, setNumTeams] = useState();
     const [questions, setQuestions] = useState(preQuestions); // TODO: stop using fake data
-    const [qStatus, setQStatus] = useState("live"); // TODO: stop using fake data
+    const [qStatus, setQStatus] = useState("post"); // TODO: stop using fake data
     const [qNum, setQNum] = useState(2); // TODO: stop using fake data
     const [ansRcvd, setAnsRcvd] = useState(fakeResponses); // TODO: stop using fake data
+    const [timerData, setTimerData] = useState(fakeTimerData); // TODO: stop using fake data
+    const [timesUp, setTimesUp] = useState(false);
+    const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
+        {
+            responsive: true,
+            maintainAspectRatio: false,
+        }
+    );
+    const [correctAnswerText, setCorrectAnswerText] = useState();
+    const [barOptions, setBarOptions] = useState(
+        {
+            legend: {
+                display: false,
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        fontColor: "#ffffff",
+                        fontSize: 30,
+                    },
+                    gridLines: {
+                        color: "#ffffff"
+                    }      
+                }],
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        min: 0,
+                        fontColor: "#ffffff",
+                        fontSize: 30,
+                        stepSize: 1,
+                    }      
+                }]
+            }
+        }
+    )
+    const [barData, setBarData] = useState(fakeBarGraph); // TODO: stop using fake data
+    const [pointsWon, setPointsWon] = useState(); // TODO: stop using fake data
+
+    useEffect( () => {
+        console.log("useEffect() triggered");
+        if (questions[qNum][5] === "A") {
+            setCorrectAnswerText(questions[qNum][1])
+        } else if (questions[qNum][5] === "B") {
+            setCorrectAnswerText(questions[qNum][2])
+        } else if (questions[qNum][5] === "C") {
+            setCorrectAnswerText(questions[qNum][3])
+        } else if (questions[qNum][5] === "D") {
+            setCorrectAnswerText(questions[qNum][4])
+        }
+        console.log(correctAnswerText);
+    },[])
 
     return(
 
-        
         <div>
 
             <h1 className="text-center mt-3 question p-3 mb-4">({qNum + 1}/{questions.length}) {questions[qNum][0]}</h1>
 
-            {/* <LiveQuestion 
-                
-            /> */}
+            { (qStatus === "live") ?
 
-            <div className="liveQuestion">
-                <h2 className="text-center mb-4">Possible Answers:</h2>
-                <h3>A. {questions[qNum][1]}</h3>
-                <h3>B. {questions[qNum][2]}</h3>
-                <h3>C. {questions[qNum][3]}</h3>
-                <h3>D. {questions[qNum][4]}</h3>
-            </div>
+            <LiveQuestion 
+                ans1 = {questions[qNum][1]}
+                ans2 = {questions[qNum][2]}
+                ans3 = {questions[qNum][3]}
+                ans4 = {questions[qNum][4]}
+                ansRcvd = {ansRcvd}
+                timesUp = {timesUp}
+                timerData = {timerData}
+                pieOptions = {pieOptions}
+                timerControl = {timerControl}
+                questions = {questions}
+                qNum = {qNum}
+            />
 
-            {/* <div className="container">
-                        {questions.map( (item, index) => (
-                            <AdminGameDiv
-                                realQNumber = {index}
-                                qNumber = {index + 1}
-                                key = {item[0]}
-                                qText = {item[0]}
-                                a1 = {item[1]}
-                                a2 = {item[2]}
-                                a3 = {item[3]}
-                                a4 = {item[4]}
-                                correct = {item[5]}
-                                deleteQuestion = {deleteQuestion}
-                            />
-                        ))}
-                    </div> */}
+            :
 
-            <div className="liveTeams">
+            <PostQuestion
+                ansLetter = {questions[qNum][5]}
+                correctAnswerText = {correctAnswerText}
+                barData = {barData}
+                barOptions = {barOptions}
+            />
 
-                <h2 className="text-center mb-4">Teams Submitted:</h2>
-                <h4>1. I am Smarticus</h4>
-                <h4>2. The Quizzard of Oz</h4>
-                <h4 className="firstCorrect">3. Team Sewer Cougar</h4>
-                <h4>4. The Decepticons</h4>
-                <h4>5. #AlternativeFacts</h4>
-                <h4>6. Taking Care of Quizness</h4>
-                <h4>7. Multiple Scoregasms</h4>
-                <h4>8. Rebel Scum</h4>
-            </div>
+            }
 
-            <div className="liveTimer">
-                <h2 className="text-center mb-4">Time Remaining:</h2>
-                <Pie 
-                    // data= {this.state.timerData}
-                />
-            </div>
-
-            
+            <button
+                onClick={() => toggleStatus()}
+            >toggle qStatus</button>
 
         </div>
     )

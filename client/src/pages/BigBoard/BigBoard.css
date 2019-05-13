@@ -20,7 +20,6 @@ canvas {
 
 div.liveQuestion {
     width: 30%;
-    height: 80%;
     float: left;
     margin: 0;
     margin-left: 5%;
@@ -29,7 +28,6 @@ div.liveQuestion {
 
 div.liveTeams {
     width: 30%;
-    height: 80%;
     float: left;
     margin: 0;
     padding: 20px 40px;
@@ -39,15 +37,39 @@ div.liveTeams {
 
 div.liveTimer {
     width: 30%;
-    height: 80%;
     float: left;
     margin: 0;
     margin-right: 5%;
-    padding: 20px 40px
+    padding: 20px 40px;
 }
 
 h4.firstCorrect {
     background-color: #34edaf;
     color: #971DFF;
     padding: 5px 10px
+}
+
+.liveContainer {
+    background-color: black;
+    border-left: 2px solid #ffffff !important;
+    border-right: 2px solid #ffffff !important;
+}
+
+.postAnswers {
+    width: 90%;
+    height: 80%;
+    float: left;
+    margin: 0;
+    margin-left: 5%;
+    margin-right: 5%;
+    padding: 20px
+}
+
+.postTeams {
+    width: 45%;
+    height: 80%;
+    float: left;
+    margin: 0;
+    margin-right: 5%;
+    padding: 20px
 }
