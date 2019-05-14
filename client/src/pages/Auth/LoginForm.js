@@ -5,10 +5,9 @@ import { Card } from '../../components/Card';
 import { Input, FormBtn } from '../../components/Form';
 
 class LoginForm extends Component {
-  
+
   constructor() {
     super();
-    
 		this.state = {
 			username: '',
 			password: '',
