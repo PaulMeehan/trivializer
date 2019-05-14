@@ -36,9 +36,7 @@ class LandingPage extends React.Component {
 
         <div className="row mt-5">
           <div className="col-md-12">
-            
-            <button className="btn btn-large btn-block btn-success"><h1>Host a Game</h1></button>
-            
+            <a href="/admin" className="btn btn-large btn-block btn-success"><h1>Host a Game</h1></a>
             <h1 className="text-center m-5">- OR -</h1>
 
             <div className="input-group mb-3">

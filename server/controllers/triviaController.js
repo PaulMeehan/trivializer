@@ -1,4 +1,4 @@
-// const db = require('../db')
+const db = require('../models')
 const Pusher = require('pusher');
 const pusher = new Pusher({
   appId: '780018',
@@ -7,25 +7,6 @@ const pusher = new Pusher({
   cluster: 'us2',
   encrypted: true
 });
-
-/*
-  Pusher strategy
-  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-  use channel 'game' for all pushed notifications
-  make all notifications objects ala
-  {
-    game: gameId,
-    data: { data }
-  }
-  then require the client to check if gameId === gameId
-  when it receives a message. If so (gameid), then look
-  at the data, else ignore it
-
-  Pusher strategy
-  ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-
-
-*/
 
 module.exports = {
   getAllGameQuestions: (req, res) => {
@@ -39,7 +20,14 @@ module.exports = {
     //  time: int
     // }
     console.log('\n****\ngetAllGameQuestions\n****\n')
-    res.send(200)
+    const username = req.user.username
+    const _id = req.user._id
+    console.log(username,_id)
+    db.User.findOne({ _id })
+      .then(user => {
+        console.log(user)
+        res.send(200)
+      })
   },
   addQuestion: (req, res) => {
     // post from host on 'create game' screen
@@ -49,7 +37,20 @@ module.exports = {
     //  questions: [question list{}]
     // }
     console.log('\n****\naddQuestion\n****\n')
-    res.send(200)
+    const _id = req.user._id
+    const questions = req.body
+    // console.log(questions)
+    db.User.update( { _id: _id }, {
+      $set: {
+        game: questions
+      }
+    }).then(confirm => {
+      console.log(confirm)
+      db.User.findOne({ _id })
+        .then(record => {
+          res.json(record.game)
+        })
+    })
   },
   nextQuestion: (req, res) => {
     // post from host on 'game management' screen

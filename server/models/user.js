@@ -9,6 +9,7 @@ const userSchema = new Schema({
 	lastName: { type: String, unique: false },
   username: { type: String, unique: true, required: true },
   password: { type: String, unique: false, required: false },
+	game: { type:	Array, unique: false, required: false, default: [] },
   books: [
     {
       // Store ObjectIds in the array
