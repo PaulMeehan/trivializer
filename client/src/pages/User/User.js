@@ -138,7 +138,7 @@ console.log(this.state);
 
 
         return(
-            <div style={{ border: 'solid, black, 1px', borderRadius: '5px', fontFamily: 'karmatic arcade', margin: 'auto', background: "#eee", maxWidth: "420px", height: 'auto' }}>
+            <div style={{ borderRadius: '5px', fontFamily: 'karmatic arcade', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto', border: '1px solid black' }}>
                  <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/>
                 </div>
             <div>   
@@ -146,20 +146,20 @@ console.log(this.state);
             <div style={{ padding: '10px',}}>
                 <p style={{ textAlign: 'center', color: '#9800ff' }}>{preQuestions[0].q}</p>
             {this.state.show?
-            <div> 
-            <ul style={{ listStyleType: 'none', color: '#9800ff'}}>
+            <div style={{display: 'flex', justifyContent: 'center',  alignItems: 'center', width: '75%'}}> 
+            <ul style={{ display: 'block', margin: 'auto', listStyleType: 'none', color: '#9800ff' }}>
                 
                 {this.state.questions[this.state.questionIndex].choices.map((singleChoice) => {
                     return(<li><input type="radio" checked={ this.state.curChoice === singleChoice } value={ singleChoice } onChange={this.handleChoiceClick}></input>{singleChoice}</li>)
                 })}
 
-                <button style={{ borderRadius: '5px', height: '30px', margin: 'auto' }} onClick={this.handleSubmit}>Submit</button>
+                <button style={{ borderRadius: '5px', height: '30px', width: '100%', backgroundColor: '#f9800ff'  }} onClick={this.handleSubmit}>Submit</button>
                 </ul>
                 </div> 
                 :<p style={{ fontFamily: 'karmatic arcade', textAlign: 'center', color: '#9800ff'}}>Good choice. But, you an idiot.</p>}
             </div>
             </div>
-            <footer style={{ fontFamily: 'karmatic arcade', textAlign: 'center', color: 'white', backgroundColor: '#9800ff' }}>Trivializer</footer>
+            <footer style={{ fontSize: '25px', fontFamily: 'karmatic arcade', textAlign: 'center', color: 'white', backgroundColor: '#9800ff' }}>Trivializer</footer>
             </div>
         );
 
