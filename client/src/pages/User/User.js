@@ -23,12 +23,16 @@ import axios from 'axios';
 
         handleChoiceClick = (e) => {
             console.log(e.target.value)
-            this.setState({ curChoice: e.target.value })
-            // if(this.state.questions[this.state.questionIndex].answer === e.target.name){
-            //     alert("Correct")
-            // }else{
-            //     alert("Wrong")
-            // }
+            this.setState({ curChoice: e.target.value }) 
+        }
+
+        handleSubmit = (e) => {
+            console.log(e.target.value)
+            if(this.state.questions[this.state.questionIndex].answer === this.state.curChoice){
+                alert("Correct")
+            }else{
+                alert("Wrong")
+            }
         }
     // let preQuestions = [
     //     [
@@ -132,23 +136,24 @@ console.log(this.state);
 
 
         return(
-            <div style={{ fontFamily: 'karmatic arcade', margin: '0', background: "#eee", maxWidth: "420px", height: 'auto' }}>
+            <div style={{ fontFamily: 'karmatic arcade', margin: 'auto', background: "#eee", maxWidth: "420px", height: 'auto' }}>
                  <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/>
                 </div>
             <div>   
-                {/* <h1 className='question'>Question: { this.state.questionNumber } </h1> */}
-                <p>{preQuestions[0].q}</p>
-            <ul>
+                <h1 style={{ textAlign: 'center', color: 'black'}}>Question: { this.state.questionIndex + 1 } </h1>
+            <div>
+                <p style={{ textAlign: 'center', color: '#9800ff' }}>{preQuestions[0].q}</p>
+            <ul style={{ flex: 1, justifyContent: 'center', alignItems: 'center', color: '#9800ff'}}>
                 
                 {this.state.questions[this.state.questionIndex].choices.map((singleChoice) => {
                     return(<li><input type="radio" checked={ this.state.curChoice === singleChoice } value={ singleChoice } onChange={this.handleChoiceClick}></input>{singleChoice}</li>)
                 })}
-               
-                {/* <li><button onClick={submitHandler}>Submit</button></li> */}
-                <li><button>Submit</button></li>
-            </ul>
+
+                <button style={{ borderRadius: '5px', height: '30px', margin: 'auto' }} onClick={this.handleSubmit}>Submit</button>
+                </ul>
             </div>
-            <footer>Trivializer</footer>
+            </div>
+            <footer style={{ textAlign: 'center', color: 'white', backgroundColor: '#9800ff' }}>Trivializer</footer>
             </div>
         );
 
