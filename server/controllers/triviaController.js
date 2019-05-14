@@ -30,12 +30,6 @@ module.exports = {
       })
   },
   addQuestion: (req, res) => {
-    // post from host on 'create game' screen
-    // need: host userId
-    // post /api/question
-    // response: {
-    //  questions: [question list{}]
-    // }
     console.log('\n****\naddQuestion\n****\n')
     const _id = req.user._id
     const questions = req.body

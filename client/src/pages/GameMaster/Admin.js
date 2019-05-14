@@ -1,9 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './Admin.css';
 import AdminGameDiv from "../../components/Admin/AdminGameDiv";
-import axios from "axios";
 import gameAPI from '../../utils/gameAPI'
-// const API = require('../../utils/gameAPI')
 
 const defaultQuestionTime = 180
 const preQuestions = [
@@ -62,8 +60,8 @@ const GameMasterAdmin = () => {
     console.log("getQuestions triggered");
     gameAPI.getQuestions()
       .then(res => {
-        console.log(res.data);
-        // setQuestions(res.data.questions);
+        console.log(res.data)
+        setQuestions(res.data)
       })
       .catch(err => console.log(err))
   }
