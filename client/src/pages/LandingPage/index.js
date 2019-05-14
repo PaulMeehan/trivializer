@@ -2,6 +2,12 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Pusher from 'pusher-js'
 
+const styles = {
+	h1Form: {
+    fontFamily: "'Bangers', cursive",
+    fontSize: "3em"
+	},
+};
 
 class LandingPage extends React.Component {
   constructor(props) {
@@ -24,32 +30,38 @@ class LandingPage extends React.Component {
   }
 
 
-
   render() {
     return (
       <div className="container">
-        I want to
-        <Link to="/admin">
-          Host a game
-        </Link>
-        <div>Or Play a Game</div>
-        <div className="input-group mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Host Name"
-            aria-label="Host Name"
-            aria-describedby="Host Name"
-            id="searchBar"
-            value={this.state.game}
-            onChange={(e) => this.handleInputChange(e)}
-          >
-          </input>
-          <a
-            href={`/play/${this.state.game}`}
-            className="btn btn-outline-secondary"
-            type="button"
-          >Play Game</a>
+
+        <div className="row mt-5">
+          <div className="col-md-12">
+            
+            <button className="btn btn-large btn-block btn-success"><h1>Host a Game</h1></button>
+            
+            <h1 className="text-center m-5">- OR -</h1>
+
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                style={styles.h1Form}
+                placeholder="Type Username of Host Here"
+                aria-label="Host Name"
+                aria-describedby="Host Name"
+                id="searchBar"
+                value={this.state.game}
+                onChange={(e) => this.handleInputChange(e)}
+              >
+              </input>
+              <a
+                href={`/play/${this.state.game}`}
+                className="btn btn-success btn-large"
+                type="button"
+              ><h1>Play a Game</h1></a>
+            </div>
+
+          </div>
         </div>
 
       </div>
