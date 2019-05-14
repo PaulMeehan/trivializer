@@ -5,6 +5,7 @@ import axios from 'axios';
     class User extends React.Component{
 
         state = {
+            show: true,
             questionIndex: 0,
             curChoice: "",
             questions: [
@@ -28,6 +29,7 @@ import axios from 'axios';
 
         handleSubmit = (e) => {
             console.log(e.target.value)
+            this.setState({ show: !this.state.show })
             if(this.state.questions[this.state.questionIndex].answer === this.state.curChoice){
                 alert("Correct")
             }else{
@@ -136,14 +138,16 @@ console.log(this.state);
 
 
         return(
-            <div style={{ fontFamily: 'karmatic arcade', margin: 'auto', background: "#eee", maxWidth: "420px", height: 'auto' }}>
+            <div style={{ border: 'solid, black, 1px', borderRadius: '5px', fontFamily: 'karmatic arcade', margin: 'auto', background: "#eee", maxWidth: "420px", height: 'auto' }}>
                  <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/>
                 </div>
             <div>   
                 <h1 style={{ textAlign: 'center', color: 'black'}}>Question: { this.state.questionIndex + 1 } </h1>
-            <div>
+            <div style={{ padding: '10px',}}>
                 <p style={{ textAlign: 'center', color: '#9800ff' }}>{preQuestions[0].q}</p>
-            <ul style={{ flex: 1, justifyContent: 'center', alignItems: 'center', color: '#9800ff'}}>
+            {this.state.show?
+            <div> 
+            <ul style={{ borderRadius: '5px', color: '#9800ff'}}>
                 
                 {this.state.questions[this.state.questionIndex].choices.map((singleChoice) => {
                     return(<li><input type="radio" checked={ this.state.curChoice === singleChoice } value={ singleChoice } onChange={this.handleChoiceClick}></input>{singleChoice}</li>)
@@ -151,9 +155,11 @@ console.log(this.state);
 
                 <button style={{ borderRadius: '5px', height: '30px', margin: 'auto' }} onClick={this.handleSubmit}>Submit</button>
                 </ul>
+                </div> 
+                :<p style={{ textAlign: 'center', color: '#9800ff'}}>Good choice. But, you an idiot.</p>}
             </div>
             </div>
-            <footer style={{ textAlign: 'center', color: 'white', backgroundColor: '#9800ff' }}>Trivializer</footer>
+            <footer style={{ fontFamily: 'karmatic arcade', textAlign: 'center', color: 'white', backgroundColor: '#9800ff' }}>Trivializer</footer>
             </div>
         );
 
