@@ -14,10 +14,10 @@ return (
                 <h4>{props.qText}</h4>
             </div>
             <div className="col-md-3">
-                <p>A. {props.a1}</p>
-                <p>B. {props.a2}</p>
-                <p>C. {props.a3}</p>
-                <p>D. {props.a4}</p>
+                <h4>A. {props.a1}</h4>
+                <h4>B. {props.a2}</h4>
+                <h4>C. {props.a3}</h4>
+                <h4>D. {props.a4}</h4>
             </div>
             <div className={ (props.currentQNumber === props.realQNumber) ? "col-md-2" : "col-md-2 hidden" }>
                 <button className="btn-success btn" onClick={() => props.launchQuestion()}>Launch Question</button>

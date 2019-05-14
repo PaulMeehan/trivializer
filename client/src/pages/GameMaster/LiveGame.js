@@ -83,7 +83,7 @@ const GameMasterLiveGame = () => {
     
     const [questions, setQuestions] = useState(preQuestions);
     // const [questions, setQuestions] = useState();
-    const [currentQNumber,setCurrentQNumber] = useState(); // 
+    const [currentQNumber,setCurrentQNumber] = useState(2); // 
     const [isActive,setIsActive] = useState();
     const [timerData, setTimerData] = useState(baseTimerData); // not doing anything at the moment
 
@@ -105,14 +105,14 @@ const GameMasterLiveGame = () => {
     }
 
     useEffect( () => {
-        getQuestions()
+        // getQuestions() 
     },[]
     // 1st arg: callback
     // 2nd arg: array of variables to watch
         // if empty, runs once. 
     )
 
-    const launchQuestion = (qNum) => {
+    const launchQuestion = () => {
         axios.post("/api/next","")
             .then(response => {
                 console.log("positive response from DB");
@@ -168,20 +168,13 @@ const GameMasterLiveGame = () => {
     return(
 
         <div className="container">
-
-            <div className="row">
-            
-                <div className="col-md-12">
-                    <h1>Your Game is Live!</h1>
-                </div>
-
-            </div>
         
-            <div className="row border mt-4">
+            <div className="row mt-4">
             
                 <div className="col-md-12">
                     <div className="container">
                         <button
+                            className="btn btn-success btn-lg btn-block"
                             onClick={() => launchQuestion()}
                         >Start Game</button>
                         {questions.map( (item, index) => (
