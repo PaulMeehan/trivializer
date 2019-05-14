@@ -85,7 +85,8 @@ class App extends Component {
 			<div className="App">
         { this.state.loggedIn && (
           <div>
-            <Nav user={this.state.user} logout={this.logout}/>
+            { (window.location.pathname.toLowerCase() == "/user") ? ("") : <Nav user={this.state.user} logout={this.logout} />  }
+						{/* <Nav user={this.state.user} logout={this.logout}/> */}
             <div className="main-view">
               <Switch>
                 <Route exact path="/" component={() => <LandingPage user={this.state.user}/>} />
