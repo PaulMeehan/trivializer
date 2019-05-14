@@ -147,7 +147,7 @@ console.log(this.state);
                 <p style={{ textAlign: 'center', color: '#9800ff' }}>{preQuestions[0].q}</p>
             {this.state.show?
             <div> 
-            <ul style={{ borderRadius: '5px', color: '#9800ff'}}>
+            <ul style={{ listStyleType: 'none', color: '#9800ff'}}>
                 
                 {this.state.questions[this.state.questionIndex].choices.map((singleChoice) => {
                     return(<li><input type="radio" checked={ this.state.curChoice === singleChoice } value={ singleChoice } onChange={this.handleChoiceClick}></input>{singleChoice}</li>)
@@ -156,7 +156,7 @@ console.log(this.state);
                 <button style={{ borderRadius: '5px', height: '30px', margin: 'auto' }} onClick={this.handleSubmit}>Submit</button>
                 </ul>
                 </div> 
-                :<p style={{ textAlign: 'center', color: '#9800ff'}}>Good choice. But, you an idiot.</p>}
+                :<p style={{ fontFamily: 'karmatic arcade', textAlign: 'center', color: '#9800ff'}}>Good choice. But, you an idiot.</p>}
             </div>
             </div>
             <footer style={{ fontFamily: 'karmatic arcade', textAlign: 'center', color: 'white', backgroundColor: '#9800ff' }}>Trivializer</footer>
