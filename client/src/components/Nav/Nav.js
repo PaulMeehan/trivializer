@@ -30,15 +30,15 @@ const Nav = (props) => {
   console.log("window.location.pathname = ");
   console.log(window.location.pathname);
 
-  if (window.location.pathname.toLowerCase() == "/statsboard") {
+  if (window.location.pathname.toLowerCase() === "/statsboard") {
     location = "Game Stats";
     linkLocation = "/board-question";
     greeting = "";
-  } else if (window.location.pathname.toLowerCase() == "/board-question") {
+  } else if (window.location.pathname.toLowerCase() === "/board-question") {
     location = props.user.username
     linkLocation = "/statsboard";
     greeting = "";
-  } else if (window.location.pathname.toLowerCase() == "/live-game") {
+  } else if (window.location.pathname.toLowerCase() === "/live-game") {
     location = "YOUR GAME IS LIVE!!!"
     linkLocation = "#";
   }

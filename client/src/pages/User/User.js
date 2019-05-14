@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-
+import gameAPI from '../../utils/gameAPI';
 
     class User extends React.Component{
 
@@ -10,7 +10,7 @@ import axios from 'axios';
             curChoice: "",
             questions: [
                 {
-                    q: "According to a Beatles song, who kept her face in a jar by the door?", 
+                    question: "According to a Beatles song, who kept her face in a jar by the door?", 
                     answer:  "Eleanor Rigby",
                     choices: [
                         "Eleanor Rigby",
@@ -118,7 +118,7 @@ render(){
 console.log(this.state);
     var preQuestions = [
         {
-            q: "According to a Beatles song, who kept her face in a jar by the door?", 
+            question: "According to a Beatles song, who kept her face in a jar by the door?", 
             answer:  "Eleanor Rigby",
             choices: [
                 "Eleanor Rigby",
@@ -138,29 +138,32 @@ console.log(this.state);
 
 
         return(
+        <div>
             <div style={{ borderRadius: '5px', fontFamily: 'karmatic arcade', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto', border: '1px solid black' }}>
                  <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/>
                 </div>
             <div>   
                 <h1 style={{ textAlign: 'center', color: 'black'}}>Question: { this.state.questionIndex + 1 } </h1>
-            <div style={{ padding: '10px',}}>
-                <p style={{ textAlign: 'center', color: '#9800ff' }}>{preQuestions[0].q}</p>
-            {this.state.show?
-            <div style={{display: 'flex', justifyContent: 'center',  alignItems: 'center', width: '75%'}}> 
-            <ul style={{ display: 'block', margin: 'auto', listStyleType: 'none', color: '#9800ff' }}>
-                
-                {this.state.questions[this.state.questionIndex].choices.map((singleChoice) => {
-                    return(<li><input type="radio" checked={ this.state.curChoice === singleChoice } value={ singleChoice } onChange={this.handleChoiceClick}></input>{singleChoice}</li>)
-                })}
+                <div style={{ padding: '10px',}}>
+                    <p style={{ textAlign: 'center', color: '#9800ff' }}>{preQuestions[0].question}</p>
+                {this.state.show?
+                        <div style={{display: 'flex', justifyContent: 'center',  alignItems: 'center', width: '75%'}}> 
+                            <ul style={{ display: 'block', margin: 'auto', listStyleType: 'none', color: '#9800ff' }}>
+                            
+                            {this.state.questions[this.state.questionIndex].choices.map((singleChoice) => {
+                                return(<li><input type="radio" checked={ this.state.curChoice === singleChoice } value={ singleChoice } onChange={this.handleChoiceClick}></input>{singleChoice}</li>)
+                            })}
 
-                <button style={{ borderRadius: '5px', height: '30px', width: '100%', backgroundColor: '#f9800ff'  }} onClick={this.handleSubmit}>Submit</button>
-                </ul>
-                </div> 
-                :<p style={{ fontFamily: 'karmatic arcade', textAlign: 'center', color: '#9800ff'}}>Good choice. But, you an idiot.</p>}
+                                <button style={{ borderRadius: '5px', height: '30px', width: '100%', backgroundColor: '#f9800ff'  }} onClick={this.handleSubmit}>Submit</button>
+                            </ul>
+                        </div> 
+                :<p style={{ padding: '15px', fontFamily: 'karmatic arcade', textAlign: 'center', color: '#9800ff'}}>Good choice. But, you an idiot.</p>}
+                </div>
             </div>
             </div>
-            <footer style={{ fontSize: '25px', fontFamily: 'karmatic arcade', textAlign: 'center', color: 'white', backgroundColor: '#9800ff' }}>Trivializer</footer>
-            </div>
+            <footer style={{ margin: 'auto', maxWidth: "420px", fontSize: '25px', fontFamily: 'karmatic arcade', textAlign: 'center', color: 'white', backgroundColor: '#9800ff' }}>Trivializer</footer>
+
+        </div>
         );
 
             }
