@@ -6,55 +6,6 @@ import LiveQuestion from "../../components/BigBoard/LiveQuestion";
 import PostQuestion from '../../components/BigBoard/PostQuestion';
 
 const defaultQuestionTime = 180
-const preQuestions = [
-    {
-      question: "According to a Beatles song, who kept her face in a jar by the door?",
-      choices: ["Eleanor Rigby", "Loretta Martin", "Molly Jones", "Lady Madonna"],
-      answer: "A",
-      time: defaultQuestionTime
-    },
-    {
-      question: "What is the stage name of English female rapper Mathangi Arulpragasam, who is known for the song &quot;Paper Planes&quot;?",
-      choices: ["K.I.A.", "C.I.A.", "M.I.A.", "A.I.A."],
-      answer: "C",
-      time: defaultQuestionTime
-    },
-    {
-      question: "Which one of these Rammstein songs has two official music videos?",
-      choices: ["Du Hast", "Benzin", "Mein Teil", "Du Riechst So Gut"],
-      answer: "D",
-      time: defaultQuestionTime
-    },
-    {
-      question: "Which rock band released the album &quot;The Bends&quot; in March 1995?",
-      choices: ["Nirvana", "Radiohead", "Lemonheads", "U2"],
-      answer: "B",
-      time: defaultQuestionTime
-    },
-    {
-      question: "Which band recorded the album &quot;Parallel Lines&quot;?",
-      choices: ["The Police", "Coldplay", "Paramore", "Blondie"],
-      answer: "D",
-      time: defaultQuestionTime
-    },
-    {
-      question: "Which of these aliases has NOT been used by electronic musician Aphex Twin?",
-      choices: ["Burial", "Caustic Window", "Bradley Strider", "GAK"],
-      answer: "A",
-      time: defaultQuestionTime
-    }
-  ]
-
-    const fakeResponses = [
-        ["I am Smarticus","A"],
-        ["The Quizzard of Oz","B"],
-        ["Team Sewer Cougar","C"],
-        ["The Decepticons","D"],
-        ["#AlternativeFacts","D"],
-        ["Taking Care of Quizness","C"],
-        ["Multiple Scoregasms","B"],
-        ["Rebel Scum","A"]
-    ]
 
     const fakeTimerData = {
         datasets: [
@@ -106,20 +57,72 @@ const BoardQuestion = () => {
         const timerInterval = setInterval(decrementTimer,1000);
     }
 
-    const toggleStatus = () => {
-        if ( qStatus === "live" ) {
-            setQStatus("post")
-        }
-        if ( qStatus === "post" ) {
-            setQStatus("live")
-        }
-    }
+    // const toggleStatus = () => {
+    //     if ( qStatus === "live" ) {
+    //         setQStatus("post")
+    //     }
+    //     if ( qStatus === "post" ) {
+    //         setQStatus("live")
+    //     }
+    // }
     
-    const [numTeams, setNumTeams] = useState();
-    const [questions, setQuestions] = useState(preQuestions); // TODO: stop using fake data
-    const [qStatus, setQStatus] = useState("post"); // TODO: stop using fake data
-    const [qNum, setQNum] = useState(2); // TODO: stop using fake data
-    const [ansRcvd, setAnsRcvd] = useState(fakeResponses); // TODO: stop using fake data
+    const [boardBlob, setBoardBlob] = useState(
+        {
+            question: { // question data for the current question
+                question: "According to a Beatles song, who kept her face in a jar by the door?",
+                choices: ["Eleanor Rigby", "Loretta Martin", "Molly Jones", "Lady Madonna"],
+                answer: "A",
+                answerText: "Eleanor Rigby",
+                time: defaultQuestionTime
+            },
+            qStatus: "live", // should be "live" or "post"
+            totalQ: 15, // the total # of questions in the game
+            qNum: 3, // The true question number. We'll do the +1 on the front end where needed
+            ansRcvd: [ // this array should update as answers are received
+                ["I am Smarticus","A"],
+                ["The Quizzard of Oz","B"],
+                ["Team Sewer Cougar","C"],
+                ["The Decepticons","D"],
+                ["#AlternativeFacts","D"],
+                ["Taking Care of Quizness","C"],
+                ["Multiple Scoregasms","B"],
+                ["Rebel Scum","A"]
+            ],
+            barData: { // everything to build out the post-question bar graph
+                labels: [ // populated based on current question
+                    "Eleanor Rigby", // A.
+                    "Loretta Martin", // B.
+                    "Molly Jones", // C.
+                    "Lady Madonna" // D.
+                ],
+                datasets: [
+                    {
+                        data: [ // the number of submissions for each answer
+                            2, // A.
+                            4, // B. 
+                            1, // C.
+                            1 // D.
+                        ],
+                        backgroundColor: [ // set colors for the 'post' bar graph
+                            // correct answer color: #34edaf
+                            // wrong answer color: #ed4634
+                            "#34edaf", // A.
+                            "#ed4634", // B.
+                            "#ed4634", // C.
+                            "#ed4634" // D.
+                        ]
+                    }
+                ]
+            } // close barData
+        }
+    );
+
+    // const [numTeams, setNumTeams] = useState();
+    // const [questions, setQuestions] = useState(preQuestions); // TODO: stop using fake data
+    // const [qStatus, setQStatus] = useState("post"); // TODO: stop using fake data
+    // const [qNum, setQNum] = useState(2); // TODO: stop using fake data
+    // const [ansRcvd, setAnsRcvd] = useState(fakeResponses); // TODO: stop using fake data
+    // const [correctAnswerText, setCorrectAnswerText] = useState();
     const [timerData, setTimerData] = useState(fakeTimerData); // TODO: stop using fake data
     const [timesUp, setTimesUp] = useState(false);
     const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
@@ -128,7 +131,6 @@ const BoardQuestion = () => {
             maintainAspectRatio: false,
         }
     );
-    const [correctAnswerText, setCorrectAnswerText] = useState();
     const [barOptions, setBarOptions] = useState(
         {
             legend: {
@@ -162,89 +164,61 @@ const BoardQuestion = () => {
             }
         }
     )
-    const [barData, setBarData] = useState(
-        // fakeBarGraph
-        {
-            labels: [
-                questions[qNum].choices[0],
-                questions[qNum].choices[1],
-                questions[qNum].choices[2],
-                questions[qNum].choices[3]
-            ],
-            datasets: [
-                {
-                    data: [
-                        2,
-                        4,
-                        1,
-                        1
-                    ],
-                    backgroundColor: [
-                        "#ed4634",
-                        "#34edaf",
-                        "#ed4634",
-                        "#ed4634"
-                    ]
-                }
-            ]
-        }
-    ); // TODO: stop using fake data
-    const [pointsWon, setPointsWon] = useState(); // TODO: stop using fake data
 
-    useEffect( () => {
-        console.log("useEffect() triggered");
-        if (questions[qNum].answer === "A") {
-            setCorrectAnswerText(questions[qNum].choices[0])
-        } else if (questions[qNum].answer === "B") {
-            setCorrectAnswerText(questions[qNum].choices[1])
-        } else if (questions[qNum].answer === "C") {
-            setCorrectAnswerText(questions[qNum].choices[2])
-        } else if (questions[qNum].answer === "D") {
-            setCorrectAnswerText(questions[qNum].choices[3])
-        }
-        console.log(correctAnswerText);
-    },[])
+    // useEffect( () => {
+    //     console.log("useEffect() triggered");
+    //     if (boardBlob.question.answer === "A") {
+    //         setCorrectAnswerText(questions[qNum].choices[0])
+    //     } else if (boardBlob.question.answer === "B") {
+    //         setCorrectAnswerText(questions[qNum].choices[1])
+    //     } else if (boardBlob.question.answer === "C") {
+    //         setCorrectAnswerText(questions[qNum].choices[2])
+    //     } else if (boardBlob.question.answer === "D") {
+    //         setCorrectAnswerText(questions[qNum].choices[3])
+    //     }
+    //     console.log(correctAnswerText);
+    // },[])
 
     return(
 
         <div>
 
-            <h1 className="text-center mt-3 question p-3 mb-4">({qNum + 1}/{questions.length}) {questions[qNum].question}</h1>
+            <h1 className="text-center mt-3 question p-3 mb-4">({boardBlob.qNum + 1}/{boardBlob.totalQ}) {boardBlob.question.question}</h1>
 
-            { (qStatus === "live") ?
+            { (boardBlob.qStatus === "live") ?
 
             <LiveQuestion 
-                ans1 = {questions[qNum].choices[0]}
-                ans2 = {questions[qNum].choices[1]}
-                ans3 = {questions[qNum].choices[2]}
-                ans4 = {questions[qNum].choices[3]}
-                ansRcvd = {ansRcvd}
-                timesUp = {timesUp}
-                timerData = {timerData}
+                ans1 = {boardBlob.question.choices[0]}
+                ans2 = {boardBlob.question.choices[1]}
+                ans3 = {boardBlob.question.choices[2]}
+                ans4 = {boardBlob.question.choices[3]}
+                ansRcvd = {boardBlob.ansRcvd}
+                timesUp = {timesUp} // TODO: need to update this one
+                timerData = {timerData} // TODO: need to update this one
+                timerControl = {timerControl} // TODO: need to update this one
+                question = {boardBlob.question}
+                qNum = {boardBlob.qNum}
                 pieOptions = {pieOptions}
-                timerControl = {timerControl}
-                questions = {questions}
-                qNum = {qNum}
             />
 
             :
 
             <PostQuestion
-                ans1 = {questions[qNum].choices[0]}
-                ans2 = {questions[qNum].choices[1]}
-                ans3 = {questions[qNum].choices[2]}
-                ans4 = {questions[qNum].choices[3]}
-                ansLetter = {questions[qNum].answer}
-                correctAnswerText = {correctAnswerText}
-                barData = {barData}
+                ans1 = {boardBlob.question.choices[0]}
+                ans2 = {boardBlob.question.choices[1]}
+                ans3 = {boardBlob.question.choices[2]}
+                ans4 = {boardBlob.question.choices[3]}
+                ansLetter = {boardBlob.question.answer}
+                correctAnswerText = {boardBlob.question.answerText}
+                barData = {boardBlob.barData}
                 barOptions = {barOptions}
             />
 
             }
 
-            <button
+            {/* <button
                 onClick={() => toggleStatus()}
-            >toggle qStatus</button>
+            >toggle qStatus</button> */}
 
         </div>
     )

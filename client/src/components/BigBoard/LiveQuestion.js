@@ -21,13 +21,13 @@ return (
 
             <h2 className="text-center mb-4">Teams Submitted:</h2>
             {props.ansRcvd.map( (item, index) => (
-                <h4 className={ (item[1] === props.questions[props.qNum].answer) ? "firstCorrect" : "" }>{index +1}. {item[0]}</h4>
+                <h4 className={ (item[1] === props.question.answer) ? "firstCorrect" : "" }>{index +1}. {item[0]}</h4>
             ))}
 
         </div>
 
         <div className="liveTimer">
-            { !props.timesUp ? <h2 className="text-center mb-4">Time Remaining:</h2> : <h2 className="text-center mb-4">Time's Up!!!</h2> }
+            { !props.timesUp ? <h2 className="text-center">Time Remaining:</h2> : <h2 className="text-center mb-4">Time's Up!!!</h2> }
             {/* <h2 className="text-center mb-4">Time Remaining:</h2> */}
             {/* <div id="pieHolder"> */}
                 {/* { !timesUp ? <Pie data = {timerData} options = {pieOptions} /> : <h2 className="text-center">Time's Up!</h2> } */}
