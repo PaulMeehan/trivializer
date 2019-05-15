@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import gameAPI from '../../utils/gameAPI';
 
     class User extends React.Component{
 
         state = {
+            
             show: true,
             questionIndex: 0,
             curChoice: "",
@@ -21,6 +23,11 @@ import gameAPI from '../../utils/gameAPI';
                 }
             ]
         }
+
+        
+        
+        
+
 
         handleChoiceClick = (e) => {
             console.log(e.target.value)
@@ -138,8 +145,11 @@ console.log(this.state);
 
 
         return(
-        <div>
-            <div style={{ borderRadius: '5px', fontFamily: 'karmatic arcade', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto', border: '1px solid black' }}>
+        <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+        <nav>
+            <Link to="/" className="navbar-brand"><img style={{ width: '100%'}} src="/trivializer-logo.png" className="logo"/></Link>
+        </nav>
+            <div style={{ borderRadius: '5px', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto' }}>
                  <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/>
                 </div>
             <div>   
@@ -161,7 +171,9 @@ console.log(this.state);
                 </div>
             </div>
             </div>
-            <footer style={{ margin: 'auto', maxWidth: "420px", fontSize: '25px', fontFamily: 'karmatic arcade', textAlign: 'center', color: 'white', backgroundColor: '#9800ff' }}>Trivializer</footer>
+            <footer>            
+                <Link to="/" className="navbar-brand"><img style={{ width: '100%'}} src="/trivializer-logo.png" className="logo"/></Link>
+            </footer>
 
         </div>
         );
