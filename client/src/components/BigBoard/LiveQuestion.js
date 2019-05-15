@@ -1,6 +1,6 @@
 import React from "react";
 import {Pie} from "react-chartjs-2";
-import './LiveQuestion.css';
+// import './LiveQuestion.css';
 
 const LiveQuestion = (props) => {
 
@@ -33,6 +33,8 @@ return (
                 {/* { !timesUp ? <Pie data = {timerData} options = {pieOptions} /> : <h2 className="text-center">Time's Up!</h2> } */}
                 <Pie 
                     data = {props.timerData}
+                    // width = {600}
+                    // height = {600}
                     options = {props.pieOptions}
                 />
             {/* </div> */}

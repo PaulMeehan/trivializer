@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Pie, Bar} from "react-chartjs-2";
 import '../../pages/BigBoard/BigBoard.css';
-import './BoardQuestion.css';
+// import './BoardQuestion.css';
 import LiveQuestion from "../../components/BigBoard/LiveQuestion"
 import PostQuestion from '../../components/BigBoard/PostQuestion';
 
@@ -175,6 +175,7 @@ const BoardQuestion = () => {
                     ticks: {
                         fontColor: "#ffffff",
                         fontSize: 30,
+                        fontFamily: "'Bangers', sans-serif"
                     },
                     gridLines: {
                         color: "#ffffff"
@@ -187,7 +188,10 @@ const BoardQuestion = () => {
                         fontColor: "#ffffff",
                         fontSize: 30,
                         stepSize: 1,
-                    }      
+                    },
+                    gridLines: {
+                        color: "#ffffff"
+                    }     
                 }]
             }
         }

@@ -160,6 +160,7 @@ const StatsBoard = () => {
 
             <HorizontalBar
                 data={answerData} 
+                height = {window.innerHeight * .8}
                 // options = {answerData.options} // TODO: why doesn't this work?
                 options={options}
             />
