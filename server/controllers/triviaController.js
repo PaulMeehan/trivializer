@@ -20,13 +20,11 @@ module.exports = {
     //  time: int
     // }
     console.log('\n****\ngetAllGameQuestions\n****\n')
-    const username = req.user.username
     const _id = req.user._id
-    console.log(username,_id)
     db.User.findOne({ _id })
       .then(user => {
-        console.log(user)
-        res.send(200)
+        console.log(user.game)
+        res.json(user.game)
       })
   },
   addQuestion: (req, res) => {
