@@ -21,7 +21,13 @@ class LandingPage extends React.Component {
       cluster: 'us2',
       forceTLS: true
     })
-    const question = pusher.subscribe('game-question')
+    const game = pusher.subscribe('game-question')
+    game.bind('dp',this.log)
+  }
+
+  log = x => {
+    console.log('\n***\nhere\n***\n')
+    console.log(x)
   }
 
   handleInputChange = e => {

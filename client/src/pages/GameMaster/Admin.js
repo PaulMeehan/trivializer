@@ -17,7 +17,7 @@ const GameMasterAdmin = () => {
 
   useEffect(() => {
     gameAPI.getQuestions()
-      .then(res => setQuestions(res.data))
+      .then(res => setQuestions(res.data.game))
       .catch(err => console.log(err))
   }, [])
 
@@ -25,7 +25,7 @@ const GameMasterAdmin = () => {
     const tempQuestions = [...questions]
     setQuestions(tempQuestions.splice(id,1))
     gameAPI.setQuestions(tempQuestions)
-      .then(res => setQuestions(res.data))
+      .then(res => setQuestions(res.data.game))
       .catch(err => console.log(err))
   }
 
@@ -52,7 +52,7 @@ const GameMasterAdmin = () => {
     }
     tempQuestions.push(newQuestion)
     gameAPI.setQuestions(tempQuestions)
-      .then(res => setQuestions(res.data))
+      .then(res => setQuestions(res.data.game))
       .catch(err => console.log(err))
   }
 
