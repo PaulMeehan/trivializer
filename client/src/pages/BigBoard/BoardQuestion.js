@@ -1,64 +1,49 @@
 import React, {useState, useEffect} from 'react';
 import {Pie, Bar} from "react-chartjs-2";
 import '../../pages/BigBoard/BigBoard.css';
-import './BoardQuestion.css';
-import LiveQuestion from "../../components/BigBoard/LiveQuestion"
+// import './BoardQuestion.css';
+import LiveQuestion from "../../components/BigBoard/LiveQuestion";
 import PostQuestion from '../../components/BigBoard/PostQuestion';
 
-
-    
-
-
-    let preQuestions = [
-        [
-            "According to a Beatles song, who kept her face in a jar by the door?",
-            "Eleanor Rigby",
-            "Loretta Martin",
-            "Molly Jones",
-            "Lady Madonna",
-            "A"
-        ],
-        [
-            "What is the stage name of English female rapper Mathangi Arulpragasam, who is known for the song &quot;Paper Planes&quot;?",
-            "K.I.A.",
-            "C.I.A.",
-            "M.I.A.",
-            "A.I.A.",
-            "C"
-        ],
-        [
-            "Which one of these Rammstein songs has two official music videos?",
-            "Du Hast",
-            "Benzin",
-            "Mein Teil",
-            "Du Riechst So Gut",
-            "D"
-        ],
-        [
-            "Which rock band released the album &quot;The Bends&quot; in March 1995?",
-            "Nirvana",
-            "Radiohead",
-            "Lemonheads",
-            "U2",
-            "B"
-        ],
-        [
-            "Which band recorded the album &quot;Parallel Lines&quot;?",
-            "The Police",
-            "Coldplay",
-            "Paramore",
-            "Blondie",
-            "D"
-        ],
-        [
-            "Which of these aliases has NOT been used by electronic musician Aphex Twin?",
-            "Burial",
-            "Caustic Window",
-            "Bradley Strider",
-            "GAK",
-            "A"
-        ]
-    ]
+const defaultQuestionTime = 180
+const preQuestions = [
+    {
+      question: "According to a Beatles song, who kept her face in a jar by the door?",
+      choices: ["Eleanor Rigby", "Loretta Martin", "Molly Jones", "Lady Madonna"],
+      answer: "A",
+      time: defaultQuestionTime
+    },
+    {
+      question: "What is the stage name of English female rapper Mathangi Arulpragasam, who is known for the song &quot;Paper Planes&quot;?",
+      choices: ["K.I.A.", "C.I.A.", "M.I.A.", "A.I.A."],
+      answer: "C",
+      time: defaultQuestionTime
+    },
+    {
+      question: "Which one of these Rammstein songs has two official music videos?",
+      choices: ["Du Hast", "Benzin", "Mein Teil", "Du Riechst So Gut"],
+      answer: "D",
+      time: defaultQuestionTime
+    },
+    {
+      question: "Which rock band released the album &quot;The Bends&quot; in March 1995?",
+      choices: ["Nirvana", "Radiohead", "Lemonheads", "U2"],
+      answer: "B",
+      time: defaultQuestionTime
+    },
+    {
+      question: "Which band recorded the album &quot;Parallel Lines&quot;?",
+      choices: ["The Police", "Coldplay", "Paramore", "Blondie"],
+      answer: "D",
+      time: defaultQuestionTime
+    },
+    {
+      question: "Which of these aliases has NOT been used by electronic musician Aphex Twin?",
+      choices: ["Burial", "Caustic Window", "Bradley Strider", "GAK"],
+      answer: "A",
+      time: defaultQuestionTime
+    }
+  ]
 
     const fakeResponses = [
         ["I am Smarticus","A"],
@@ -86,32 +71,13 @@ import PostQuestion from '../../components/BigBoard/PostQuestion';
         ]
     }
 
-    const fakeBarGraph = {
-        labels: [
-            'Little Richard',
-            'Carl Perkins',
-            'Elvis Presley',
-            'Jerry Lee Lewis'
-        ],
-        datasets: [
-            {
-                data: [
-                    2,
-                    4,
-                    1,
-                    1
-                ],
-                backgroundColor: [
-                    "#ed4634",
-                    "#34edaf",
-                    "#ed4634",
-                    "#ed4634"
-                ]
-            }
-        ]
-    }
+    
 
 const BoardQuestion = () => {
+
+    // TODO: onload, need to pull all questions
+    // TODO: get the current question #
+    // TODO: get if the question is active
 
     const decrementTimer = () => {
         console.log("decrement run");
@@ -175,6 +141,7 @@ const BoardQuestion = () => {
                     ticks: {
                         fontColor: "#ffffff",
                         fontSize: 30,
+                        fontFamily: "'Bangers', sans-serif"
                     },
                     gridLines: {
                         color: "#ffffff"
@@ -187,24 +154,53 @@ const BoardQuestion = () => {
                         fontColor: "#ffffff",
                         fontSize: 30,
                         stepSize: 1,
-                    }      
+                    },
+                    gridLines: {
+                        color: "#ffffff"
+                    }     
                 }]
             }
         }
     )
-    const [barData, setBarData] = useState(fakeBarGraph); // TODO: stop using fake data
+    const [barData, setBarData] = useState(
+        // fakeBarGraph
+        {
+            labels: [
+                questions[qNum].choices[0],
+                questions[qNum].choices[1],
+                questions[qNum].choices[2],
+                questions[qNum].choices[3]
+            ],
+            datasets: [
+                {
+                    data: [
+                        2,
+                        4,
+                        1,
+                        1
+                    ],
+                    backgroundColor: [
+                        "#ed4634",
+                        "#34edaf",
+                        "#ed4634",
+                        "#ed4634"
+                    ]
+                }
+            ]
+        }
+    ); // TODO: stop using fake data
     const [pointsWon, setPointsWon] = useState(); // TODO: stop using fake data
 
     useEffect( () => {
         console.log("useEffect() triggered");
-        if (questions[qNum][5] === "A") {
-            setCorrectAnswerText(questions[qNum][1])
-        } else if (questions[qNum][5] === "B") {
-            setCorrectAnswerText(questions[qNum][2])
-        } else if (questions[qNum][5] === "C") {
-            setCorrectAnswerText(questions[qNum][3])
-        } else if (questions[qNum][5] === "D") {
-            setCorrectAnswerText(questions[qNum][4])
+        if (questions[qNum].answer === "A") {
+            setCorrectAnswerText(questions[qNum].choices[0])
+        } else if (questions[qNum].answer === "B") {
+            setCorrectAnswerText(questions[qNum].choices[1])
+        } else if (questions[qNum].answer === "C") {
+            setCorrectAnswerText(questions[qNum].choices[2])
+        } else if (questions[qNum].answer === "D") {
+            setCorrectAnswerText(questions[qNum].choices[3])
         }
         console.log(correctAnswerText);
     },[])
@@ -213,15 +209,15 @@ const BoardQuestion = () => {
 
         <div>
 
-            <h1 className="text-center mt-3 question p-3 mb-4">({qNum + 1}/{questions.length}) {questions[qNum][0]}</h1>
+            <h1 className="text-center mt-3 question p-3 mb-4">({qNum + 1}/{questions.length}) {questions[qNum].question}</h1>
 
             { (qStatus === "live") ?
 
             <LiveQuestion 
-                ans1 = {questions[qNum][1]}
-                ans2 = {questions[qNum][2]}
-                ans3 = {questions[qNum][3]}
-                ans4 = {questions[qNum][4]}
+                ans1 = {questions[qNum].choices[0]}
+                ans2 = {questions[qNum].choices[1]}
+                ans3 = {questions[qNum].choices[2]}
+                ans4 = {questions[qNum].choices[3]}
                 ansRcvd = {ansRcvd}
                 timesUp = {timesUp}
                 timerData = {timerData}
@@ -234,7 +230,11 @@ const BoardQuestion = () => {
             :
 
             <PostQuestion
-                ansLetter = {questions[qNum][5]}
+                ans1 = {questions[qNum].choices[0]}
+                ans2 = {questions[qNum].choices[1]}
+                ans3 = {questions[qNum].choices[2]}
+                ans4 = {questions[qNum].choices[3]}
+                ansLetter = {questions[qNum].answer}
                 correctAnswerText = {correctAnswerText}
                 barData = {barData}
                 barOptions = {barOptions}

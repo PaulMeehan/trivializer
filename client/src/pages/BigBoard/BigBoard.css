@@ -14,9 +14,9 @@ h1.question {
     color:#971DFF;
 }
 
-canvas {
+/* canvas {
     height: 85vh !important;
-}
+} */
 
 div.liveQuestion {
     width: 30%;
@@ -57,12 +57,12 @@ h4.firstCorrect {
 
 .postAnswers {
     width: 90%;
-    height: 80%;
+    /* height: 80%; */
     float: left;
     margin: 0;
     margin-left: 5%;
     margin-right: 5%;
-    padding: 20px
+    padding: 20px;
 }
 
 .postTeams {
