@@ -25,6 +25,7 @@ module.exports = {
       .then(user => {
         console.log(user.game)
         res.json(user.game)
+        // return game + isActive(false) + qNum
       })
   },
   addQuestion: (req, res) => {
@@ -53,7 +54,23 @@ module.exports = {
     //
     // }
     console.log('\n****\nnextQuestion\n****\n')
-    pusher.trigger('game-question', 'new-question', {message: 'nextQuestion fired from trigger'})
+    const _id = req.user._id;
+    console.log ("_id:" + _id);
+    var nextQNum = -1;
+    var nextQuestion = "";
+    var userName = "";
+    db.User.findOne( { _id: _id } )
+      .then(response => {
+        console.log("response = " + response);
+        nextQNum = response.qNum + 1;
+        userName = response.username;
+        nextQuestion = response.game[nextQNum].question;
+        console.log("nextQNum:" + nextQNum);
+        console.log("userName:" + userName);
+        console.log("nextQuestion: " + nextQuestion);
+      })
+    pusher.trigger('game-question', nextQuestion.toString(), {message: 'nextQuestion fired from trigger'})
+    // res.json(next question number)
     res.send(200)
   },
   endQuestion: (req, res) => {
@@ -62,6 +79,7 @@ module.exports = {
     // post  /api/end
     // TODO: will require pusher to broadcast end question
     console.log('\n****\nendQuestion\n****\n')
+    pusher.trigger('game-question', 'new-question', { message: 'nextQuestion fired from trigger' })
     res.send(200)
   },
   submitAnswer: (req, res) => {
