@@ -45,8 +45,7 @@ const preQuestions = [
 
 const GameMasterAdmin = () => {
 
-  const [questions, setQuestions] = useState(preQuestions);
-  // const [questions, setQuestions] = useState();
+  const [questions, setQuestions] = useState([]);
   const [newQ, setNewQ] = useState();
   const [newA1, setNewA1] = useState();
   const [newA2, setNewA2] = useState();
@@ -55,38 +54,19 @@ const GameMasterAdmin = () => {
   const [newCorrect, setNewCorrect] = useState();
 
   const getQuestions = () => {
-    // /api/questions
-    // GET request
-    console.log("getQuestions triggered");
     gameAPI.getQuestions()
-      .then(res => {
-        console.log(res.data)
-        setQuestions(res.data)
-      })
+      .then(res => setQuestions(res.data))
       .catch(err => console.log(err))
   }
 
-  useEffect( () => {
-    // 1st arg: callback
-    // 2nd arg: array of variables to watch
-    // if empty, runs once.
-    getQuestions()
-    }, []
-  )
+  useEffect(() => { getQuestions() }, [])
 
   const deleteQuestion = (id) => {
-    console.log("deleteQuestion triggered");
     const tempQuestions = [...questions];
-    const throwAway = tempQuestions.splice(id,1);
+    tempQuestions.splice(id,1);
     setQuestions(tempQuestions);
-    // console.log(questions)
-    // not sure why it will write throwAway to state but not tempQuestions
     gameAPI.setQuestions(tempQuestions)
-      .then(res => {
-        console.log("positive response to delete question");
-        console.log(res.data);
-        // getQuestions();
-      })
+      .then(res => setQuestions(res.data))
       .catch(err => console.log(err))
   }
 
@@ -106,8 +86,7 @@ const GameMasterAdmin = () => {
   }
 
   const printState = () => {
-    console.log(newQ,"\n",newA2,"\n",newA3,"\n",newA4,"\n",newCorrect);
-    console.log(questions)
+    console.log(newQ,"\n",newA2,"\n",newA3,"\n",newA4,"\n",newCorrect,"\n",questions);
   }
 
   const addQuestion = () => {
@@ -191,7 +170,8 @@ const GameMasterAdmin = () => {
         <div className="col-md-12">
           <h2>Saved Questions:</h2>
           <div className="container">
-            {
+          {questions?
+            (
               questions.map( (question, i) => {
                 return (
                   <AdminGameDiv
@@ -208,7 +188,9 @@ const GameMasterAdmin = () => {
                   />
                 )
               })
-            }
+            ) : (
+              <h3>No current questions</h3>
+            ) }
           </div>
         </div>
       </div>
