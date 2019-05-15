@@ -55,7 +55,19 @@ module.exports = {
     //
     // }
     console.log('\n****\nnextQuestion\n****\n')
-    pusher.trigger('game-question', 'new-question', {message: 'nextQuestion fired from trigger'})
+    const nextQNum = -1;
+    const nextQuestion = "";
+    const userName = "";
+    db.User.find( { _id: _id } )
+      .then(response => {
+        nextQNum = response.qNum + 1;
+        userName = response.username;
+        nextQuestion = response.game[nextQNum].question;
+        console.log("nextQNum:" + nextQNum);
+        console.log("userName:" + userName);
+        console.log("nextQuestion: " + nextQuestion);
+      })
+    // pusher.trigger('game-question', 'new-question', {message: 'nextQuestion fired from trigger'})
     res.send(200)
   },
   endQuestion: (req, res) => {
