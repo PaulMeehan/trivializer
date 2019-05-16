@@ -21,37 +21,11 @@ const prepQuestions = questions => {
   q.game = questions.game
   q.qNum = questions.qNum
   q.isActive = questions.questionActive
+  q.gameActive = questions.gameActive
   return q
 }
 const prepAnswers = (answers, qNum) => {
   const a = []
-  /* will be
-    answers = [
-      {
-        hostname: 'dp',
-        qNum: 1,
-        playerName: 'elvis',
-        response: 'A',
-        points: 0
-      },
-      {
-        hostname: 'dp',
-        qNum: 2,
-        playerName: 'elvis',
-        response: 'B'
-        points: 2
-      },
-      {
-        hostname: 'dp',
-        qNum: 1,
-        playerName: 'mark',
-        response: 'C',
-        points: 1
-      },
-      etc...
-    ]
-    needs to be [[playerName, response], [playerName, response], etc...]
-  */
   for (let i in answers) {
     if (answers[i].qNum === qNum) {
       a.push([answers[i].playerName, answers[i].response])
@@ -74,7 +48,7 @@ const prepCurrentGameQuestion = (questions, answers) => {
   */
   q.question = q.game[Math.max(0,q.qNum)]
   q.question.answerText = q.question.choices[alphabet.indexOf(q.question.answer)]
-  q.qNum = Math.max(0, q.qNum)
+  q.qNum = q.qNum
   q.totalQ = q.game.length
 
   /*
@@ -120,7 +94,6 @@ const prepCurrentGameQuestion = (questions, answers) => {
 
 module.exports = {
   getAllGameQuestions: (req, res) => {
-    console.log('\n****\ngetAllGameQuestions\n****\n')
     const _id = req.user._id
     db.User.findOne({ _id })
     .then(user => {
@@ -128,7 +101,6 @@ module.exports = {
     })
   },
   addQuestion: (req, res) => {
-    console.log('\n****\naddQuestion\n****\n')
     const _id = req.user._id
     const questions = req.body
     db.User.update( { _id }, {
@@ -136,7 +108,6 @@ module.exports = {
         game: questions
       }
     }).then(confirm => {
-      console.log(confirm)
       db.User.findOne({ _id })
         .then(record => {
           res.json(prepQuestions(record))
@@ -144,7 +115,6 @@ module.exports = {
     })
   },
   nextQuestion: (req, res) => {
-    console.log('\n****\nnextQuestion\n****\n')
     const _id = req.user._id
     const host = req.user.username
     // get current qNum
@@ -173,8 +143,8 @@ module.exports = {
             // clear out prior answers to prevent contamination
             db.GameResponse.remove({hostName: host})
             .then(cleared => {
-                pusher.trigger('game-question', host, newGame)
-              res.json(newGame)
+              pusher.trigger('game-question', host, newGame)
+              res.json(prepQuestions(newRec))
             })
           })
         })
@@ -192,10 +162,10 @@ module.exports = {
           .then(newRec => {
             db.GameResponse.find({ hostName: host })
             .then(answers => {
-              newRec.qNum = totalQuestionNumber - 1
+              // newRec.qNum = totalQuestionNumber - 1
               const gameSummary = prepCurrentGameQuestion(newRec, answers)
               pusher.trigger('game-question', host, gameSummary)
-              res.json(gameSummary)
+              res.json(prepQuestions(newRec))
             })
           })
         })
@@ -212,7 +182,7 @@ module.exports = {
             .then(answers => {
               const gameStatus = prepCurrentGameQuestion(newRec, answers)
               pusher.trigger('game-question', host, gameStatus)
-              res.json(gameStatus)
+              res.json(prepQuestions(newRec))
             })
           })
         })
@@ -220,7 +190,6 @@ module.exports = {
     })
   },
   endQuestion: (req, res) => {
-    console.log('\n****\nendQuestion\n****\n')
     const _id = req.user._id
     const host = req.user.username
     db.User.update({ _id }, { $set: { questionActive: false }})
@@ -231,16 +200,12 @@ module.exports = {
         .then(answers => {
           const game = prepCurrentGameQuestion(user, answers)
           pusher.trigger('game-question', host, game)
-          res.json(game)
+          res.json(prepQuestions(user))
         })
       })
     })
-
-    pusher.trigger('game-question', 'new-question', { message: 'nextQuestion fired from trigger' })
-    res.send(200)
   },
   submitAnswer: (req, res) => {
-    console.log('\n****\nsubmitAnswer\n****\n')
     const player = req.user.username
     const host = req.params.host
     const qNum = req.params.qNum
@@ -249,24 +214,23 @@ module.exports = {
     db.GameResponse.find({ hostName: host, playerName: player, qNum: qNum })
     .then(found => {
       if (found.length) {
-        console.log('\nplayer already answered\n', found)
         return res.send(200)
       }
       // make sure the question and game are both active
       db.User.find({ username: host })
       .then(game => {
-        if (!game[0].gameActive || !game[0].questionActive) {
-          console.log('\ngame and/or question are not active\n')
+        game = game[0]
+        if (!game.gameActive || !game.questionActive || qNum != game.qNum) {
           return res.send(200)
         }
         // game & question are both active and user hasn't submitted an answer yet
         // now check if they are right
-        if (game.game[qNum].answer === choice) {  // correct answer
+        if (game.game[qNum].answer === choice.toUpperCase()) {  // correct answer
           // were they the first correct answer?
           db.GameResponse.find({ hostName: host, qNum: qNum, points: 2 })
           .then(someoneElse => {
             let points = 1
-            if (!someoneElse) points = 2
+            if (someoneElse.length) points = 2
             db.GameResponse.create({
               hostName: host,
               playerName: player,
@@ -305,46 +269,90 @@ module.exports = {
     })
   },
   getQuestion: (req, res) => {
-    // get from player on game-play screen
-    // need: gameId or hostId
-    // get /api/:GAMEID
-    console.log('\n****\ngetQuestion\n****\n')
-    res.send(200)
+    const host = req.params.host
+    const player = req.user.username
+    // see if the question is active
+    db.User.findOne({ username: host })
+    .then(game => {
+      if (!game.gameActive || !game.questionActive) return res.json({message:'No active question'})
+      // see if the player has answered already
+      db.GameResponse.find({ hostName: host, qNum: game.qNum, playerName: player })
+      .then(answered => {
+        if (answered.length) return res.json({message:'You already answered this question'})
+        res.json(prepCurrentGameQuestion(game))
+      })
+    })
   },
   endGame: (req, res) => {
-    // post from host
-    // need: host userId
-    // post /api/endGame
-    // TODO: will require pusher to broadcast end game
-    console.log('\n****\nendGame\n****\n')
-    res.send(200)
+    const _id = req.user._id
+    const host = req.user.username
+    db.User.update({ _id }, { $set: { gameActive: false, questionActive: false }})
+    .then(updated => {
+      db.User.findOne({ _id })
+      .then(game => {
+        db.GameResponse.find({ hostName: host })
+        .then(answers => {
+          const response = prepCurrentGameQuestion(game, answers)
+          pusher.trigger('game-question', host, game)
+          console.log(prepQuestions(game))
+          res.json(prepQuestions(game))
+        })
+      })
+    })
   },
   scoreBoard: (req, res) => {
-    /*  get from host
-        need: host userId
-        get /api/scoreBoard
-        Client needs:
-          {
-            labels: [team names],
-            datasets: [
-              { data: [team scores] },
-              { backgroundColor: [colors of bars] }, // leader - #34edaf", everyone else #ed4634"
-            ],
-            options: {
-              responsive: true,
-              scales : {
-                xAxes: [{
-                  ticks:  {
-                    beginAtZero: true,
-                    min: 0,
-                    max: {TOTAL NUMBER OF QUESTIONS IN GAME}
-                  }
-                }]
-              }
+    const hostName = req.user.username
+    const _id = req.user._id
+    db.GameResponse.find({ hostName })
+    .then(responses => {
+      const labels = [], data = [], backGroundColor = []
+      let max = 0
+      // make labels (teamNames)
+      for (let i in responses) {
+        if (labels.indexOf(responses[i].playerName) === -1) labels.push(responses[i].playerName)
+      }
+      // tally team scores
+      for (let i in labels) {
+        let teamScore = 0
+        for (let j in responses) {
+          if (responses[j].playerName === labels[i]) teamScore += parseInt(responses[j].points)
+        }
+        data.push(teamScore)
+      }
+      // get highScore value
+      let highScore = 0
+      for (let i in data) highScore = Math.max(highScore, data[i])
+      //make backgroundColors
+      for (let i in data) {
+        let color = '#ed4634'
+        if (data[i] === highScore) color = '#34edaf'
+        backGroundColor.push(color)
+      }
+      // get game length
+      db.User.findOne({ _id })
+      .then(game => {
+        game = prepCurrentGameQuestion(game)
+        const response = {
+          labels: labels,
+          datasets: [
+            { data: data },
+            { backgroundColor: backGroundColor }
+          ],
+          options: {
+            responsive: true,
+            scales : {
+              xAxes: [{
+                ticks:  {
+                  beginAtZero: true,
+                  min: 0,
+                  max: game.game.length
+                }
+              }]
             }
           }
-    */
-   console.log('\n****\nscoreBoard\n****\n')
-   res.send(200)
+        }
+        res.json(response)
+      })
+    })
   }
 }
