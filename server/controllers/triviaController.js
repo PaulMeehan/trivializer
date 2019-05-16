@@ -123,9 +123,9 @@ module.exports = {
     console.log('\n****\ngetAllGameQuestions\n****\n')
     const _id = req.user._id
     db.User.findOne({ _id })
-      .then(user => {
-        res.json(prepQuestions(user))
-      })
+    .then(user => {
+      res.json(prepQuestions(user))
+    })
   },
   addQuestion: (req, res) => {
     console.log('\n****\naddQuestion\n****\n')
@@ -146,95 +146,163 @@ module.exports = {
   nextQuestion: (req, res) => {
     console.log('\n****\nnextQuestion\n****\n')
     const _id = req.user._id
-    const username = req.user.username
+    const host = req.user.username
     // get current qNum
     db.User.findOne( { _id } )
-      .then(user => {
-        const rec = prepQuestions(user)
-        const totalQuestionNumber = rec.game.length - 1
-        const nextQ = rec.qNum + 1
+    .then(user => {
+      const rec = prepQuestions(user)
+      const totalQuestionNumber = rec.game.length - 1
+      const nextQ = rec.qNum + 1
 
-        /*
-          start game logic
-        */
-        if (rec.qNum < 0) { // game is starting
-          // set game, question to active, iterate qNum, push next question & finish
-          db.User.update({ _id }, {
-            $set: {
-              qNum: nextQ,
-              questionActive: true,
-              gameActive: true
-            }
-          })
-            .then(success => {  // pull game data, parse appropriately & push response
-              db.User.findOne({ _id })
-                .then(newRec => {
-                  const newGame = prepCurrentGameQuestion(newRec)
-                  // clear out prior answers to prevent contamination
-                  db.GameResponse.remove({hostName: username})
-                  .then(cleared => {
-                    pusher.trigger('game-question', username, newGame)
-                    res.json(newGame)
-                  })
-                })
-            })
-
-        }
-        else if (rec.qNum === totalQuestionNumber) { // set game to inactive & push end game function
-          db.User.update({ _id }, {
-            $set: {
-              qNum: -1,
-              questionActive: false,
-              gameActive: false
-            }
-          })
-            .then(gameOver => { // pull answers & push answers
-              db.User.findOne({ _id })
-                .then(newRec => {
-                  db.GameResponse.find({ hostName: username })
-                    .then(answers => {
-                      newRec.qNum = totalQuestionNumber - 1
-                      const gameSummary = prepCurrentGameQuestion(newRec, answers)
-                      pusher.trigger('game-question', username, gameSummary)
-                      res.json(gameSummary)
-                    })
-                })
-            })
-        }
-        else {  // we are in the middle of the game, iterate qNum & push next question
-          db.User.update({ _id }, { $set: {
+      /*
+        start game logic
+      */
+      if (rec.qNum < 0) { // game is starting
+        // set game, question to active, iterate qNum, push next question & finish
+        db.User.update({ _id }, {
+          $set: {
             qNum: nextQ,
-            questionActive: true
-          }})
-            .then(success => {
-              db.User.findOne({ _id })
-                .then(newRec => {
-                  db.GameResponse.find({ hostName: username })
-                    .then(answers => {
-                      const gameStatus = prepCurrentGameQuestion(newRec, answers)
-                      pusher.trigger('game-question', username, gameStatus)
-                      res.json(gameStatus)
-                    })
-                })
+            questionActive: true,
+            gameActive: true
+          }
+        })
+        .then(success => {  // pull game data, parse appropriately & push response
+          db.User.findOne({ _id })
+          .then(newRec => {
+            const newGame = prepCurrentGameQuestion(newRec)
+            // clear out prior answers to prevent contamination
+            db.GameResponse.remove({hostName: host})
+            .then(cleared => {
+                pusher.trigger('game-question', host, newGame)
+              res.json(newGame)
             })
-        }
-      })
+          })
+        })
+      }
+      else if (rec.qNum === totalQuestionNumber || !user.gameActive) { // set game to inactive & push end game function
+        db.User.update({ _id }, {
+          $set: {
+            qNum: -1,
+            questionActive: false,
+            gameActive: false
+          }
+        })
+        .then(gameOver => { // pull answers & push answers
+          db.User.findOne({ _id })
+          .then(newRec => {
+            db.GameResponse.find({ hostName: host })
+            .then(answers => {
+              newRec.qNum = totalQuestionNumber - 1
+              const gameSummary = prepCurrentGameQuestion(newRec, answers)
+              pusher.trigger('game-question', host, gameSummary)
+              res.json(gameSummary)
+            })
+          })
+        })
+      }
+      else {  // we are in the middle of the game, iterate qNum & push next question
+        db.User.update({ _id }, { $set: {
+          qNum: nextQ,
+          questionActive: true
+        }})
+        .then(success => {
+          db.User.findOne({ _id })
+          .then(newRec => {
+            db.GameResponse.find({ hostName: host })
+            .then(answers => {
+              const gameStatus = prepCurrentGameQuestion(newRec, answers)
+              pusher.trigger('game-question', host, gameStatus)
+              res.json(gameStatus)
+            })
+          })
+        })
+      }
+    })
   },
   endQuestion: (req, res) => {
-    // post from host on 'game management' screen
-    // need: host userId
-    // post  /api/end
-    // TODO: will require pusher to broadcast end question
     console.log('\n****\nendQuestion\n****\n')
+    const _id = req.user._id
+    const host = req.user.username
+    db.User.update({ _id }, { $set: { questionActive: false }})
+    .then(confirm => {
+      db.User.findOne({ _id })
+      .then(user => {
+        db.GameResponse.find({ hostName: host })
+        .then(answers => {
+          const game = prepCurrentGameQuestion(user, answers)
+          pusher.trigger('game-question', host, game)
+          res.json(game)
+        })
+      })
+    })
+
     pusher.trigger('game-question', 'new-question', { message: 'nextQuestion fired from trigger' })
     res.send(200)
   },
   submitAnswer: (req, res) => {
-    // post from player on game-play screen
-    // need: player userId, gameId or hostId, question number, answer
-    // post /api/:GAMEID/:qNum/:choice
     console.log('\n****\nsubmitAnswer\n****\n')
-    res.send(200)
+    const player = req.user.username
+    const host = req.params.host
+    const qNum = req.params.qNum
+    const choice = req.params.choice
+    // make sure they haven't already answered this question
+    db.GameResponse.find({ hostName: host, playerName: player, qNum: qNum })
+    .then(found => {
+      if (found.length) {
+        console.log('\nplayer already answered\n', found)
+        return res.send(200)
+      }
+      // make sure the question and game are both active
+      db.User.find({ username: host })
+      .then(game => {
+        if (!game[0].gameActive || !game[0].questionActive) {
+          console.log('\ngame and/or question are not active\n')
+          return res.send(200)
+        }
+        // game & question are both active and user hasn't submitted an answer yet
+        // now check if they are right
+        if (game.game[qNum].answer === choice) {  // correct answer
+          // were they the first correct answer?
+          db.GameResponse.find({ hostName: host, qNum: qNum, points: 2 })
+          .then(someoneElse => {
+            let points = 1
+            if (!someoneElse) points = 2
+            db.GameResponse.create({
+              hostName: host,
+              playerName: player,
+              qNum: qNum,
+              response: choice,
+              points: points
+            })
+            .then(answerRecorded => {
+              db.GameResponse.find({ hostName: host, qNum: qNum })
+              .then(answers => {
+                const gameStatus = prepCurrentGameQuestion(game, answers)
+                pusher.trigger('game-question', host, gameStatus)
+                res.json(gameStatus)
+              })
+            })
+          })
+        }
+        else {  // incorrect answer
+          db.GameResponse.create({
+            hostName: host,
+            playerName: player,
+            qNum: qNum,
+            response: choice,
+            points: 0
+          })
+          .then(answerRecorded => {
+            db.GameResponse.find({ hostName: host, qNum: qNum })
+            .then(answers => {
+              const gameStatus = prepCurrentGameQuestion(game, answers)
+              pusher.trigger('game-question', host, gameStatus)
+              res.json(gameStatus)
+            })
+          })
+        }
+      })
+    })
   },
   getQuestion: (req, res) => {
     // get from player on game-play screen

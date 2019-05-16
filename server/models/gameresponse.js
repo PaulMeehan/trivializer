@@ -17,10 +17,10 @@ const gameResponseSchema = new Schema({
     type: String,
     required: true
   },
-  answerGiven:
+  response:
   {
     type: String,
-    default: 'Did Not Answer'
+    default: 'No Answer'
   },
   points:
   {
