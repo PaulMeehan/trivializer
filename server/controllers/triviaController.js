@@ -93,7 +93,6 @@ const prepCurrentGameQuestion = (questions, answers) => {
 
 module.exports = {
   getAllGameQuestions: (req, res) => {
-    console.log('\n****\ngetAllGameQuestions\n****\n')
     const _id = req.user._id
     db.User.findOne({ _id })
     .then(user => {
@@ -101,7 +100,6 @@ module.exports = {
     })
   },
   addQuestion: (req, res) => {
-    console.log('\n****\naddQuestion\n****\n')
     const _id = req.user._id
     const questions = req.body
     db.User.update( { _id }, {
@@ -109,7 +107,6 @@ module.exports = {
         game: questions
       }
     }).then(confirm => {
-      console.log(confirm)
       db.User.findOne({ _id })
         .then(record => {
           res.json(prepQuestions(record))
@@ -117,7 +114,6 @@ module.exports = {
     })
   },
   nextQuestion: (req, res) => {
-    console.log('\n****\nnextQuestion\n****\n')
     const _id = req.user._id
     const host = req.user.username
     // get current qNum
@@ -193,7 +189,6 @@ module.exports = {
     })
   },
   endQuestion: (req, res) => {
-    console.log('\n****\nendQuestion\n****\n')
     const _id = req.user._id
     const host = req.user.username
     db.User.update({ _id }, { $set: { questionActive: false }})
@@ -213,7 +208,6 @@ module.exports = {
     res.send(200)
   },
   submitAnswer: (req, res) => {
-    console.log('\n****\nsubmitAnswer\n****\n')
     const player = req.user.username
     const host = req.params.host
     const qNum = req.params.qNum
@@ -222,7 +216,6 @@ module.exports = {
     db.GameResponse.find({ hostName: host, playerName: player, qNum: qNum })
     .then(found => {
       if (found.length) {
-        // console.log('\nplayer already answered\n', found)
         return res.send(200)
       }
       // make sure the question and game are both active
@@ -230,7 +223,6 @@ module.exports = {
       .then(game => {
         game = game[0]
         if (!game.gameActive || !game.questionActive || qNum != game.qNum) {
-          // console.log('\ngame and/or question are not active or qNum is old\n')
           return res.send(200)
         }
         // game & question are both active and user hasn't submitted an answer yet
@@ -279,7 +271,6 @@ module.exports = {
     })
   },
   getQuestion: (req, res) => {
-    console.log('\n****\ngetQuestion\n****\n')
     const host = req.params.host
     const player = req.user.username
     // see if the question is active
@@ -289,46 +280,79 @@ module.exports = {
       // see if the player has answered already
       db.GameResponse.find({ hostName: host, qNum: game.qNum, playerName: player })
       .then(answered => {
-        console.log(answered)
         if (answered.length) return res.json({message:'You already answered this question'})
         res.json(prepCurrentGameQuestion(game))
       })
     })
   },
   endGame: (req, res) => {
-    // post from host
-    // need: host userId
-    // post /api/endGame
-    // TODO: will require pusher to broadcast end game
-    console.log('\n****\nendGame\n****\n')
-    res.send(200)
+    const _id = req.user._id
+    const host = req.user.username
+    db.User.update({ _id }, { $set: { gameActive: false, questionActive: false }})
+    .then(updated => {
+      db.User.findOne({ _id })
+      .then(game => {
+        db.GameResponse.find({ hostName: host })
+        .then(answers => {
+          const response = prepCurrentGameQuestion(game, answers)
+          res.json(response)
+        })
+      })
+    })
   },
   scoreBoard: (req, res) => {
-    /*  get from host
-        need: host userId
-        get /api/scoreBoard
-        Client needs:
-          {
-            labels: [team names],
-            datasets: [
-              { data: [team scores] },
-              { backgroundColor: [colors of bars] }, // leader - #34edaf", everyone else #ed4634"
-            ],
-            options: {
-              responsive: true,
-              scales : {
-                xAxes: [{
-                  ticks:  {
-                    beginAtZero: true,
-                    min: 0,
-                    max: {TOTAL NUMBER OF QUESTIONS IN GAME}
-                  }
-                }]
-              }
+    const hostName = req.user.username
+    const _id = req.user._id
+    db.GameResponse.find({ hostName })
+    .then(responses => {
+      const labels = [], data = [], backGroundColor = []
+      let max = 0
+      // make labels (teamNames)
+      for (let i in responses) {
+        if (labels.indexOf(responses[i].playerName) === -1) labels.push(responses[i].playerName)
+      }
+      // tally team scores
+      for (let i in labels) {
+        let teamScore = 0
+        for (let j in responses) {
+          if (responses[j].playerName === labels[i]) teamScore += parseInt(responses[j].points)
+        }
+        data.push(teamScore)
+      }
+      // get highScore value
+      let highScore = 0
+      for (let i in data) highScore = Math.max(highScore, data[i])
+      //make backgroundColors
+      for (let i in data) {
+        let color = '#ed4634'
+        if (data[i] === highScore) color = '#34edaf'
+        backGroundColor.push(color)
+      }
+      // get game length
+      db.User.findOne({ _id })
+      .then(game => {
+        game = prepCurrentGameQuestion(game)
+        const response = {
+          labels: labels,
+          datasets: [
+            { data: data },
+            { backgroundColor: backGroundColor }
+          ],
+          options: {
+            responsive: true,
+            scales : {
+              xAxes: [{
+                ticks:  {
+                  beginAtZero: true,
+                  min: 0,
+                  max: game.game.length
+                }
+              }]
             }
           }
-    */
-   console.log('\n****\nscoreBoard\n****\n')
-   res.send(200)
+        }
+        res.json(response)
+      })
+    })
   }
 }
