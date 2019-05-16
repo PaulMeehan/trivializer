@@ -2,6 +2,10 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import gameAPI from '../../utils/gameAPI';
+import PageVisibility from 'react-page-visibility';
+
+let initialIncrement = 0;
+// let runChecker = setInterval(check,1000);
 
 class User extends React.Component{
 
