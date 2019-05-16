@@ -2,10 +2,8 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import gameAPI from '../../utils/gameAPI';
-import PageVisibility from 'react-page-visibility';
 
-let initialIncrement = 0;
-// let runChecker = setInterval(check,1000);
+
 
     class User extends React.Component{
 
@@ -28,8 +26,15 @@ let initialIncrement = 0;
             ]
         }
 
-        
-        
+        componentWillMount () {
+            Pusher.logToConsole = true
+            const pusher = new Pusher('e5795cf1dfac2a8aee31', {
+              cluster: 'us2',
+              forceTLS: true
+            })
+            const game = pusher.subscribe('game-question')
+            game.bind('   something here   ',this.log)
+        }
         
 
 
@@ -47,75 +52,10 @@ let initialIncrement = 0;
                 alert("Wrong")
             }
         }
-    // let preQuestions = [
-    //     [
-    //         "According to a Beatles song, who kept her face in a jar by the door?",
-    //         "Eleanor Rigby",
-    //         "Loretta Martin",
-    //         "Molly Jones",
-    //         "Lady Madonna",
-    //         "A"
-    //     ],
-    //     [
-    //         "What is the stage name of English female rapper Mathangi Arulpragasam, who is known for the song &quot;Paper Planes&quot;?",
-    //         "K.I.A.",
-    //         "C.I.A.",
-    //         "M.I.A.",
-    //         "A.I.A.",
-    //         "C"
-    //     ],
-    //     [
-    //         "Which one of these Rammstein songs has two official music videos?",
-    //         "Du Hast",
-    //         "Benzin",
-    //         "Mein Teil",
-    //         "Du Riechst So Gut",
-    //         "D"
-    //     ],
-    //     [
-    //         "Which rock band released the album &quot;The Bends&quot; in March 1995?",
-    //         "Nirvana",
-    //         "Radiohead",
-    //         "Lemonheads",
-    //         "U2",
-    //         "B"
-    //     ],
-    //     [
-    //         "Which band recorded the album &quot;Parallel Lines&quot;?",
-    //         "The Police",
-    //         "Coldplay",
-    //         "Paramore",
-    //         "Blondie",
-    //         "D"
-    //     ],
-    //     [
-    //         "Which of these aliases has NOT been used by electronic musician Aphex Twin?",
-    //         "Burial",
-    //         "Caustic Window",
-    //         "Bradley Strider",
-    //         "GAK",
-    //         "A"
-    //     ]
-    // ]
     
     
-    // check = () => {
-    //     initialIncrement++;
-    //     if (initialIncrement > 9) {
-    //         // add logic to delete last child div before adding a new one once there are three results on the page
-    //         $(".log").first().remove()
-    //     }
-    //     if ( document.hidden === "true" || document.visibilityState === "hidden" ) {
-    //         clearInterval(runChecker);
-    //         $("#container").empty();
-    //         let newDiv = $("<div>");
-    //         newDiv.html("<h1>You're horrible human being.</h1>");
-    //         $("#container").append(newDiv);
-    //     } else {
-    //         createLogLine();
-    //     }
-        
-    // }
+    
+  
     
     
 
@@ -136,9 +76,7 @@ let initialIncrement = 0;
             })
     }
 
-    // useEffect( () => {
-    //     getQuestions();
-    // },[]);
+    
 
     
 render(){
@@ -156,12 +94,6 @@ console.log(this.state);
         }
     ]
 
-    // const [questions, setQuestions] = useState(preQuestions);
-    // const [currentQNumber,setCurrentQNumber] = useState(); 
-    // const [isActive,setIsActive] = useState();
-    // // const [timerData, setTimerData] = useState(baseTimerData); // not doing anything at the moment
-    // const [choice, setChoice] = useState();
-    // console.log(choice, questions, setQuestions);
 
 
     return(
@@ -170,7 +102,7 @@ console.log(this.state);
                 <Link to="/" className="navbar-brand"><img style={{ width: '100%'}} src="/trivializer-logo.png" alt="" className="logo"/></Link>
             </nav>
             <div style={{ borderRadius: '5px', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto' }}>
-                 <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/>
+                <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/>
                 </div>
                 <div>   
                     <h1 style={{ textAlign: 'center', color: 'black'}}>Question: { this.state.questionIndex + 1 } </h1>
@@ -194,8 +126,10 @@ console.log(this.state);
             <footer>            
                 <Link to="/" className="navbar-brand"><img style={{ width: '100%'}} src="/trivializer-logo.png" alt="" className="logo"/></Link>
             </footer>
-
+           
+            
         </div>
+        
         );
     }
 }
