@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+
 import gameAPI from '../../utils/gameAPI';
+
+
 
 
 
@@ -96,6 +99,8 @@ console.log(this.state);
 
 
 
+
+  render(){
     return(
         <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
             <nav>
@@ -132,8 +137,7 @@ console.log(this.state);
         
         );
     }
+
 }
-
-
 
 export default User;

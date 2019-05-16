@@ -1,39 +1,34 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const gameresponseSchema = new Schema({
-  ownerId_fk: 
-  { 
-    type: Number, 
-    required: true
-  },
-  questionNumber:
-  {
-    type: Number,
-    required: true
-  },
-  teamName:
+const gameResponseSchema = new Schema({
+  hostName:
   {
     type: String,
     required: true
   },
-  answerGiven:
+  qNum:
+  {
+    type: Number,
+    required: true
+  },
+  playerName:
   {
     type: String,
     required: true
   },
-  responseOrder:
+  response:
   {
-    type: Number,
-    required: true
+    type: String,
+    default: 'No Answer'
   },
   points:
   {
     type: Number,
-    required: true
+    default: 1
   }
 });
 
-const Gameresponse = mongoose.model("Gameresponse", gameresponseSchema);
+const GameResponse = mongoose.model("GameResponse", gameResponseSchema);
 
-module.exports = Gameresponse;
+module.exports = GameResponse;

@@ -10,118 +10,102 @@ import './BigBoard.css';
 // Chart.defaults.global.elements.line.tension = 0;
 
 
-const fakeAnswerData =  {
-            labels: [
-                'I am Smarticus',
-                'The Quizzard of Oz',
-                'Team Sewer Cougar',
-                'The Decepticons',
-                '#AlternativeFacts',
-                'Taking Care of Quizness',
-                'Multiple Scoregasms',
-                'Rebel Scum',
-                'Another Team',
-                'And Another'
-            ],
-            datasets: [
-                {
-                    data: [
-                        6,
-                        4,
-                        8,
-                        2,
-                        5,
-                        8,
-                        3,
-                        7,
-                        3,
-                        4
-                    ],
-                    backgroundColor: [
-                        "#F634FF",
-                        "#F634FF",
-                        "#34edaf",
-                        "#F634FF",
-                        "#F634FF",
-                        "#34edaf",
-                        "#F634FF",
-                        "#F634FF",
-                        "#F634FF",
-                        "#F634FF"
-                    ]
-                }
-            ],
-            options: {
-                responsive: true,
-                scales: {
-                    xAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            min: 0,
-                            max: 15,
-                        }      
-                    }]
-                }
-            }
-        }
 
 const StatsBoard = () => {
 
-// /api/scoreboard
-// qTotal: // total # of questions
-// currentQestion: // current question
-// answerData: // will come across as complete object for use with chart.js
-// gameOver: true/false
-
-// need to add in logic to show "game over"
-
-    const [answerData, setAnswerData] = useState();
-    // TODO: why does answerData.options work for a class, but not when using useState();
-    const [options, setOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
+    const [statsBlob, setStatsBlob] = useState(
         {
-            legend: {
-                display: false,
+            barOptions: {
+                legend: {
+                    display: false, // static value
+                },
+                responsive: true, // static value
+                maintainAspectRatio: false, // static value
+                scales: {
+                    xAxes: [{
+                        position: "top", // static value
+                        ticks: {
+                            beginAtZero: true, // static value
+                            min: 0, // static value
+                    // ############ //
+                            max: 15, // THIS VALUE NEEDS TO BE SET TO THE TOTAL # OF QUESTIONS FOR THE GAME!!
+                    // ############ //
+                            fontColor: "#ffffff", // static value
+                            fontSize: 30, // static value
+                            stepSize: 1, // static value
+                        },
+                        gridLines: {
+                            color: "#ffffff" // static value
+                        }      
+                    }],
+                    yAxes: [{
+                        ticks: {
+                            fontColor: "#ffffff", // static value
+                            fontSize: 30, // static value
+                            fontFamily: "'Bangers', sans-serif" // static value
+                        },
+                        gridLines: {
+                            color: "#ffffff" // static value
+                        } 
+                    }]
+                }
             },
-            responsive: true,
-            maintainAspectRatio: false,
-            // aspectRatio: "4:1",
-            scales: {
-                xAxes: [{
-                    position: "top",
-                    ticks: {
-                        beginAtZero: true,
-                        min: 0,
-                        max: 15,
-                        fontColor: "#ffffff",
-                        fontSize: 30,
-                        stepSize: 1,
-                    },
-                    gridLines: {
-                        color: "#ffffff"
-                    }      
-                }],
-                yAxes: [{
-                    ticks: {
-                        fontColor: "#ffffff",
-                        fontSize: 30,
-                        fontFamily: "'Bangers', sans-serif"
-                    },
-                    gridLines: {
-                        color: "#ffffff"
-                    } 
-                }]
+            answerData: {
+                labels: [ // an array of all the team names
+                    'I am Smarticus',
+                    'The Quizzard of Oz',
+                    'Team Sewer Cougar',
+                    'The Decepticons',
+                    '#AlternativeFacts',
+                    'Taking Care of Quizness',
+                    'Multiple Scoregasms',
+                    'Rebel Scum',
+                    'Another Team',
+                    'And Another'
+                ],
+                datasets: [
+                    {
+                        data: [ // corresponding current scores for the teams listed in the labels array
+                            6,
+                            4,
+                            8,
+                            2,
+                            5,
+                            8,
+                            3,
+                            7,
+                            3,
+                            4
+                        ],
+                        backgroundColor: [ // for the team(s) in the lead, set the color to #34edaf
+                            "#F634FF",
+                            "#F634FF",
+                            "#34edaf",
+                            "#F634FF",
+                            "#F634FF",
+                            "#34edaf",
+                            "#F634FF",
+                            "#F634FF",
+                            "#F634FF",
+                            "#F634FF"
+                        ]
+                    }
+                ],
             }
         }
     );
+
+
+    
     
     
 
-    const logState = () => {
-        console.log("answerData:");
-        console.log(answerData);
-        console.log("answerData.options:");
-        console.log(answerData.options);
-    }
+    // const logState = () => {
+    //     console.log("answerData:");
+    //     console.log(answerData);
+    //     console.log("answerData.options:");
+    //     console.log(answerData.options);
+    // }
 
     const getStats = () => { // pull questions from DB
         // /api/scoreboard
@@ -139,16 +123,14 @@ const StatsBoard = () => {
         //     })
 
         // FAKE VERSION: //
-        setAnswerData(fakeAnswerData);
+        // setAnswerData(fakeAnswerData);
         
 
     }
 
     useEffect( () => {
         console.log("useEffect() triggered");
-        getStats()
-        console.log("answerData:");
-        console.log(answerData);
+        // getStats()
 
     },[])
 
@@ -159,9 +141,10 @@ const StatsBoard = () => {
             {/* <button onClick={() => logState()}>console.log state</button> */}
 
             <HorizontalBar
-                data={answerData} 
+                data={statsBlob.answerData} 
+                height = {window.innerHeight * .8}
                 // options = {answerData.options} // TODO: why doesn't this work?
-                options={options}
+                options={statsBlob.barOptions}
             />
 
         </div>

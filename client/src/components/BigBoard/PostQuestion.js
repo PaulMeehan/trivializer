@@ -1,6 +1,6 @@
 import React from "react";
 import {Bar} from "react-chartjs-2";
-import './PostQuestion.css';
+// import './PostQuestion.css';
 
 const PostQuestion = (props) => {
 
@@ -12,8 +12,9 @@ return (
 
         <div className="postAnswers">
             <Bar
-                data= {props.barData} 
-                options={props.barOptions}
+                data = {props.barData} 
+                height = {window.innerHeight * .4}
+                options = {props.barOptions}
             />
         </div>
     
