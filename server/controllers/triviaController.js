@@ -295,6 +295,7 @@ module.exports = {
         db.GameResponse.find({ hostName: host })
         .then(answers => {
           const response = prepCurrentGameQuestion(game, answers)
+          pusher.trigger('game-question', host, game)
           res.json(response)
         })
       })
