@@ -107,7 +107,7 @@ class App extends Component {
 								<Route exact path="/live-game" component={GameMasterLiveGame} />
 								<Route exact path="/statsboard" component={StatsBoard} />
 								<Route exact path="/board-question" component={BoardQuestion} />
-								<Route exact path="/user" component={User} />
+								<Route exact path="/play/*" component={User} />
                 <Route component={NoMatch} />
               </Switch>
             </div>

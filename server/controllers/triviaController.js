@@ -21,6 +21,7 @@ const prepQuestions = questions => {
   q.game = questions.game
   q.qNum = questions.qNum
   q.isActive = questions.questionActive
+  q.gameActive = questions.gameActive
   return q
 }
 const prepAnswers = (answers, qNum) => {
@@ -47,7 +48,7 @@ const prepCurrentGameQuestion = (questions, answers) => {
   */
   q.question = q.game[Math.max(0,q.qNum)]
   q.question.answerText = q.question.choices[alphabet.indexOf(q.question.answer)]
-  q.qNum = Math.max(0, q.qNum)
+  q.qNum = q.qNum
   q.totalQ = q.game.length
 
   /*
@@ -142,8 +143,8 @@ module.exports = {
             // clear out prior answers to prevent contamination
             db.GameResponse.remove({hostName: host})
             .then(cleared => {
-                pusher.trigger('game-question', host, newGame)
-              res.json(newGame)
+              pusher.trigger('game-question', host, newGame)
+              res.json(prepQuestions(newRec))
             })
           })
         })
@@ -164,7 +165,7 @@ module.exports = {
               newRec.qNum = totalQuestionNumber - 1
               const gameSummary = prepCurrentGameQuestion(newRec, answers)
               pusher.trigger('game-question', host, gameSummary)
-              res.json(gameSummary)
+              res.json(prepQuestions(newRec))
             })
           })
         })
@@ -181,7 +182,7 @@ module.exports = {
             .then(answers => {
               const gameStatus = prepCurrentGameQuestion(newRec, answers)
               pusher.trigger('game-question', host, gameStatus)
-              res.json(gameStatus)
+              res.json(prepQuestions(newRec))
             })
           })
         })
@@ -199,13 +200,10 @@ module.exports = {
         .then(answers => {
           const game = prepCurrentGameQuestion(user, answers)
           pusher.trigger('game-question', host, game)
-          res.json(game)
+          res.json(prepQuestions(user))
         })
       })
     })
-
-    pusher.trigger('game-question', 'new-question', { message: 'nextQuestion fired from trigger' })
-    res.send(200)
   },
   submitAnswer: (req, res) => {
     const player = req.user.username
@@ -296,7 +294,8 @@ module.exports = {
         .then(answers => {
           const response = prepCurrentGameQuestion(game, answers)
           pusher.trigger('game-question', host, game)
-          res.json(response)
+          console.log(prepQuestions(game))
+          res.json(prepQuestions(game))
         })
       })
     })
