@@ -25,33 +25,6 @@ const prepQuestions = questions => {
 }
 const prepAnswers = (answers, qNum) => {
   const a = []
-  /* will be
-    answers = [
-      {
-        hostname: 'dp',
-        qNum: 1,
-        playerName: 'elvis',
-        response: 'A',
-        points: 0
-      },
-      {
-        hostname: 'dp',
-        qNum: 2,
-        playerName: 'elvis',
-        response: 'B'
-        points: 2
-      },
-      {
-        hostname: 'dp',
-        qNum: 1,
-        playerName: 'mark',
-        response: 'C',
-        points: 1
-      },
-      etc...
-    ]
-    needs to be [[playerName, response], [playerName, response], etc...]
-  */
   for (let i in answers) {
     if (answers[i].qNum === qNum) {
       a.push([answers[i].playerName, answers[i].response])
@@ -249,24 +222,25 @@ module.exports = {
     db.GameResponse.find({ hostName: host, playerName: player, qNum: qNum })
     .then(found => {
       if (found.length) {
-        console.log('\nplayer already answered\n', found)
+        // console.log('\nplayer already answered\n', found)
         return res.send(200)
       }
       // make sure the question and game are both active
       db.User.find({ username: host })
       .then(game => {
-        if (!game[0].gameActive || !game[0].questionActive) {
-          console.log('\ngame and/or question are not active\n')
+        game = game[0]
+        if (!game.gameActive || !game.questionActive || qNum != game.qNum) {
+          // console.log('\ngame and/or question are not active or qNum is old\n')
           return res.send(200)
         }
         // game & question are both active and user hasn't submitted an answer yet
         // now check if they are right
-        if (game.game[qNum].answer === choice) {  // correct answer
+        if (game.game[qNum].answer === choice.toUpperCase()) {  // correct answer
           // were they the first correct answer?
           db.GameResponse.find({ hostName: host, qNum: qNum, points: 2 })
           .then(someoneElse => {
             let points = 1
-            if (!someoneElse) points = 2
+            if (someoneElse.length) points = 2
             db.GameResponse.create({
               hostName: host,
               playerName: player,
@@ -305,11 +279,21 @@ module.exports = {
     })
   },
   getQuestion: (req, res) => {
-    // get from player on game-play screen
-    // need: gameId or hostId
-    // get /api/:GAMEID
     console.log('\n****\ngetQuestion\n****\n')
-    res.send(200)
+    const host = req.params.host
+    const player = req.user.username
+    // see if the question is active
+    db.User.findOne({ username: host })
+    .then(game => {
+      if (!game.gameActive || !game.questionActive) return res.json({message:'No active question'})
+      // see if the player has answered already
+      db.GameResponse.find({ hostName: host, qNum: game.qNum, playerName: player })
+      .then(answered => {
+        console.log(answered)
+        if (answered.length) return res.json({message:'You already answered this question'})
+        res.json(prepCurrentGameQuestion(game))
+      })
+    })
   },
   endGame: (req, res) => {
     // post from host
