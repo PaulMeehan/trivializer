@@ -1,28 +1,34 @@
-import React, { useState, useEffect } from 'react';
+
+import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-// import PageVisibility from 'react-page-visibility';
 import gameAPI from '../../utils/gameAPI';
-import Pusher from "pusher-js";
+import Pusher from 'pusher-js';
+import Visibility from '../../components/Visibility/Visibility.js';
 
-class User extends React.Component {
-    state = {
-        show: true,
-        questionIndex: 0,
-        curChoice: "",
-        questions: [
-            {
-                question: "According to a Beatles song, who kept her face in a jar by the door?",
-                answer: "Eleanor Rigby",
-                choices: [
-                    "Eleanor Rigby",
-                    "Loretta Martin",
-                    "Molly Jones",
-                    "Lady Madonna"
-                ]
-            }
-        ]
-    }
+
+
+    class User extends React.Component{
+
+        state = {
+            
+            show: true,
+            questionIndex: 0,
+            curChoice: "",
+            questions: [
+                {
+                    question: "According to a Beatles song, who kept her face in a jar by the door?", 
+                    answer:  "Eleanor Rigby",
+                    choices: [
+                        "Eleanor Rigby",
+                        "Loretta Martin",
+                        "Molly Jones",
+                        "Lady Madonna"
+                    ]
+                }
+            ]
+        }
+
 
         componentWillMount () {
             Pusher.logToConsole = true
@@ -49,6 +55,11 @@ class User extends React.Component {
         }
     }
     
+
+    
+
+
+
     getQuestions = () => { // pull questions from DB
         // /api/questions
         // GET request
@@ -66,58 +77,64 @@ class User extends React.Component {
             })
     }
     
-    render() {
-        console.log(this.state);
-        var preQuestions = [
-            {
-                question: "According to a Beatles song, who kept her face in a jar by the door?",
-                answer: "Eleanor Rigby",
-                choices: [
-                    "Eleanor Rigby",
-                    "Loretta Martin",
-                    "Molly Jones",
-                    "Lady Madonna"
-                ]
-            }
-        ]
 
-            return (
-                <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto' }}>
-                    <nav>
-                        <Link to="/" className="navbar-brand"><img style={{ width: '100%' }} src="/trivializer-logo.png" alt="" className="logo" /></Link>
-                    </nav>
-                    <div style={{ borderRadius: '5px', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto' }}>
-                        <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt="" />
-                        </div>
-                        <div>
-                            <h1 style={{ textAlign: 'center', color: 'black' }}>Question: {this.state.questionIndex + 1} </h1>
-                            <div style={{ padding: '10px', }}>
-                                <p style={{ textAlign: 'center', color: '#9800ff' }}>{preQuestions[0].question}</p>
-                                {this.state.show ?
-                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '75%' }}>
-                                        <ul style={{ display: 'block', margin: 'auto', listStyleType: 'none', color: '#9800ff' }}>
+render(){
 
-                                            {this.state.questions[this.state.questionIndex].choices.map((singleChoice) => {
-                                                return (<li><input type="radio" checked={this.state.curChoice === singleChoice} value={singleChoice} onChange={this.handleChoiceClick}></input>{singleChoice}</li>)
-                                            })}
-
-                                            <button style={{ borderRadius: '5px', height: '30px', width: '100%', backgroundColor: '#f9800ff' }} onClick={this.handleSubmit}>Submit</button>
-                                        </ul>
-                                    </div>
-                                    : <p style={{ padding: '15px', fontFamily: 'karmatic arcade', textAlign: 'center', color: '#9800ff' }}>Good choice.  But, you an idiot.</p>}
-                            </div>
-                        </div>
-                    </div>
-                    <footer>
-                        <Link to="/" className="navbar-brand"><img style={{ width: '100%' }} src="/trivializer-logo.png" alt="" className="logo" /></Link>
-                    </footer>
-
-
-                </div>
-
-            );
+console.log(this.state);
+    var preQuestions = [
+        {
+            question: "According to a Beatles song, who kept her face in a jar by the door?", 
+            answer:  "Eleanor Rigby",
+            choices: [
+                "Eleanor Rigby",
+                "Loretta Martin",
+                "Molly Jones",
+                "Lady Madonna"
+            ]
         }
+    ]
+
+
+
+    return(
+        <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+           
+            <nav>
+                <Link to="/" className="navbar-brand"><img style={{ width: '100%'}} src="/trivializer-logo.png" alt="" className="logo"/></Link>
+            </nav>
+            <div style={{ borderRadius: '5px', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto' }}>
+                <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/>
+                </div>
+                <div>   
+                    <h1 style={{ textAlign: 'center', color: 'black'}}>Question: { this.state.questionIndex + 1 } </h1>
+                    <div style={{ padding: '10px',}}>
+                        <p style={{ textAlign: 'center', color: '#9800ff' }}>{preQuestions[0].question}</p>
+                            {this.state.show?
+                                <div style={{display: 'flex', justifyContent: 'center',  alignItems: 'center', width: '75%'}}> 
+                                    <ul style={{ display: 'block', margin: 'auto', listStyleType: 'none', color: '#9800ff' }}>
+                                    
+                                        {this.state.questions[this.state.questionIndex].choices.map((singleChoice) => {
+                                        return(<li><input type="radio" checked={ this.state.curChoice === singleChoice } value={ singleChoice } onChange={this.handleChoiceClick}></input>{singleChoice}</li>)
+                                        })}
+                                        <button style={{ borderRadius: '5px', height: '30px', width: '100%', backgroundColor: '#f9800ff'  }} onClick={this.handleSubmit}>Submit</button>
+                                    </ul>
+                                </div> 
+                        :<p style={{ padding: '15px', fontFamily: 'karmatic arcade', textAlign: 'center', color: '#9800ff'}}>Good choice.  But, you an idiot.</p>}
+                    </div>
+                </div>
+            </div>
+            <footer>            
+                <Link to="/" className="navbar-brand"><img style={{ width: '100%'}} src="/trivializer-logo.png" alt="" className="logo"/></Link>
+            </footer>
+    
+            <Visibility />
+        </div>
+        
+        );
+    }
 
 }
+
+
 
 export default User;
