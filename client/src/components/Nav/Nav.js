@@ -42,7 +42,7 @@ const Nav = (props) => {
     location = "YOUR GAME IS LIVE!!!"
     linkLocation = "#";
   }
-  
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <Col size="md-9">
@@ -52,7 +52,7 @@ const Nav = (props) => {
       {/* <Col size="md-7"></Col> */}
       <Col size="md-3">
         <div className="float-right">
-        {greeting} 
+        {greeting}
         {/* - <Link to="#" className="logout" onClick={props.logout}>Logout</Link> */}
         </div>
       </Col>
