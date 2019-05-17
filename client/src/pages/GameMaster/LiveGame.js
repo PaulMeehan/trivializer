@@ -1,99 +1,99 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef } from 'react'
 import './Admin.css'
 import {Pie} from "react-chartjs-2"
-import AdminLiveQDiv from "../../components/Admin/AdminLiveQDiv"
 import gameAPI from '../../utils/gameAPI'
-// import { start } from 'repl';
 
 
-const GameMasterLiveGame = () => {
+const GameMasterLiveGame = (props) => {
 
   const [questions, setQuestions] = React.useState([])
   const [qNum,setQNum] = useState()
   const [questionIsActive,setQuestionIsActive] = useState()
   const [gameIsActive, setGameIsActive] = useState()
-  const [timerData, setTimerData] = useState(baseTimerData); // not doing anything at the moment
+  const [time, setTime] = useState()
+  const [timer, setTimer] = useState()
 
+  // onload
   useEffect( () => {
     gameAPI.getQuestions()
-    .then(res => updateState(res))
+    .then(res => {
+      const x = res.data
+      // updateState(res)
+      if (x.isActive && x.gameActive) {
+        updateState(res,true)
+        gameTimer(x.game[x.qNum].time)
+      } else {
+        updateState(res)
+      }
+    })
     .catch(err => console.log(err))
   },[])
-  const updateState = res => {
-    console.log(res.data.qNum)
-    setQuestions(res.data.game)
-    setQNum(res.data.qNum)
-    setQuestionIsActive(res.data.isActive)
-    setGameIsActive(res.data.gameActive)
+
+  const updateState = (res, ignoreTime = false) => {
+    const x = res.data
+    setQuestions(x.game)
+    setQNum(x.qNum)
+    setQuestionIsActive(x.isActive)
+    setGameIsActive(x.gameActive)
+    if (!ignoreTime) setTime(parseInt(x.game[x.qNum].time))
   }
-  const baseTimerData = {
-    labels: [
-      'Time Remaining',
-    ],
-    datasets: [
-      {
-        data: [
-          180, // what's left
-          0 // what's elapsed
-        ],
-        backgroundColor: [
-          "#34edaf",
-          "#ed4634"
-        ]
+
+  const gameTimer = (startTime = false) => {
+    let elapsed = 0
+    startTime = startTime || time || questions[0].time
+    const t = setInterval(() => {
+      elapsed++
+      setTime(startTime - elapsed)
+      gameAPI.setTime(startTime - elapsed)
+      if (startTime === elapsed) {
+        clearInterval(t)
+        endQuestion()
       }
-    ],
-    options: {
-      responsive: true
-    }
+    }, 1000)
+    setTimer(t)
   }
+
   const startNextQuestion = () => {
     gameAPI.nextQuestion()
-    .then(res => updateState(res))
+    .then(res => {
+      updateState(res)
+      gameTimer()
+    })
     .catch(err => console.log(err))
   }
+
   const endQuestion = () => {
-    gameAPI.endQuestion()
-    .then(res => updateState(res))
-    .catch(err => console.log(err))
+    clearInterval(timer)
+    // reset the time on this question first, then call endQuestion
+    let time, q = qNum - 1
+    if (qNum - 1 <= 0) q = qNum + 1
+    if (questions.length <= 1) time = 180
+    else {
+      time = questions[q].time
+    }
+    gameAPI.setTime(time)
+    .then(success => {
+      gameAPI.endQuestion()
+      .then(res => updateState(res))
+      .catch(err => console.log(err))
+    })
+    .catch(err => {
+      gameAPI.endQuestion()
+      .then(res => updateState(res))
+      .catch(err => console.log(err))
+    })
   }
-  const endGame = () => {
-    gameAPI.endGame()
-    .then(res => updateState(res))
-    .catch(err => console.log(err))
-  }
+
   const printState = () => {
     console.log('questions')
     console.table(questions)
     console.log('gameIsActive', gameIsActive)
     console.log('questionIsActive', questionIsActive)
-    console.log('qNum', qNum)
+    console.log('qNum ', qNum)
+    console.log('time ', time)
+    console.log('timer ', timer)
   }
-  const decrementTimer = () => {
-    console.log("decrement run");
-    if (timerData.datasets[0].data[0] > 0) {
-      let currentTime = [timerData.datasets[0].data[0],timerData.datasets[0].data[1]];
-      currentTime = [(currentTime[0] - 1),(currentTime[1] + 1)]
-      setTimerData(
-        {
-          datasets: [
-            {
-              data: currentTime,
-              backgroundColor: [
-                "#34edaf",
-                "#ed4634"
-              ]
-            }
-          ],
-          options: {
-              responsive: true
-          }
-        }
-      )
-    }
-  }
-  const timerControl = () => {
-    const timerInterval = setInterval(decrementTimer,1000);
-  }
+
   const ControllButton = () => {
     const button = []
     // game is active but the last question is over
@@ -175,7 +175,7 @@ const GameMasterLiveGame = () => {
             </div>
             <div className={ activeQuestion ? "col-md-3" : "col-md-3 hidden" }>
               <Pie
-                data= {timerData}
+                // data= {timerData}
               />
             </div>
         </div>
@@ -187,7 +187,11 @@ const GameMasterLiveGame = () => {
 
   return(
     <div className="container">
+      <h4>Live game at
+        <a href={`trivializer.com/play/${props.username}`} target="_blank">{`  trivializer.com/play/${props.username}`}</a>
+      </h4>
       <button onClick={() => printState()}>PrintState</button>
+      {time}
       <div className="row mt-4">
         <div className="col-md-12">
           <div className="container">
@@ -201,3 +205,50 @@ const GameMasterLiveGame = () => {
 }
 
 export default GameMasterLiveGame;
+
+  // const baseTimerData = {
+  //   labels: [
+  //     'Time Remaining',
+  //   ],
+  //   datasets: [
+  //     {
+  //       data: [
+  //         180, // what's left
+  //         0 // what's elapsed
+  //       ],
+  //       backgroundColor: [
+  //         "#34edaf",
+  //         "#ed4634"
+  //       ]
+  //     }
+  //   ],
+  //   options: {
+  //     responsive: true
+  //   }
+  // }
+  // const decrementTimer = () => {
+  //   console.log("decrement run");
+  //   if (timerData.datasets[0].data[0] > 0) {
+  //     let currentTime = [timerData.datasets[0].data[0],timerData.datasets[0].data[1]];
+  //     currentTime = [(currentTime[0] - 1),(currentTime[1] + 1)]
+  //     setTimerData(
+  //       {
+  //         datasets: [
+  //           {
+  //             data: currentTime,
+  //             backgroundColor: [
+  //               "#34edaf",
+  //               "#ed4634"
+  //             ]
+  //           }
+  //         ],
+  //         options: {
+  //             responsive: true
+  //         }
+  //       }
+  //     )
+  //   }
+  // }
+  // const timerControl = () => {
+  //   const timerInterval = setInterval(decrementTimer,1000);
+  // }

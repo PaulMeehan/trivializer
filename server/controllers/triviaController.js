@@ -275,7 +275,7 @@ module.exports = {
     // see if the question is active
     db.User.findOne({ username: host })
     .then(game => {
-      if (!game.gameActive || !game.questionActive || game.qNum === -1) {
+      if (!game.gameActive || !game.questionActive || parseInt(game.qNum) === -1) {
         return res.json(prepCurrentGameQuestion(game))
       }
       // see if the player has answered already
@@ -359,6 +359,17 @@ module.exports = {
         }
         res.json(response)
       })
+    })
+  },
+  setGameTime: (req, res) => {
+    const _id = req.user._id
+    const time = parseInt(req.params.time)
+    db.User.findOne({ _id })
+    .then(user => {
+      if (user.qNum < 0) return res.send(200)
+      user.game[user.qNum].time = time
+      db.User.update({ _id }, { $set: {game: user.game}})
+      .then(res.send(200))
     })
   }
 }
