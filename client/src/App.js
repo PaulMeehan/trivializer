@@ -108,7 +108,7 @@ class App extends Component {
 								<Route exact path="/statsboard" component={StatsBoard} />
 								{/* <Route exact path="/board-question" component={BoardQuestion} userID={"cheese"} /> */}
 								<Route exact path="/board-question" component={() => <BoardQuestion userID={this.state.user.username}/>} />
-								<Route exact path="/play/*" component={User} />
+								<Route exact path="/user/" component={User} />
                 <Route component={NoMatch} />
               </Switch>
             </div>
