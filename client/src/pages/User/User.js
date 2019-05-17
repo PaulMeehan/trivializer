@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 // import PageVisibility from 'react-page-visibility';
 import gameAPI from '../../utils/gameAPI';
+import Pusher from "pusher-js";
 
 class User extends React.Component {
     state = {
