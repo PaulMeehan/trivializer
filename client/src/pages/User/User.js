@@ -1,10 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
 import gameAPI from '../../utils/gameAPI';
-
-
+import Pusher from 'pusher-js';
+import Visibility from '../../components/Visibility/Visibility.js';
 
 
 
@@ -57,10 +56,7 @@ import gameAPI from '../../utils/gameAPI';
         }
     
     
-    
-  
-    
-    
+
 
     getQuestions = () => { // pull questions from DB
         // /api/questions
@@ -83,6 +79,7 @@ import gameAPI from '../../utils/gameAPI';
 
     
 render(){
+
 console.log(this.state);
     var preQuestions = [
         {
@@ -99,10 +96,9 @@ console.log(this.state);
 
 
 
-
-  render(){
     return(
         <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+           
             <nav>
                 <Link to="/" className="navbar-brand"><img style={{ width: '100%'}} src="/trivializer-logo.png" alt="" className="logo"/></Link>
             </nav>
@@ -118,9 +114,8 @@ console.log(this.state);
                                     <ul style={{ display: 'block', margin: 'auto', listStyleType: 'none', color: '#9800ff' }}>
                                     
                                         {this.state.questions[this.state.questionIndex].choices.map((singleChoice) => {
-                                            return(<li><input type="radio" checked={ this.state.curChoice === singleChoice } value={ singleChoice } onChange={this.handleChoiceClick}></input>{singleChoice}</li>)
+                                        return(<li><input type="radio" checked={ this.state.curChoice === singleChoice } value={ singleChoice } onChange={this.handleChoiceClick}></input>{singleChoice}</li>)
                                         })}
-
                                         <button style={{ borderRadius: '5px', height: '30px', width: '100%', backgroundColor: '#f9800ff'  }} onClick={this.handleSubmit}>Submit</button>
                                     </ul>
                                 </div> 
@@ -131,13 +126,14 @@ console.log(this.state);
             <footer>            
                 <Link to="/" className="navbar-brand"><img style={{ width: '100%'}} src="/trivializer-logo.png" alt="" className="logo"/></Link>
             </footer>
-           
-            
+    
+            <Visibility />
         </div>
         
         );
     }
-
 }
+
+
 
 export default User;
