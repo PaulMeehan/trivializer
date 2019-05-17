@@ -4,6 +4,7 @@ import '../../pages/BigBoard/BigBoard.css';
 // import './BoardQuestion.css';
 import LiveQuestion from "../../components/BigBoard/LiveQuestion";
 import PostQuestion from '../../components/BigBoard/PostQuestion';
+import gameAPI from '../../utils/gameAPI'
 
 const defaultQuestionTime = 180
 
@@ -24,7 +25,10 @@ const defaultQuestionTime = 180
 
     
 
-const BoardQuestion = () => {
+const BoardQuestion = (props) => {
+
+    console.log('username:');
+    console.log(props.userID);
 
     // TODO: onload, need to pull all questions
     // TODO: get the current question #
@@ -66,42 +70,85 @@ const BoardQuestion = () => {
     //     }
     // }
     
+    // const [boardBlob, setBoardBlob] = useState(
+    //     {
+    //         question: { // question data for the current question
+    //             question: "According to a Beatles song, who kept her face in a jar by the door?",
+    //             choices: ["Eleanor Rigby", "Loretta Martin", "Molly Jones", "Lady Madonna"],
+    //             answer: "A",
+    //             answerText: "Eleanor Rigby",
+    //             time: defaultQuestionTime
+    //         },
+    //         qStatus: "live", // should be "live" or "post"
+    //         totalQ: 15, // the total # of questions in the game
+    //         qNum: 3, // The true question number. We'll do the +1 on the front end where needed
+    //         ansRcvd: [ // this array should update as answers are received
+    //             ["I am Smarticus","A"],
+    //             ["The Quizzard of Oz","B"],
+    //             ["Team Sewer Cougar","C"],
+    //             ["The Decepticons","D"],
+    //             ["#AlternativeFacts","D"],
+    //             ["Taking Care of Quizness","C"],
+    //             ["Multiple Scoregasms","B"],
+    //             ["Rebel Scum","A"]
+    //         ],
+    //         barData: { // everything to build out the post-question bar graph
+    //             labels: [ // populated based on current question
+    //                 "Eleanor Rigby", // A.
+    //                 "Loretta Martin", // B.
+    //                 "Molly Jones", // C.
+    //                 "Lady Madonna" // D.
+    //             ],
+    //             datasets: [
+    //                 {
+    //                     data: [ // the number of submissions for each answer
+    //                         2, // A.
+    //                         4, // B. 
+    //                         1, // C.
+    //                         1 // D.
+    //                     ],
+    //                     backgroundColor: [ // set colors for the 'post' bar graph
+    //                         // correct answer color: #34edaf
+    //                         // wrong answer color: #ed4634
+    //                         "#34edaf", // A.
+    //                         "#ed4634", // B.
+    //                         "#ed4634", // C.
+    //                         "#ed4634" // D.
+    //                     ]
+    //                 }
+    //             ]
+    //         } // close barData
+    //     }
+    // );
+
     const [boardBlob, setBoardBlob] = useState(
         {
             question: { // question data for the current question
-                question: "According to a Beatles song, who kept her face in a jar by the door?",
-                choices: ["Eleanor Rigby", "Loretta Martin", "Molly Jones", "Lady Madonna"],
-                answer: "A",
-                answerText: "Eleanor Rigby",
+                question: "",
+                choices: ["", "", "", ""],
+                answer: "",
+                answerText: "",
                 time: defaultQuestionTime
             },
-            qStatus: "live", // should be "live" or "post"
-            totalQ: 15, // the total # of questions in the game
-            qNum: 3, // The true question number. We'll do the +1 on the front end where needed
+            qStatus: "", // should be "live" or "post"
+            totalQ: 0, // the total # of questions in the game
+            qNum: 0, // The true question number. We'll do the +1 on the front end where needed
             ansRcvd: [ // this array should update as answers are received
-                ["I am Smarticus","A"],
-                ["The Quizzard of Oz","B"],
-                ["Team Sewer Cougar","C"],
-                ["The Decepticons","D"],
-                ["#AlternativeFacts","D"],
-                ["Taking Care of Quizness","C"],
-                ["Multiple Scoregasms","B"],
-                ["Rebel Scum","A"]
             ],
             barData: { // everything to build out the post-question bar graph
                 labels: [ // populated based on current question
-                    "Eleanor Rigby", // A.
-                    "Loretta Martin", // B.
-                    "Molly Jones", // C.
-                    "Lady Madonna" // D.
+                    "", // A.
+                    "", // B.
+                    "", // C.
+                    "" // D.
                 ],
                 datasets: [
                     {
                         data: [ // the number of submissions for each answer
-                            2, // A.
-                            4, // B. 
-                            1, // C.
-                            1 // D.
+                            0, // A.
+                            0, // B. 
+                            0, // C.
+                            0 // D.
                         ],
                         backgroundColor: [ // set colors for the 'post' bar graph
                             // correct answer color: #34edaf
@@ -116,6 +163,8 @@ const BoardQuestion = () => {
             } // close barData
         }
     );
+
+    // const [boardBlob, setBoardBlob] = useState();
 
     // const [numTeams, setNumTeams] = useState();
     // const [questions, setQuestions] = useState(preQuestions); // TODO: stop using fake data
@@ -165,19 +214,19 @@ const BoardQuestion = () => {
         }
     )
 
-    // useEffect( () => {
-    //     console.log("useEffect() triggered");
-    //     if (boardBlob.question.answer === "A") {
-    //         setCorrectAnswerText(questions[qNum].choices[0])
-    //     } else if (boardBlob.question.answer === "B") {
-    //         setCorrectAnswerText(questions[qNum].choices[1])
-    //     } else if (boardBlob.question.answer === "C") {
-    //         setCorrectAnswerText(questions[qNum].choices[2])
-    //     } else if (boardBlob.question.answer === "D") {
-    //         setCorrectAnswerText(questions[qNum].choices[3])
-    //     }
-    //     console.log(correctAnswerText);
-    // },[])
+    useEffect( () => {
+        console.log("useEffect() triggered");
+        console.log("username");
+        console.log(props.userID);
+        gameAPI.getCurrentQuestion(props.userID)
+            .then(function(res) {
+                console.log('response received');
+                console.log(res.data)
+                setBoardBlob(res.data)
+            })
+            // .then(res => setBoardBlob(res.data))
+            .catch(err => console.log(err))
+    },[])
 
     return(
 
@@ -185,7 +234,7 @@ const BoardQuestion = () => {
 
             <h1 className="text-center mt-3 question p-3 mb-4">({boardBlob.qNum + 1}/{boardBlob.totalQ}) {boardBlob.question.question}</h1>
 
-            { (boardBlob.qStatus === "live") ?
+            { (boardBlob.isActive === true) ?
 
             <LiveQuestion 
                 ans1 = {boardBlob.question.choices[0]}
