@@ -1,3 +1,4 @@
+
 import React from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -28,6 +29,7 @@ import Visibility from '../../components/Visibility/Visibility.js';
             ]
         }
 
+
         componentWillMount () {
             Pusher.logToConsole = true
             const pusher = new Pusher('e5795cf1dfac2a8aee31', {
@@ -37,25 +39,25 @@ import Visibility from '../../components/Visibility/Visibility.js';
             const game = pusher.subscribe('game-question')
             game.bind('   something here   ',this.log)
         }
-        
 
+    handleChoiceClick = (e) => {
+        console.log(e.target.value)
+        this.setState({ curChoice: e.target.value })
+    }
 
-        handleChoiceClick = (e) => {
-            console.log(e.target.value)
-            this.setState({ curChoice: e.target.value }) 
+    handleSubmit = (e) => {
+        console.log(e.target.value)
+        this.setState({ show: !this.state.show })
+        if (this.state.questions[this.state.questionIndex].answer === this.state.curChoice) {
+            alert("Correct")
+        } else {
+            alert("Wrong")
         }
+    }
+    
 
-        handleSubmit = (e) => {
-            console.log(e.target.value)
-            this.setState({ show: !this.state.show })
-            if(this.state.questions[this.state.questionIndex].answer === this.state.curChoice){
-                alert("Correct")
-            }else{
-                alert("Wrong")
-            }
-        }
     
-    
+
 
 
     getQuestions = () => { // pull questions from DB
@@ -74,10 +76,8 @@ import Visibility from '../../components/Visibility/Visibility.js';
                 console.log(err);
             })
     }
-
     
 
-    
 render(){
 
 console.log(this.state);
@@ -132,6 +132,7 @@ console.log(this.state);
         
         );
     }
+
 }
 
 

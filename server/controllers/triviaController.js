@@ -162,7 +162,7 @@ module.exports = {
           .then(newRec => {
             db.GameResponse.find({ hostName: host })
             .then(answers => {
-              newRec.qNum = totalQuestionNumber - 1
+              // newRec.qNum = totalQuestionNumber - 1
               const gameSummary = prepCurrentGameQuestion(newRec, answers)
               pusher.trigger('game-question', host, gameSummary)
               res.json(prepQuestions(newRec))

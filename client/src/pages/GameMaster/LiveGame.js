@@ -5,56 +5,6 @@ import AdminLiveQDiv from "../../components/Admin/AdminLiveQDiv"
 import gameAPI from '../../utils/gameAPI'
 // import { start } from 'repl';
 
-let preQuestions = [
-  [
-    "According to a Beatles song, who kept her face in a jar by the door?",
-    "Eleanor Rigby",
-    "Loretta Martin",
-    "Molly Jones",
-    "Lady Madonna",
-    "A"
-  ],
-  [
-    "What is the stage name of English female rapper Mathangi Arulpragasam, who is known for the song &quot;Paper Planes&quot;?",
-    "K.I.A.",
-    "C.I.A.",
-    "M.I.A.",
-    "A.I.A.",
-    "C"
-  ],
-  [
-    "Which one of these Rammstein songs has two official music videos?",
-    "Du Hast",
-    "Benzin",
-    "Mein Teil",
-    "Du Riechst So Gut",
-    "D"
-  ],
-  [
-    "Which rock band released the album &quot;The Bends&quot; in March 1995?",
-    "Nirvana",
-    "Radiohead",
-    "Lemonheads",
-    "U2",
-    "B"
-  ],
-  [
-    "Which band recorded the album &quot;Parallel Lines&quot;?",
-    "The Police",
-    "Coldplay",
-    "Paramore",
-    "Blondie",
-    "D"
-  ],
-  [
-    "Which of these aliases has NOT been used by electronic musician Aphex Twin?",
-    "Burial",
-    "Caustic Window",
-    "Bradley Strider",
-    "GAK",
-    "A"
-  ]
-]
 
 const GameMasterLiveGame = () => {
 
@@ -96,18 +46,6 @@ const GameMasterLiveGame = () => {
       responsive: true
     }
   }
-  const getQuestions = () => {
-    gameAPI.getQuestions()
-    .then(res => {
-      console.table(res.data)
-      setQuestions(res.data.game);
-      setQNum(res.data.qNum)
-      setQuestionIsActive(res.data.isActive)
-      setGameIsActive(res.data.gameActive)
-
-    })
-    .catch(err => console.log(err))
-  }
   const startNextQuestion = () => {
     gameAPI.nextQuestion()
     .then(res => updateState(res))
@@ -130,7 +68,6 @@ const GameMasterLiveGame = () => {
     console.log('questionIsActive', questionIsActive)
     console.log('qNum', qNum)
   }
-
   const decrementTimer = () => {
     console.log("decrement run");
     if (timerData.datasets[0].data[0] > 0) {
@@ -154,15 +91,33 @@ const GameMasterLiveGame = () => {
       )
     }
   }
-
   const timerControl = () => {
     const timerInterval = setInterval(decrementTimer,1000);
   }
-
   const ControllButton = () => {
     const button = []
+    // game is active but the last question is over
+    if (!questionIsActive && (qNum === questions.length - 1)) {
+      button.push(
+        <div className="row">
+          <div className="col md-3">
+            <a
+              className='btn btn-success btn-lg btn-block'
+              href="/admin"
+            >Back to Admin</a>
+          </div>
+          <div className="col md-3">
+            <button
+              className='btn btn-danger btn-lg btn-block'
+              onClick={() => startNextQuestion()}
+            >Start Over
+            </button>
+          </div>
+        </div>
+      )
+    }
     // game has started but question is over
-    if (gameIsActive && !questionIsActive) {
+    else if (gameIsActive && !questionIsActive) {
       button.push(
         <button
           className="btn btn-success btn-lg btn-block"
@@ -179,16 +134,6 @@ const GameMasterLiveGame = () => {
           className="btn btn-danger btn-lg btn-block"
           onClick={()=> endQuestion()}
         >End Current Question</button>
-      )
-    }
-    // game is active but the last question is over
-    else if (!questionIsActive && qNum === questions.length) {
-      button.push(
-        <button
-          className='btn btn-success btn-lg btn-block'
-          // onClick={() => }
-        ></button>
-
       )
     }
     // game has not started
