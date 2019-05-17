@@ -106,7 +106,8 @@ class App extends Component {
 								<Route exact path="/admin" component={GameMasterAdmin} />
 								<Route exact path="/live-game" component={GameMasterLiveGame} />
 								<Route exact path="/statsboard" component={StatsBoard} />
-								<Route exact path="/board-question" component={BoardQuestion} />
+								{/* <Route exact path="/board-question" component={BoardQuestion} userID={"cheese"} /> */}
+								<Route exact path="/board-question" component={() => <BoardQuestion userID={this.state.user.username}/>} />
 								<Route exact path="/play/*" component={User} />
                 <Route component={NoMatch} />
               </Switch>

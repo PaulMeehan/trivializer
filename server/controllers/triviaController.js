@@ -41,6 +41,7 @@ const prepCurrentGameQuestion = (questions, answers) => {
   answers = answers || []
   const alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
   const q = prepQuestions(questions)
+  console.log("\n\nLOOK AT THIS: " + q.qNum)
   const a = prepAnswers(answers, q.qNum)
 
   /*
@@ -274,12 +275,17 @@ module.exports = {
     // see if the question is active
     db.User.findOne({ username: host })
     .then(game => {
-      if (!game.gameActive || !game.questionActive) return res.json({message:'No active question'})
+      if (!game.gameActive || !game.questionActive || game.qNum === -1) {
+        return res.json(prepCurrentGameQuestion(game))
+      }
       // see if the player has answered already
       db.GameResponse.find({ hostName: host, qNum: game.qNum, playerName: player })
       .then(answered => {
         if (answered.length) return res.json({message:'You already answered this question'})
-        res.json(prepCurrentGameQuestion(game))
+        db.GameResponse.find({ hostName: host })
+        .then(answers => {
+          res.json(prepCurrentGameQuestion(game, answers))
+        })
       })
     })
   },
