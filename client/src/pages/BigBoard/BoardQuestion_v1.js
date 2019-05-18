@@ -7,7 +7,6 @@ import NotStarted from '../../components/BigBoard/NotStarted';
 import gameAPI from '../../utils/gameAPI'
 import Pusher from 'pusher-js'
 
-
 const defaultQuestionTime = 180
 
 const fakeTimerData = {
@@ -25,7 +24,12 @@ const fakeTimerData = {
     ]
 }
 
+    
+
 const BoardQuestion = (props) => {
+
+    
+
 
     // TODO: update this to sync up with the slight tweaks dave made to the structure, specifically around gameActive and isActive
     const [boardBlob, setBoardBlob] = useState(
@@ -71,10 +75,6 @@ const BoardQuestion = (props) => {
             } // close barData
         }
     );
-
-/// ======================================================
-/// ======================================================
-/// ======================================================
 
     const [timerData, setTimerData] = useState(fakeTimerData); // TODO: stop using fake data
     const [timesUp, setTimesUp] = useState(false);
@@ -143,22 +143,21 @@ const BoardQuestion = (props) => {
                 console.log('response received');
                 // console.log(res.data)
                 setBoardBlob(res.data)
-                // setTimerData({
-                //     datasets: [
-                //         {
-                //             data: [
-                //                 res.data.question.time,
-                //                 0
-                //             ],
-                //             backgroundColor: [
-                //                 "#34edaf",
-                //                 "#ed4634"
-                //             ]
-                //         }
-                //     ]
-                // })
+                setTimerData({
+                    datasets: [
+                        {
+                            data: [
+                                res.data.question.time,
+                                0
+                            ],
+                            backgroundColor: [
+                                "#34edaf",
+                                "#ed4634"
+                            ]
+                        }
+                    ]
+                })
                 timerControl()
-                // gameTimer(res.data.question.time)
             })
             // .then(res => setBoardBlob(res.data))
             .catch(err => console.log(err))
@@ -172,80 +171,18 @@ const BoardQuestion = (props) => {
         console.log("=== PUSHER ===")
         console.log(props.userID);
         game.bind(props.userID,function(data){
-            // console.log(data)
+            console.log(data)
             setBoardBlob(data)
-            // console.log("data.question.time = " + data.question.time)
-            // console.log("timerData.datasets[0].data[0] = " + timerData.datasets[0].data[0])
-            // if (data.isActive === true) {
-            //     gameTimer(data.question.time)
-            // }
-            // if (data.isActive === false) {
-            //     endQuestion();
-            // }
-            // if ( Math.abs(data.question.time - timerData.datasets[0].data[0]) > 10 ) {
-            //     console.log("running setTimerData b/c time different too large")
-            //     setTimerData({
-            //         datasets: [
-            //             {
-            //                 data: [
-            //                     data.question.time - 2,
-            //                     0
-            //                 ],
-            //                 backgroundColor: [
-            //                     "#34edaf",
-            //                     "#ed4634"
-            //                 ]
-            //             }
-            //         ]
-            //     })
-            // }
-        })
-    },[])
-
-
-    // const decrementTimer = () => {
-    //     console.log("decrement check");
-    //     console.log("timerData.datasets[0].data[0] = " + timerData.datasets[0].data[0])
-    //     console.log("boardBlob.isActive = " + boardBlob.isActive)
-    //     if ( (timerData.datasets[0].data[0] > 0) && (boardBlob.isActive === true) )  {
-    //     // if ( (boardBlob.isActive === true) )  {
-    //         console.log("IF condition met")
-    //         let currentTime = [ timerData.datasets[0].data[0], timerData.datasets[0].data[1] ];
-    //         console.log("currentTime = " + currentTime)
-    //         currentTime = [(currentTime[0] - 1),(currentTime[1] + 1)]
-    //         console.log("currentTime = " + currentTime)
-    //         setTimerData(
-    //             {
-    //                 datasets: [
-    //                     {
-    //                         data: currentTime,
-    //                         backgroundColor: [
-    //                             "#34edaf",
-    //                             "#ed4634"
-    //                         ]
-    //                     }
-    //                 ]
-    //             }
-    //         )
-    //     } else {
-    //         console.log("ELSE condition met")
-    //         setTimesUp(true);
-    //     }
-    // }
-
-    const timerControl = () => {
-        const timerInterval = setInterval(function(){
-            gameAPI.getCurrentQuestion(props.userID)
-            .then(function(res) {
-                console.log('timer API hit reponse received');
-                console.log("res.data.question.time = " + res.data.question.time)
-                // setBoardBlob(res.data)
+            console.log("data.question.time = " + data.question.time)
+            console.log("timerData.datasets[0].data[0] = " + timerData.datasets[0].data[0])
+            if ( Math.abs(data.question.time - timerData.datasets[0].data[0]) > 10 ) {
+                console.log("running setTimerData b/c time different too large")
                 setTimerData({
                     datasets: [
                         {
                             data: [
-                                res.data.question.time - 1,
-                                180 - res.data.question.time
+                                data.question.time - 2,
+                                0
                             ],
                             backgroundColor: [
                                 "#34edaf",
@@ -254,12 +191,43 @@ const BoardQuestion = (props) => {
                         }
                     ]
                 })
-                // timerControl()
-                // gameTimer(res.data.question.time)
-            })
-            // .then(res => setBoardBlob(res.data))
-            .catch(err => console.log(err))
-        },1000);
+            }
+        })
+    },[])
+
+
+    const decrementTimer = () => {
+        console.log("decrement check");
+        console.log("timerData.datasets[0].data[0] = " + timerData.datasets[0].data[0])
+        console.log("boardBlob.isActive = " + boardBlob.isActive)
+        if ( (timerData.datasets[0].data[0] > 0) && (boardBlob.isActive === true) )  {
+        // if ( (boardBlob.isActive === true) )  {
+            console.log("IF condition met")
+            let currentTime = [ timerData.datasets[0].data[0], timerData.datasets[0].data[1] ];
+            console.log("currentTime = " + currentTime)
+            currentTime = [(currentTime[0] - 1),(currentTime[1] + 1)]
+            console.log("currentTime = " + currentTime)
+            setTimerData(
+                {
+                    datasets: [
+                        {
+                            data: currentTime,
+                            backgroundColor: [
+                                "#34edaf",
+                                "#ed4634"
+                            ]
+                        }
+                    ]
+                }
+            )
+        } else {
+            console.log("ELSE condition met")
+            setTimesUp(true);
+        }
+    }
+
+    const timerControl = () => {
+        const timerInterval = setInterval(decrementTimer,1000);
     }
 
     return(

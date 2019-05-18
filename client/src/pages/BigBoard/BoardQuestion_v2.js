@@ -7,7 +7,6 @@ import NotStarted from '../../components/BigBoard/NotStarted';
 import gameAPI from '../../utils/gameAPI'
 import Pusher from 'pusher-js'
 
-
 const defaultQuestionTime = 180
 
 const fakeTimerData = {
@@ -25,7 +24,12 @@ const fakeTimerData = {
     ]
 }
 
+    
+
 const BoardQuestion = (props) => {
+
+    
+
 
     // TODO: update this to sync up with the slight tweaks dave made to the structure, specifically around gameActive and isActive
     const [boardBlob, setBoardBlob] = useState(
@@ -74,9 +78,72 @@ const BoardQuestion = (props) => {
 
 /// ======================================================
 /// ======================================================
+/// DAVE TIME STUFF
+
+    const [time, setTime] = useState()
+    const [timer, setTimer] = useState()
+    const [timerData, setTimerData] = useState(fakeTimerData); // TODO: stop using fake data
+
+    const gameTimer = (startTime = false) => {
+        let elapsed = 0
+        startTime = startTime || time || boardBlob.game[0].time
+        const t = setInterval(() => {
+          elapsed++
+          setTime(startTime - elapsed)
+        //   gameAPI.setTime(startTime - elapsed)
+          if (startTime === elapsed) {
+            clearInterval(t)
+            endQuestion()
+          }
+    
+          setTimerData({
+            labels: [
+              'Time Remaining',
+            ],
+            datasets: [
+              {
+                data: [
+                  startTime-elapsed, // what's left
+                  elapsed // what's elapsed
+                ],
+                backgroundColor: [
+                  "#34edaf",
+                  "#ed4634"
+                ]
+              }
+            ],
+            options: {
+              responsive: true
+            }
+          })
+    
+        }, 1000)
+        setTimer(t)
+    }
+
+    const endQuestion = () => {
+        clearInterval(timer)
+        console.log("boardBlob in endQuestion()")
+        console.log(boardBlob);
+        console.log(boardBlob.game)
+        // reset the time on this question first, then call endQuestion
+        let time, q = boardBlob.qNum - 1
+        // if (boardBlob.qNum - 1 <= 0) q = boardBlob.qNum + 1
+        // if (boardBlob.game.length <= 1) time = 180
+
+        // if (Object.keys(boardBlob.game).length <= 1) time = 180
+
+        if(boardBlob.totalQ = 1) q=boardBlob.qNum +1
+
+        else {
+          time = boardBlob.game[q].time
+        }
+      }
+
+/// ======================================================
 /// ======================================================
 
-    const [timerData, setTimerData] = useState(fakeTimerData); // TODO: stop using fake data
+    // const [timerData, setTimerData] = useState(fakeTimerData); // TODO: stop using fake data
     const [timesUp, setTimesUp] = useState(false);
     const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
         {
@@ -143,22 +210,22 @@ const BoardQuestion = (props) => {
                 console.log('response received');
                 // console.log(res.data)
                 setBoardBlob(res.data)
-                // setTimerData({
-                //     datasets: [
-                //         {
-                //             data: [
-                //                 res.data.question.time,
-                //                 0
-                //             ],
-                //             backgroundColor: [
-                //                 "#34edaf",
-                //                 "#ed4634"
-                //             ]
-                //         }
-                //     ]
-                // })
-                timerControl()
-                // gameTimer(res.data.question.time)
+                setTimerData({
+                    datasets: [
+                        {
+                            data: [
+                                res.data.question.time,
+                                0
+                            ],
+                            backgroundColor: [
+                                "#34edaf",
+                                "#ed4634"
+                            ]
+                        }
+                    ]
+                })
+                // timerControl()
+                gameTimer(res.data.question.time)
             })
             // .then(res => setBoardBlob(res.data))
             .catch(err => console.log(err))
@@ -174,14 +241,14 @@ const BoardQuestion = (props) => {
         game.bind(props.userID,function(data){
             // console.log(data)
             setBoardBlob(data)
-            // console.log("data.question.time = " + data.question.time)
-            // console.log("timerData.datasets[0].data[0] = " + timerData.datasets[0].data[0])
-            // if (data.isActive === true) {
-            //     gameTimer(data.question.time)
-            // }
-            // if (data.isActive === false) {
-            //     endQuestion();
-            // }
+            console.log("data.question.time = " + data.question.time)
+            console.log("timerData.datasets[0].data[0] = " + timerData.datasets[0].data[0])
+            if (data.isActive === true) {
+                gameTimer(data.question.time)
+            }
+            if (data.isActive === false) {
+                endQuestion();
+            }
             // if ( Math.abs(data.question.time - timerData.datasets[0].data[0]) > 10 ) {
             //     console.log("running setTimerData b/c time different too large")
             //     setTimerData({
@@ -203,63 +270,38 @@ const BoardQuestion = (props) => {
     },[])
 
 
-    // const decrementTimer = () => {
-    //     console.log("decrement check");
-    //     console.log("timerData.datasets[0].data[0] = " + timerData.datasets[0].data[0])
-    //     console.log("boardBlob.isActive = " + boardBlob.isActive)
-    //     if ( (timerData.datasets[0].data[0] > 0) && (boardBlob.isActive === true) )  {
-    //     // if ( (boardBlob.isActive === true) )  {
-    //         console.log("IF condition met")
-    //         let currentTime = [ timerData.datasets[0].data[0], timerData.datasets[0].data[1] ];
-    //         console.log("currentTime = " + currentTime)
-    //         currentTime = [(currentTime[0] - 1),(currentTime[1] + 1)]
-    //         console.log("currentTime = " + currentTime)
-    //         setTimerData(
-    //             {
-    //                 datasets: [
-    //                     {
-    //                         data: currentTime,
-    //                         backgroundColor: [
-    //                             "#34edaf",
-    //                             "#ed4634"
-    //                         ]
-    //                     }
-    //                 ]
-    //             }
-    //         )
-    //     } else {
-    //         console.log("ELSE condition met")
-    //         setTimesUp(true);
-    //     }
-    // }
-
-    const timerControl = () => {
-        const timerInterval = setInterval(function(){
-            gameAPI.getCurrentQuestion(props.userID)
-            .then(function(res) {
-                console.log('timer API hit reponse received');
-                console.log("res.data.question.time = " + res.data.question.time)
-                // setBoardBlob(res.data)
-                setTimerData({
+    const decrementTimer = () => {
+        console.log("decrement check");
+        console.log("timerData.datasets[0].data[0] = " + timerData.datasets[0].data[0])
+        console.log("boardBlob.isActive = " + boardBlob.isActive)
+        if ( (timerData.datasets[0].data[0] > 0) && (boardBlob.isActive === true) )  {
+        // if ( (boardBlob.isActive === true) )  {
+            console.log("IF condition met")
+            let currentTime = [ timerData.datasets[0].data[0], timerData.datasets[0].data[1] ];
+            console.log("currentTime = " + currentTime)
+            currentTime = [(currentTime[0] - 1),(currentTime[1] + 1)]
+            console.log("currentTime = " + currentTime)
+            setTimerData(
+                {
                     datasets: [
                         {
-                            data: [
-                                res.data.question.time - 1,
-                                180 - res.data.question.time
-                            ],
+                            data: currentTime,
                             backgroundColor: [
                                 "#34edaf",
                                 "#ed4634"
                             ]
                         }
                     ]
-                })
-                // timerControl()
-                // gameTimer(res.data.question.time)
-            })
-            // .then(res => setBoardBlob(res.data))
-            .catch(err => console.log(err))
-        },1000);
+                }
+            )
+        } else {
+            console.log("ELSE condition met")
+            setTimesUp(true);
+        }
+    }
+
+    const timerControl = () => {
+        const timerInterval = setInterval(decrementTimer,1000);
     }
 
     return(
