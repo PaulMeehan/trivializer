@@ -4,7 +4,9 @@ import '../../pages/BigBoard/BigBoard.css';
 // import './BoardQuestion.css';
 import LiveQuestion from "../../components/BigBoard/LiveQuestion";
 import PostQuestion from '../../components/BigBoard/PostQuestion';
+import NotStarted from '../../components/BigBoard/NotStarted';
 import gameAPI from '../../utils/gameAPI'
+import Pusher from 'pusher-js'
 
 const defaultQuestionTime = 180
 
@@ -121,6 +123,7 @@ const BoardQuestion = (props) => {
     //     }
     // );
 
+    // TODO: update this to sync up with the slight tweaks dave made to the structure, specifically around gameActive and isActive
     const [boardBlob, setBoardBlob] = useState(
         {
             question: { // question data for the current question
@@ -130,7 +133,8 @@ const BoardQuestion = (props) => {
                 answerText: "",
                 time: defaultQuestionTime
             },
-            qStatus: "", // should be "live" or "post"
+            isActive: false, // is the question live or post?
+            gameActive: false, // is the game active
             totalQ: 0, // the total # of questions in the game
             qNum: 0, // The true question number. We'll do the +1 on the front end where needed
             ansRcvd: [ // this array should update as answers are received
@@ -226,44 +230,78 @@ const BoardQuestion = (props) => {
             })
             // .then(res => setBoardBlob(res.data))
             .catch(err => console.log(err))
+        // PUSHER
+        Pusher.logToConsole = true
+        const pusher = new Pusher('e5795cf1dfac2a8aee31', {
+            cluster: 'us2',
+            forceTLS: true
+        })
+        const game = pusher.subscribe('game-question')
+        game.bind('dp',this.log)
     },[])
+
+    // componentWillMount () {
+    //     Pusher.logToConsole = true
+    //     const pusher = new Pusher('e5795cf1dfac2a8aee31', {
+    //       cluster: 'us2',
+    //       forceTLS: true
+    //     })
+    //     const game = pusher.subscribe('game-question')
+    //     game.bind('dp',this.log)
+    //   }
 
     return(
 
         <div>
 
-            <h1 className="text-center mt-3 question p-3 mb-4">({boardBlob.qNum + 1}/{boardBlob.totalQ}) {boardBlob.question.question}</h1>
+            {(boardBlob.gameActive === true) ? <h1 className="text-center mt-3 question p-3 mb-4">({boardBlob.qNum + 1}/{boardBlob.totalQ}) {boardBlob.question.question}</h1> : ""}
 
-            { (boardBlob.isActive === true) ?
+            {(boardBlob.gameActive === false) ? 
 
-            <LiveQuestion 
-                ans1 = {boardBlob.question.choices[0]}
-                ans2 = {boardBlob.question.choices[1]}
-                ans3 = {boardBlob.question.choices[2]}
-                ans4 = {boardBlob.question.choices[3]}
-                ansRcvd = {boardBlob.ansRcvd}
-                timesUp = {timesUp} // TODO: need to update this one
-                timerData = {timerData} // TODO: need to update this one
-                timerControl = {timerControl} // TODO: need to update this one
-                question = {boardBlob.question}
-                qNum = {boardBlob.qNum}
-                pieOptions = {pieOptions}
-            />
+                // WHAT TO SHOW IF GAME IS NOT RUNNING
 
-            :
+                <NotStarted
+                    userID = {props.userID}
+                />                
 
-            <PostQuestion
-                ans1 = {boardBlob.question.choices[0]}
-                ans2 = {boardBlob.question.choices[1]}
-                ans3 = {boardBlob.question.choices[2]}
-                ans4 = {boardBlob.question.choices[3]}
-                ansLetter = {boardBlob.question.answer}
-                correctAnswerText = {boardBlob.question.answerText}
-                barData = {boardBlob.barData}
-                barOptions = {barOptions}
-            />
+                :
 
-            }
+                // WHAT TO SHOW IF GAME IS RUNNING
+                // START NESTED TERNARY
+                (boardBlob.isActive === true) ?
+
+                    <LiveQuestion 
+                        ans1 = {boardBlob.question.choices[0]}
+                        ans2 = {boardBlob.question.choices[1]}
+                        ans3 = {boardBlob.question.choices[2]}
+                        ans4 = {boardBlob.question.choices[3]}
+                        ansRcvd = {boardBlob.ansRcvd}
+                        timesUp = {timesUp} // TODO: need to update this one
+                        timerData = {timerData} // TODO: need to update this one
+                        timerControl = {timerControl} // TODO: need to update this one
+                        question = {boardBlob.question}
+                        qNum = {boardBlob.qNum}
+                        pieOptions = {pieOptions}
+                    />
+        
+                    :
+        
+                    <PostQuestion
+                        ans1 = {boardBlob.question.choices[0]}
+                        ans2 = {boardBlob.question.choices[1]}
+                        ans3 = {boardBlob.question.choices[2]}
+                        ans4 = {boardBlob.question.choices[3]}
+                        ansLetter = {boardBlob.question.answer}
+                        correctAnswerText = {boardBlob.question.answerText}
+                        barData = {boardBlob.barData}
+                        barOptions = {barOptions}
+                    />
+        
+                // close nested ternary
+
+            } {/* close main ternary */}
+                
+              
 
             {/* <button
                 onClick={() => toggleStatus()}

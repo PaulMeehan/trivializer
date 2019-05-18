@@ -47,7 +47,7 @@ const Nav = (props) => {
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <Col size="md-9">
         <Link to="/" className="navbar-brand"><img src="/trivializer-logo.png" className="logo"/></Link>
-        <Link to={linkLocation}><h1 style={ {display: "inline-block" } } className="align-middle m-0 ml-4 p-0 pageTitle">{location}</h1></Link>
+        <Link to={linkLocation}><h1 style={ {display: "inline-block" } } className="align-middle m-0 ml-4 p-0 pageTitle">by&nbsp;&nbsp;&nbsp;{location}</h1></Link>
       </Col>
       {/* <Col size="md-7"></Col> */}
       <Col size="md-3">
