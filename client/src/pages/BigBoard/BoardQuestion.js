@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Pie, Bar} from "react-chartjs-2";
 import '../../pages/BigBoard/BigBoard.css';
-// import './BoardQuestion.css';
 import LiveQuestion from "../../components/BigBoard/LiveQuestion";
 import PostQuestion from '../../components/BigBoard/PostQuestion';
 import NotStarted from '../../components/BigBoard/NotStarted';
@@ -10,31 +9,24 @@ import Pusher from 'pusher-js'
 
 const defaultQuestionTime = 180
 
-    const fakeTimerData = {
-        datasets: [
-            {
-                data: [
-                    15,
-                    0
-                ],
-                backgroundColor: [
-                    "#34edaf",
-                    "#ed4634"
-                ]
-            }
-        ]
-    }
+const fakeTimerData = {
+    datasets: [
+        {
+            data: [
+                15,
+                0
+            ],
+            backgroundColor: [
+                "#34edaf",
+                "#ed4634"
+            ]
+        }
+    ]
+}
 
     
 
 const BoardQuestion = (props) => {
-
-    console.log('username:');
-    console.log(props.userID);
-
-    // TODO: onload, need to pull all questions
-    // TODO: get the current question #
-    // TODO: get if the question is active
 
     const decrementTimer = () => {
         console.log("decrement run");
@@ -63,65 +55,6 @@ const BoardQuestion = (props) => {
         const timerInterval = setInterval(decrementTimer,1000);
     }
 
-    // const toggleStatus = () => {
-    //     if ( qStatus === "live" ) {
-    //         setQStatus("post")
-    //     }
-    //     if ( qStatus === "post" ) {
-    //         setQStatus("live")
-    //     }
-    // }
-    
-    // const [boardBlob, setBoardBlob] = useState(
-    //     {
-    //         question: { // question data for the current question
-    //             question: "According to a Beatles song, who kept her face in a jar by the door?",
-    //             choices: ["Eleanor Rigby", "Loretta Martin", "Molly Jones", "Lady Madonna"],
-    //             answer: "A",
-    //             answerText: "Eleanor Rigby",
-    //             time: defaultQuestionTime
-    //         },
-    //         qStatus: "live", // should be "live" or "post"
-    //         totalQ: 15, // the total # of questions in the game
-    //         qNum: 3, // The true question number. We'll do the +1 on the front end where needed
-    //         ansRcvd: [ // this array should update as answers are received
-    //             ["I am Smarticus","A"],
-    //             ["The Quizzard of Oz","B"],
-    //             ["Team Sewer Cougar","C"],
-    //             ["The Decepticons","D"],
-    //             ["#AlternativeFacts","D"],
-    //             ["Taking Care of Quizness","C"],
-    //             ["Multiple Scoregasms","B"],
-    //             ["Rebel Scum","A"]
-    //         ],
-    //         barData: { // everything to build out the post-question bar graph
-    //             labels: [ // populated based on current question
-    //                 "Eleanor Rigby", // A.
-    //                 "Loretta Martin", // B.
-    //                 "Molly Jones", // C.
-    //                 "Lady Madonna" // D.
-    //             ],
-    //             datasets: [
-    //                 {
-    //                     data: [ // the number of submissions for each answer
-    //                         2, // A.
-    //                         4, // B. 
-    //                         1, // C.
-    //                         1 // D.
-    //                     ],
-    //                     backgroundColor: [ // set colors for the 'post' bar graph
-    //                         // correct answer color: #34edaf
-    //                         // wrong answer color: #ed4634
-    //                         "#34edaf", // A.
-    //                         "#ed4634", // B.
-    //                         "#ed4634", // C.
-    //                         "#ed4634" // D.
-    //                     ]
-    //                 }
-    //             ]
-    //         } // close barData
-    //     }
-    // );
 
     // TODO: update this to sync up with the slight tweaks dave made to the structure, specifically around gameActive and isActive
     const [boardBlob, setBoardBlob] = useState(
@@ -168,14 +101,6 @@ const BoardQuestion = (props) => {
         }
     );
 
-    // const [boardBlob, setBoardBlob] = useState();
-
-    // const [numTeams, setNumTeams] = useState();
-    // const [questions, setQuestions] = useState(preQuestions); // TODO: stop using fake data
-    // const [qStatus, setQStatus] = useState("post"); // TODO: stop using fake data
-    // const [qNum, setQNum] = useState(2); // TODO: stop using fake data
-    // const [ansRcvd, setAnsRcvd] = useState(fakeResponses); // TODO: stop using fake data
-    // const [correctAnswerText, setCorrectAnswerText] = useState();
     const [timerData, setTimerData] = useState(fakeTimerData); // TODO: stop using fake data
     const [timesUp, setTimesUp] = useState(false);
     const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
@@ -218,41 +143,88 @@ const BoardQuestion = (props) => {
         }
     )
 
+    // timerData / setTimerData is the state name
+    // const fakeTimerData = {
+    //     datasets: [
+    //         {
+    //             data: [
+    //                 15,
+    //                 0
+    //             ],
+    //             backgroundColor: [
+    //                 "#34edaf",
+    //                 "#ed4634"
+    //             ]
+    //         }
+    //     ]
+    // }
+
     useEffect( () => {
         console.log("useEffect() triggered");
         console.log("username");
-        console.log(props.userID);
+        // console.log(props.userID);
         gameAPI.getCurrentQuestion(props.userID)
             .then(function(res) {
                 console.log('response received');
-                console.log(res.data)
+                // console.log(res.data)
                 setBoardBlob(res.data)
+                setTimerData({
+                    datasets: [
+                        {
+                            data: [
+                                res.data.question.time,
+                                0
+                            ],
+                            backgroundColor: [
+                                "#34edaf",
+                                "#ed4634"
+                            ]
+                        }
+                    ]
+                })
+                timerControl()
             })
             // .then(res => setBoardBlob(res.data))
             .catch(err => console.log(err))
         // PUSHER
-        Pusher.logToConsole = true
+        Pusher.logToConsole = false
         const pusher = new Pusher('e5795cf1dfac2a8aee31', {
             cluster: 'us2',
             forceTLS: true
         })
         const game = pusher.subscribe('game-question')
-        game.bind('dp',this.log)
+        console.log("=== PUSHER ===")
+        console.log(props.userID);
+        game.bind(props.userID,function(data){
+            console.log(data)
+            setBoardBlob(data)
+            console.log("data.question.time = " + data.question.time)
+            console.log("timerData.datasets[0].data[0] = " + timerData.datasets[0].data[0])
+            if ( Math.abs(data.question.time - timerData.datasets[0].data[0]) > 10 ) {
+                console.log("running setTimerData b/c time different too large")
+                setTimerData({
+                    datasets: [
+                        {
+                            data: [
+                                data.question.time - 2,
+                                timerData.datasets[0].data[1]
+                            ],
+                            backgroundColor: [
+                                "#34edaf",
+                                "#ed4634"
+                            ]
+                        }
+                    ]
+                })
+            }
+        })
     },[])
-
-    // componentWillMount () {
-    //     Pusher.logToConsole = true
-    //     const pusher = new Pusher('e5795cf1dfac2a8aee31', {
-    //       cluster: 'us2',
-    //       forceTLS: true
-    //     })
-    //     const game = pusher.subscribe('game-question')
-    //     game.bind('dp',this.log)
-    //   }
 
     return(
 
         <div>
+            
+            <p>timerData: {timerData.datasets[0].data[0]} / {timerData.datasets[0].data[1]}</p>
 
             {(boardBlob.gameActive === true) ? <h1 className="text-center mt-3 question p-3 mb-4">({boardBlob.qNum + 1}/{boardBlob.totalQ}) {boardBlob.question.question}</h1> : ""}
 
@@ -301,12 +273,6 @@ const BoardQuestion = (props) => {
 
             } {/* close main ternary */}
                 
-              
-
-            {/* <button
-                onClick={() => toggleStatus()}
-            >toggle qStatus</button> */}
-
         </div>
     )
 

@@ -4,6 +4,34 @@ import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI'
 import { Link } from 'react-router-dom'
 
+const baseTimerData = {
+  labels: [
+    'Time Remaining',
+  ],
+  datasets: [
+    {
+      data: [
+        180, // what's left
+        0 // what's elapsed
+      ],
+      backgroundColor: [
+        "#34edaf",
+        "#ed4634"
+      ]
+    }
+  ],
+  options: {
+    responsive: true
+  }
+}
+
+const styles = {
+	tempHolderDiv: {
+    width: 400,
+	},
+};
+
+
 
 const GameMasterLiveGame = (props) => {
 
@@ -13,6 +41,9 @@ const GameMasterLiveGame = (props) => {
   const [gameIsActive, setGameIsActive] = useState()
   const [time, setTime] = useState()
   const [timer, setTimer] = useState()
+  const [timerData, setTimerData] = useState(baseTimerData); // TODO: stop using fake data
+
+  
 
   // onload
   useEffect( () => {
@@ -50,6 +81,28 @@ const GameMasterLiveGame = (props) => {
         clearInterval(t)
         endQuestion()
       }
+
+      setTimerData({
+        labels: [
+          'Time Remaining',
+        ],
+        datasets: [
+          {
+            data: [
+              startTime-elapsed, // what's left
+              elapsed // what's elapsed
+            ],
+            backgroundColor: [
+              "#34edaf",
+              "#ed4634"
+            ]
+          }
+        ],
+        options: {
+          responsive: true
+        }
+      })
+
     }, 1000)
     setTimer(t)
   }
@@ -230,9 +283,9 @@ const GameMasterLiveGame = (props) => {
               {(currentQuestion && !activeQuestion) ? (<div>This question has ended</div>) : (<div></div>)}
             </div>
             <div className={ activeQuestion ? "col-md-3" : "col-md-3 hidden" }>
-              <Pie
-                // data= {timerData}
-              />
+              {/* <Pie
+                data= {timerData}
+              /> */}
             </div>
         </div>
         </div>
@@ -241,12 +294,48 @@ const GameMasterLiveGame = (props) => {
     return qstns
   }
 
+  // BRANDON'S CHART.JS TIMER MESS
+
+  
+  // const decrementTimer = () => {
+  //   console.log("decrement run");
+  //   if (timerData.datasets[0].data[0] > 0) {
+  //     let currentTime = [timerData.datasets[0].data[0],timerData.datasets[0].data[1]];
+  //     currentTime = [(currentTime[0] - 1),(currentTime[1] + 1)]
+  //     setTimerData(
+  //       {
+  //         datasets: [
+  //           {
+  //             data: currentTime,
+  //             backgroundColor: [
+  //               "#34edaf",
+  //               "#ed4634"
+  //             ]
+  //           }
+  //         ],
+  //         options: {
+  //             responsive: true
+  //         }
+  //       }
+  //     )
+  //   }
+  // }
+  // const timerControl = () => {
+  //   const timerInterval = setInterval(decrementTimer,1000);
+  // }
+
   return(
     <div className="container">
       <h4>Live game at
         {/* <a href={`trivializer.com/play/${props.username}`} target="_blank">{`  trivializer.com/play/${props.username}`}</a> */}
         <Link to={`trivializer.com/play/${props.username}`} target="_blank">{`  trivializer.com/play/${props.username}`}</Link>
       </h4>
+      <div style={styles.tempHolderDiv}>
+        <Pie
+          data = {timerData}
+        />
+      </div>
+      
       <button onClick={() => printState()}>PrintState</button>
       {time}
       <div className="row mt-4">
