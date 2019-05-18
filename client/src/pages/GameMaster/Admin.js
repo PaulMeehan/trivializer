@@ -46,7 +46,8 @@ const GameMasterAdmin = () => {
     console.log ("In addQuestion");
     console.log (newCorrect);
     if (!newCorrect) return
-    const tempQuestions = [...questions]
+    console.log(tempQuestions)
+    const tempQuestions = questions && questions.length ? [...questions] : [];
     const newQuestion = {
       question: newQ,
       choices: [newA1, newA2, newA3, newA4],
