@@ -8,3 +8,21 @@
 .hidden {
     visibility:hidden;
 }
+
+#gotoadmin {
+    text-align: center;
+    color: black;
+}
+
+#adminAnchor {
+    margin-top: 0px;
+}
+
+#startover {
+    text-align: center;
+    color: black;
+}
+
+#btnStartOver {
+    margin-top: 0px;
+}
