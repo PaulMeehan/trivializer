@@ -58,6 +58,7 @@ const prepCurrentGameQuestion = (questions, answers) => {
 
   // answers need to be [[teamName1,answer], [teamName2,answer], etc...]
   q.ansRcvd = a
+  console.log("**\n**\n**\n a = " + a + "\n**\n**\n**")
 
   // barData.labels prep
   const labels = []
@@ -69,23 +70,26 @@ const prepCurrentGameQuestion = (questions, answers) => {
   q.barData.datasets = []
   const datasetsInnerObject = {
     data: [],
-    colors: [],
+    backgroundColor: [],
   }
   // const data = []
   // const colors = []
+  console.log("**\n**\n**\n q.question.choices.length = " + q.question.choices.length + "\n**\n**\n**")
   for (let i = 0; i < q.question.choices.length; i++) {
-
+    console.log("\n\ndatasets FOR loop, trip " + i)
     // background colors
     let color = '#ed4634'
     if (alphabet[i] === q.question.answer) color = '#34edaf'
-    datasetsInnerObject.colors.push(color)
+    datasetsInnerObject.backgroundColor.push(color)
 
     // data - tally count of each answer
+    let count = 0
     for (let j in a)  {
-      let count = 0
+      console.log("datasets score tally FOR loop, trip " + j)
+      console.log("a length = " + a.length)
       if (a[j][1] === alphabet[i]) count++
-      datasetsInnerObject.data.push(count)
     }
+    datasetsInnerObject.data.push(count)
   }
   q.barData.datasets[0] = datasetsInnerObject;
   // q.barData.datasets.data = data
