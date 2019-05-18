@@ -39,7 +39,10 @@ class LoginForm extends Component {
           <Row>
             <Col size="md-3"></Col>
             <Col size="md-6">
-              <Card title="Login to React Reading List">
+							<div class="text-center mb-3">
+								<img src="/trivializer-logo.png" className="logo"/>	
+							</div>
+              <Card title="Login to Trivializer">
                 <form style={{marginTop: 10}}>
                   <label htmlFor="username">Username: </label>
                   <Input

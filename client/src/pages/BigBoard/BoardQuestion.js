@@ -266,8 +266,8 @@ const BoardQuestion = (props) => {
 
         <div>
             
-            <p>timerData.datasets[0].data[0]: {timerData.datasets[0].data[0]}</p>
-            <p>timerData.datasets[0].data[1]: {timerData.datasets[0].data[1]}</p>
+            {/* <p>timerData.datasets[0].data[0]: {timerData.datasets[0].data[0]}</p>
+            <p>timerData.datasets[0].data[1]: {timerData.datasets[0].data[1]}</p> */}
 
             {(boardBlob.gameActive === true) ? <h1 className="text-center mt-3 question p-3 mb-4">({boardBlob.qNum + 1}/{boardBlob.totalQ}) {boardBlob.question.question}</h1> : ""}
 
