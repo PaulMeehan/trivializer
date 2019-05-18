@@ -94,25 +94,57 @@ const GameMasterLiveGame = () => {
   const timerControl = () => {
     const timerInterval = setInterval(decrementTimer,1000);
   }
+
   const ControllButton = () => {
     const button = []
     // game is active but the last question is over
     if (!questionIsActive && (qNum === questions.length - 1)) {
       button.push(
-        <div className="row">
-          <div className="col md-3">
-            <a
-              className='btn btn-success btn-lg btn-block'
-              href="/admin"
-            >Back to Admin</a>
+//  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+        <div class="container">
+
+          <div className="row">
+            <div className="col md-3">
+              {/* <a
+                className='btn btn-success btn-lg btn-block'
+                href="/admin"
+              >Back to Admin</a> */}
+              <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#gotoadmin">
+                Back to Admin
+              </button>
+            </div>
+            <div className="col md-3">
+              <button
+                className='btn btn-danger btn-lg btn-block'
+                onClick={() => startNextQuestion()}
+              >Start Over
+              </button>
+            </div>
           </div>
-          <div className="col md-3">
-            <button
-              className='btn btn-danger btn-lg btn-block'
-              onClick={() => startNextQuestion()}
-            >Start Over
-            </button>
+
+          <div class="modal fade" id="gotoadmin" tabindex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title" id="exampleModalLabel">Warning ! ! !</h2>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <h4></h4>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */}
+
         </div>
       )
     }
