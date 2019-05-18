@@ -41,6 +41,7 @@ const prepCurrentGameQuestion = (questions, answers) => {
   answers = answers || []
   const alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
   const q = prepQuestions(questions)
+  console.log("\n\nLOOK AT THIS: " + q.qNum)
   const a = prepAnswers(answers, q.qNum)
 
   /*
@@ -65,25 +66,30 @@ const prepCurrentGameQuestion = (questions, answers) => {
   q.barData.labels = labels
 
   // barData.datasets.data & barData.datasets.backgroundColor prep
-  q.barData.datasets = {}
-  const data = []
-  const colors = []
+  q.barData.datasets = []
+  const datasetsInnerObject = {
+    data: [],
+    colors: [],
+  }
+  // const data = []
+  // const colors = []
   for (let i = 0; i < q.question.choices.length; i++) {
 
     // background colors
     let color = '#ed4634'
     if (alphabet[i] === q.question.answer) color = '#34edaf'
-    colors.push(color)
+    datasetsInnerObject.colors.push(color)
 
     // data - tally count of each answer
     for (let j in a)  {
       let count = 0
       if (a[j][1] === alphabet[i]) count++
-      data.push(count)
+      datasetsInnerObject.data.push(count)
     }
   }
-  q.barData.datasets.data = data
-  q.barData.datasets.backgroundColor = colors
+  q.barData.datasets[0] = datasetsInnerObject;
+  // q.barData.datasets.data = data
+  // q.barData.datasets.backgroundColor = colors
   // finished - return q
   return q
 }
@@ -274,12 +280,19 @@ module.exports = {
     // see if the question is active
     db.User.findOne({ username: host })
     .then(game => {
-      if (!game.gameActive || !game.questionActive) return res.json({message:'No active question'})
+      // if (!game.gameActive || !game.questionActive || parseInt(game.qNum) === -1) {
+      //   console.log("**\n**\n**\n if (!game.gameActive || !game.questionActive || parseInt(game.qNum) === -1) \n**\n**\n**")
+      //   return res.json(prepCurrentGameQuestion(game))
+      // }
       // see if the player has answered already
       db.GameResponse.find({ hostName: host, qNum: game.qNum, playerName: player })
       .then(answered => {
         if (answered.length) return res.json({message:'You already answered this question'})
-        res.json(prepCurrentGameQuestion(game))
+        db.GameResponse.find({ hostName: host })
+        .then(answers => {
+          console.log("**\n**\n**\n active response sent \n**\n**\n**")
+          res.json(prepCurrentGameQuestion(game, answers))
+        })
       })
     })
   },
@@ -353,6 +366,17 @@ module.exports = {
         }
         res.json(response)
       })
+    })
+  },
+  setGameTime: (req, res) => {
+    const _id = req.user._id
+    const time = parseInt(req.params.time)
+    db.User.findOne({ _id })
+    .then(user => {
+      if (user.qNum < 0) return res.send(200)
+      user.game[user.qNum].time = time
+      db.User.update({ _id }, { $set: {game: user.game}})
+      .then(res.send(200))
     })
   }
 }

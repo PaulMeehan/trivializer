@@ -23,7 +23,10 @@ export default {
     return axios.post(`/api/play/${game}/${qNum}/${choice}`)
   },
   getCurrentQuestion: game => {
-    return axios.get(`/play/$game`)
+    return axios.get(`/api/play/${game}`)
   },
+  setTime: time => {
+    return axios.post(`/api/time/${time}`)
+  }
 
 }

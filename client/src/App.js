@@ -104,10 +104,11 @@ class App extends Component {
 								{/* <Route exact path="/board-halftime" component={BoardHalfTime} /> */}
 								{/* <Route exact path="/board-gameover" component={BoardGameOver} /> */}
 								<Route exact path="/admin" component={GameMasterAdmin} />
-								<Route exact path="/live-game" component={GameMasterLiveGame} />
+								<Route exact path="/live-game" component={() => <GameMasterLiveGame username={this.state.user.username}/>} />
 								<Route exact path="/statsboard" component={StatsBoard} />
-								<Route exact path="/board-question" component={BoardQuestion} />
-								<Route exact path="/play/*" component={User} />
+								{/* <Route exact path="/board-question" component={BoardQuestion} userID={"cheese"} /> */}
+								<Route exact path="/board-question" component={() => <BoardQuestion userID={this.state.user.username}/>} />
+								<Route exact path="/user/" component={User} />
                 <Route component={NoMatch} />
               </Switch>
             </div>
