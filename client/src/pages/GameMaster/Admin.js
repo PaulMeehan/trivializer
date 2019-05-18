@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import './Admin.css';
 import AdminGameDiv from "../../components/Admin/AdminGameDiv";
 import gameAPI from '../../utils/gameAPI'
+import { Link } from 'react-router-dom'
 
 const defaultQuestionTime = 180
 
@@ -103,7 +104,8 @@ const GameMasterAdmin = () => {
           {/* spacer div */}
         </div>
         <div className="col-md-4 border">
-          <a href="/live-game" className="btn btn-success">Start Your Game</a>
+          {/* <a href="/live-game" className="btn btn-success">Start Your Game</a> */}
+          <Link to="/live-game" className="btn btn-success">Start Your Game</Link>
         </div>
       </div>
       {/* saved questions div */}

@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef } from 'react'
 import './Admin.css'
 import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI'
+import { Link } from 'react-router-dom'
 
 
 const GameMasterLiveGame = (props) => {
@@ -117,7 +118,7 @@ const GameMasterLiveGame = (props) => {
             </div>
           </div>
 
-          <div class="modal fade" id="gotoadmin" tabindex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
+          <div class="modal" data-backdrop="false" id="gotoadmin" tabindex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -132,16 +133,18 @@ const GameMasterLiveGame = (props) => {
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
-                  <a id="adminAnchor"
-                    className='btn btn-secondary btn-lg btn-block'
-                    href="/admin"
-                  >Yes, go to Admin</a>
+                  <Link to={`/admin`} id="adminAnchor" 
+                    className="btn btn-secondary btn-lg btn-block"
+                    // data-dismiss="modal"
+                    >
+                      Yes, go to Admin
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="modal fade" id="startover" tabindex="-1" role="dialog" aria-labelledby="startoverModalLabel" aria-hidden="true">
+          <div class="modal" id="startover" tabindex="-1" role="dialog" aria-labelledby="startoverModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -241,7 +244,8 @@ const GameMasterLiveGame = (props) => {
   return(
     <div className="container">
       <h4>Live game at
-        <a href={`trivializer.com/play/${props.username}`} target="_blank">{`  trivializer.com/play/${props.username}`}</a>
+        {/* <a href={`trivializer.com/play/${props.username}`} target="_blank">{`  trivializer.com/play/${props.username}`}</a> */}
+        <Link to={`trivializer.com/play/${props.username}`} target="_blank">{`  trivializer.com/play/${props.username}`}</Link>
       </h4>
       <button onClick={() => printState()}>PrintState</button>
       {time}
