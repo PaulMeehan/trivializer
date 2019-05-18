@@ -53,10 +53,11 @@ const GameMasterAdmin = () => {
       answer: newCorrect,
       time: defaultQuestionTime
     }
+    console.log(tempQuestions, newQuestion)
     tempQuestions.push(newQuestion)
     gameAPI.setQuestions(tempQuestions)
       .then(res => setQuestions(res.data.game))
-      .catch(err => console.log(err))
+      .catch(err => console.log(err, 'this is an error inside of addQuestion', tempQuestions, newQuestion))
   }
 
   return(
