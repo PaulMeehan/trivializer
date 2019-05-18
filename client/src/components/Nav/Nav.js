@@ -12,14 +12,14 @@ const Nav = (props) => {
 		greeting = (
 			<Fragment>
 				Welcome back, <strong>{props.user.firstName}</strong>
-        - <Link to="#" className="logout" onClick={props.logout}>Logout</Link>
+        &nbsp; <Link to="#" className="logout" onClick={props.logout}>[Logout]</Link>
 			</Fragment>
 		)
 	} else if (props.user.username) {
 		greeting = (
 			<Fragment>
 				Welcome back, <strong>{props.user.username} </strong>
-        - <Link to="#" className="logout" onClick={props.logout}>Logout</Link>
+        &nbsp; <Link to="#" className="logout" onClick={props.logout}>[Logout]</Link>
 			</Fragment>
 		)
   }
@@ -35,11 +35,11 @@ const Nav = (props) => {
     linkLocation = "/board-question";
     greeting = "";
   } else if (window.location.pathname.toLowerCase() === "/board-question") {
-    location = props.user.username
+    location = "by\xa0\xa0\xa0" + props.user.username
     linkLocation = "/statsboard";
     greeting = "";
-  } else if (window.location.pathname.toLowerCase() === "/live-game") {
-    location = "YOUR GAME IS LIVE!!!"
+  } else if (window.location.pathname.toLowerCase() === "/live-game" || "/admin") {
+    location = "by\xa0\xa0\xa0" + props.user.username
     linkLocation = "#";
   }
 
@@ -47,7 +47,7 @@ const Nav = (props) => {
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <Col size="md-9">
         <Link to="/" className="navbar-brand"><img src="/trivializer-logo.png" className="logo"/></Link>
-        <Link to={linkLocation}><h1 style={ {display: "inline-block" } } className="align-middle m-0 ml-4 p-0 pageTitle">by&nbsp;&nbsp;&nbsp;{location}</h1></Link>
+        <Link to={linkLocation}><h1 style={ {display: "inline-block" } } className="align-middle m-0 ml-4 p-0 pageTitle">{location}</h1></Link>
       </Col>
       {/* <Col size="md-7"></Col> */}
       <Col size="md-3">

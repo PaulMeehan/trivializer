@@ -1,6 +1,5 @@
-.logout {
+.logout, .logout:hover {
   color: #fff;
-  
 }
 .bg-primary {
   background-color: #9800FF !important;
