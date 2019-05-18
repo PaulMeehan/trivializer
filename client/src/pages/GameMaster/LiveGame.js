@@ -105,19 +105,14 @@ const GameMasterLiveGame = (props) => {
 
           <div className="row">
             <div className="col md-3">
-              {/* <a
-                className='btn btn-success btn-lg btn-block'
-                href="/admin"
-              >Back to Admin</a> */}
+
               <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#gotoadmin">
                 Back to Admin
               </button>
             </div>
             <div className="col md-3">
-              <button
-                className='btn btn-danger btn-lg btn-block'
-                onClick={() => startNextQuestion()}
-              >Start Over
+              <button type="button" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#startover">
+                Start Over
               </button>
             </div>
           </div>
@@ -132,11 +127,38 @@ const GameMasterLiveGame = (props) => {
                   </button>
                 </div>
                 <div class="modal-body">
-                  <h4></h4>
+                  <h2>If you go to the Admin Screen, you will have to restart this game.</h2>
+                  <h4>Do you want to continue to the Admin Screen?</h4>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Save changes</button>
+                  <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
+                  <a id="adminAnchor"
+                    className='btn btn-secondary btn-lg btn-block'
+                    href="/admin"
+                  >Yes, go to Admin</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="startover" tabindex="-1" role="dialog" aria-labelledby="startoverModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h2 class="modal-title" id="exampleModalLabel">Warning ! ! !</h2>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <h2>If you Start Over, all player answers will be deleted.</h2>
+                  <h4>Are you sure you want to start over?</h4>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
+                  <button type="button" id="btnStartOver" className='btn btn-danger btn-lg btn-block' data-dismiss="modal" onClick={() => startNextQuestion()}>
+                    Yes, Start Over!
+                  </button>
                 </div>
               </div>
             </div>
