@@ -10,22 +10,28 @@ const defaultQuestionTime = 180
 
 const GameMasterAdmin = () => {
 
-  const [questions, setQuestions] = useState([]);
+  const [questions, setQuestions] = useState([{question:"stillEmpty"}]);
   const [newQ, setNewQ] = useState();
   const [newA1, setNewA1] = useState();
   const [newA2, setNewA2] = useState();
   const [newA3, setNewA3] = useState();
   const [newA4, setNewA4] = useState();
   const [newCorrect, setNewCorrect] = useState();
-  const [questionCount, setQuestionCount] = useState(false);
+  const [questionCount, setQuestionCount] = useState("stillEmpty");
   const [firstAjaxReturned, setFirstAjaxReturned] = useState(false);
+
+  // console.log("questions[0].question = " + questions[0].question)
 
   useEffect(() => {
     gameAPI.getQuestions()
       .then(function(res) {
-        setQuestions(res.data.game)
-        setQuestionCount(res.data.game.length -1)
-        setFirstAjaxReturned(true)
+        console.log("res.data.game = ");
+        console.log(res.data.game);
+        if (res.data.game.length !== 0) {
+          setQuestions(res.data.game)
+          setQuestionCount(res.data.game.length -1)
+          setFirstAjaxReturned(true)
+        }
       })
       .catch(err => console.log(err))
   }, [])
@@ -61,7 +67,7 @@ const GameMasterAdmin = () => {
     if (!newCorrect) return
     console.log(tempQuestions)
     // const tempQuestions = [...questions]
-    const tempQuestions = questions && questions.length > 0 ? [...questions] : [];
+    let tempQuestions = questions && questions.length > 0 ? [...questions] : [];
     const newQuestion = {
       question: newQ,
       choices: [newA1, newA2, newA3, newA4],
@@ -69,11 +75,22 @@ const GameMasterAdmin = () => {
       time: defaultQuestionTime
     }
     console.log(tempQuestions, newQuestion)
-    tempQuestions.push(newQuestion)
+    if (questions[0].question === "stillEmpty") { // if the "stillEmpty" placehold is still present, we want to overwrite the array with only this new question
+      tempQuestions = [newQuestion] 
+    } else { // otherwise it's business as usual
+      tempQuestions.push(newQuestion)
+    }
     gameAPI.setQuestions(tempQuestions)
       .then(function(res) {
         setQuestions(res.data.game)
         setQuestionCount(res.data.game.length -1)
+        setNewQ('');
+        setNewA1('');
+        setNewA2('');
+        setNewA3('');
+        setNewA4('');
+        setNewCorrect('');
+        document.getElementById("addQuestionForm").reset();
       })
       .catch(err => console.log(err))
   }
@@ -142,10 +159,14 @@ const GameMasterAdmin = () => {
           <div className="border p-3 m-0 mb-5">
               <div className="container">
 
+                {console.log("questionCount = " + questionCount)}
+
                 { 
                 // TERNARY (DETERMINING IF questionCount HAS BEEN UPDATED)
-                (questionCount === false) ? <h1>No Question Count</h1> : 
+                (questionCount === "stillEmpty" || questions[0].question === "stillEmpty") ? <h4>No current questions</h4> : 
                 
+                // <h4>Trying to show the last question</h4>
+                // console.log("trying to spit out <AdminGameDiv>")
                 <AdminGameDiv
                   realQNumber = {questionCount}
                   qNumber = {questionCount + 1}
@@ -192,7 +213,7 @@ const GameMasterAdmin = () => {
           </div>
           <div className="border p-3 m-0">
               <div className="container">
-              {questions?
+              { (questions[0].question !== "stillEmpty") ?
                 (
                   questions.map( (question, i) => {
                     return (
