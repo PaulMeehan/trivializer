@@ -5,6 +5,14 @@
 .deadQuestion {
     background-color: gray;
 }
+.notDeadQuestion {
+    background-color: #33EDAF;
+    color: #961CFF;
+    border: 8px solid #ffffff !important;
+}
+.notDeadQuestion h1 {
+    color: #961CFF;
+}
 .hidden {
     visibility:hidden;
 }
@@ -40,4 +48,23 @@ h2, h3 {
 .header h2 {
     margin: 0px;
     padding: 0px;
+}
+
+.white, .white:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.liveGameCurrentQuestionHeader {
+    background-color: #ffffff;
+    color: #961CFF;
+    margin-top: 20px;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#questionsFrame {
+    height: 70vh;
+    overflow: auto;
 }
