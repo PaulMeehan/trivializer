@@ -41,7 +41,6 @@ const prepCurrentGameQuestion = (questions, answers) => {
   answers = answers || []
   const alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
   const q = prepQuestions(questions)
-  console.log("\n\nLOOK AT THIS: " + q.qNum)
   const a = prepAnswers(answers, q.qNum)
 
   /*
@@ -284,14 +283,10 @@ module.exports = {
     // see if the question is active
     db.User.findOne({ username: host })
     .then(game => {
-      // if (!game.gameActive || !game.questionActive || parseInt(game.qNum) === -1) {
-      //   console.log("**\n**\n**\n if (!game.gameActive || !game.questionActive || parseInt(game.qNum) === -1) \n**\n**\n**")
-      //   return res.json(prepCurrentGameQuestion(game))
-      // }
+      if (!game || game.length === 0) return res.json({message: 'dne'})
       // see if the player has answered already
       db.GameResponse.find({ hostName: host, qNum: game.qNum, playerName: player })
       .then(answered => {
-        if (answered.length) return res.json({message:'You already answered this question'})
         db.GameResponse.find({ hostName: host })
         .then(answers => {
           console.log("**\n**\n**\n active response sent \n**\n**\n**")
@@ -311,7 +306,6 @@ module.exports = {
         .then(answers => {
           const response = prepCurrentGameQuestion(game, answers)
           pusher.trigger('game-question', host, game)
-          console.log(prepQuestions(game))
           res.json(prepQuestions(game))
         })
       })
@@ -356,53 +350,48 @@ module.exports = {
       .then(game => {
         game = prepCurrentGameQuestion(game)
         const response = {
-
           barOptions: {
-              legend: {
-                  display: false, // static value
-              },
-              responsive: true, // static value
-              maintainAspectRatio: false, // static value
-              scales: {
-                  xAxes: [{
-                      position: "top", // static value
-                      ticks: {
-                          beginAtZero: true, // static value
-                          min: 0, // static value
-                  // ############ //
-                          max: game.game.length, // THIS VALUE NEEDS TO BE SET TO THE TOTAL # OF QUESTIONS FOR THE GAME!!
-                  // ############ //
-                          fontColor: "#ffffff", // static value
-                          fontSize: 30, // static value
-                          stepSize: 1, // static value
-                      },
-                      gridLines: {
-                          color: "#ffffff" // static value
-                      }      
-                  }],
-                  yAxes: [{
-                      ticks: {
-                          fontColor: "#ffffff", // static value
-                          fontSize: 30, // static value
-                          fontFamily: "'Bangers', sans-serif" // static value
-                      },
-                      gridLines: {
-                          color: "#ffffff" // static value
-                      } 
-                  }]
-              }
+            legend: {
+                display: false, // static value
+            },
+            responsive: true, // static value
+            maintainAspectRatio: false, // static value
+            scales: {
+              xAxes: [{
+                position: "top", // static value
+                ticks: {
+                  beginAtZero: true, // static value
+                  min: 0, // static value
+                  max: game.game.length, // THIS VALUE NEEDS TO BE SET TO THE TOTAL # OF QUESTIONS FOR THE GAME!!
+                  fontColor: "#ffffff", // static value
+                  fontSize: 30, // static value
+                  stepSize: 1, // static value
+                },
+                gridLines: {
+                  color: "#ffffff" // static value
+                }
+              }],
+              yAxes: [{
+                ticks: {
+                  fontColor: "#ffffff", // static value
+                  fontSize: 30, // static value
+                  fontFamily: "'Bangers', sans-serif" // static value
+                },
+                gridLines: {
+                  color: "#ffffff" // static value
+                }
+              }]
+            }
           },
           answerData: {
             labels: labels,
             datasets: [
-              { 
+              {
                 data: data,
                 backgroundColor: backGroundColor
               }
             ]
           }
-
-          
           // options: {
           //   responsive: true,
           //   scales : {
@@ -415,11 +404,6 @@ module.exports = {
           //     }]
           //   }
           // }
-
-
-
-
-
         }
         res.json(response)
       })
