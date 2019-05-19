@@ -1,10 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {Pie, Bar} from "react-chartjs-2";
 import '../../pages/BigBoard/BigBoard.css';
-import LiveQuestion from "../../components/BigBoard/LiveQuestion";
-import PostQuestion from '../../components/BigBoard/PostQuestion';
-import NotStarted from '../../components/BigBoard/NotStarted';
-import gameAPI from '../../utils/gameAPI'
+import LiveQuestion from "../../../components/BigBoard/LiveQuestion";
+import PostQuestion from '../../../components/BigBoard/PostQuestion';
+import NotStarted from '../../../components/BigBoard/NotStarted';
+import gameAPI from '../../../utils/gameAPI'
 import Pusher from 'pusher-js'
 
 const defaultQuestionTime = 180

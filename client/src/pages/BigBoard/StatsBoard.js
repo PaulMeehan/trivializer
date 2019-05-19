@@ -29,7 +29,7 @@ const StatsBoard = () => {
                             beginAtZero: true, // static value
                             min: 0, // static value
                     // ############ //
-                            max: 15, // THIS VALUE NEEDS TO BE SET TO THE TOTAL # OF QUESTIONS FOR THE GAME!!
+                            max: 1, // THIS VALUE NEEDS TO BE SET TO THE TOTAL # OF QUESTIONS FOR THE GAME!!
                     // ############ //
                             fontColor: "#ffffff", // static value
                             fontSize: 30, // static value
@@ -53,42 +53,15 @@ const StatsBoard = () => {
             },
             answerData: {
                 labels: [ // an array of all the team names
-                    'I am Smarticus',
-                    'The Quizzard of Oz',
-                    'Team Sewer Cougar',
-                    'The Decepticons',
-                    '#AlternativeFacts',
-                    'Taking Care of Quizness',
-                    'Multiple Scoregasms',
-                    'Rebel Scum',
-                    'Another Team',
-                    'And Another'
+                    '',
                 ],
                 datasets: [
                     {
                         data: [ // corresponding current scores for the teams listed in the labels array
-                            6,
-                            4,
-                            8,
-                            2,
-                            5,
-                            8,
-                            3,
-                            7,
-                            3,
-                            4
+                            0,
                         ],
                         backgroundColor: [ // for the team(s) in the lead, set the color to #34edaf
                             "#F634FF",
-                            "#F634FF",
-                            "#34edaf",
-                            "#F634FF",
-                            "#F634FF",
-                            "#34edaf",
-                            "#F634FF",
-                            "#F634FF",
-                            "#F634FF",
-                            "#F634FF"
                         ]
                     }
                 ],
@@ -97,7 +70,88 @@ const StatsBoard = () => {
     );
 
 
-    
+    // SAVED COPY OF WHAT A POPULATED statsBlob LOOKS LIKE
+    // const [statsBlob, setStatsBlob] = useState(
+    //     {
+    //         barOptions: {
+    //             legend: {
+    //                 display: false, // static value
+    //             },
+    //             responsive: true, // static value
+    //             maintainAspectRatio: false, // static value
+    //             scales: {
+    //                 xAxes: [{
+    //                     position: "top", // static value
+    //                     ticks: {
+    //                         beginAtZero: true, // static value
+    //                         min: 0, // static value
+    //                 // ############ //
+    //                         max: 15, // THIS VALUE NEEDS TO BE SET TO THE TOTAL # OF QUESTIONS FOR THE GAME!!
+    //                 // ############ //
+    //                         fontColor: "#ffffff", // static value
+    //                         fontSize: 30, // static value
+    //                         stepSize: 1, // static value
+    //                     },
+    //                     gridLines: {
+    //                         color: "#ffffff" // static value
+    //                     }      
+    //                 }],
+    //                 yAxes: [{
+    //                     ticks: {
+    //                         fontColor: "#ffffff", // static value
+    //                         fontSize: 30, // static value
+    //                         fontFamily: "'Bangers', sans-serif" // static value
+    //                     },
+    //                     gridLines: {
+    //                         color: "#ffffff" // static value
+    //                     } 
+    //                 }]
+    //             }
+    //         },
+    //         answerData: {
+    //             labels: [ // an array of all the team names
+    //                 'I am Smarticus',
+    //                 'The Quizzard of Oz',
+    //                 'Team Sewer Cougar',
+    //                 'The Decepticons',
+    //                 '#AlternativeFacts',
+    //                 'Taking Care of Quizness',
+    //                 'Multiple Scoregasms',
+    //                 'Rebel Scum',
+    //                 'Another Team',
+    //                 'And Another'
+    //             ],
+    //             datasets: [
+    //                 {
+    //                     data: [ // corresponding current scores for the teams listed in the labels array
+    //                         6,
+    //                         4,
+    //                         8,
+    //                         2,
+    //                         5,
+    //                         8,
+    //                         3,
+    //                         7,
+    //                         3,
+    //                         4
+    //                     ],
+    //                     backgroundColor: [ // for the team(s) in the lead, set the color to #34edaf
+    //                         "#F634FF",
+    //                         "#F634FF",
+    //                         "#34edaf",
+    //                         "#F634FF",
+    //                         "#F634FF",
+    //                         "#34edaf",
+    //                         "#F634FF",
+    //                         "#F634FF",
+    //                         "#F634FF",
+    //                         "#F634FF"
+    //                     ]
+    //                 }
+    //             ],
+    //         }
+    //     }
+    // );
     
     
 
