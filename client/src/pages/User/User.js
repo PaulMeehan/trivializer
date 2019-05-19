@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import gameAPI from '../../utils/gameAPI';
@@ -7,6 +6,10 @@ import Visibility from '../../components/Visibility/Visibility.js';
 
 
 const User = ({ userId }) => {
+  /*
+    State & Session mem
+  */
+
   const [host, setHost] = useState()
   const [qNum, setQNum] = useState()
   const [question, setQuestion] = useState()
@@ -16,25 +19,29 @@ const User = ({ userId }) => {
   const [userChoiceText, setUserChoiceText] = useState()
   const [userWasCorrect, setUserWasCorrect] = useState()
   const [time, setTime] = useState()
-  const [whereAreWe, setWhereAreWe] = useState()
+  const [whereAreWe, setWhereAreWe] = useState('preGame')
+  const [userDidAnswer, setUserDidAnswer] = useState()
   // need persist memory because for some reason
   // the state variables get reset when pusher sends
   // data into setState
   const persist = {
-    host: null,
-    qNum: null,
-    question: null,
-    choices: null,
-    answerText: null,
-    userChoice: null,
-    userChoiceText: null,
-    userWasCorrect: null,
-    time: null,
-    timer: null,
-    whereAreWe: null
+    host: 'Bob',
+    qNum: -1,
+    question: '',
+    choices: ['','','',''],
+    answerText: '',
+    userChoice: '',
+    userChoiceText: '',
+    userWasCorrect: '',
+    time: 180,
+    timer: '',
+    whereAreWe: 'preGame',
+    userDidAnswer: false
   }
 
-
+  /*
+    onLoad & setState logic (where the magic happens)
+  */
   useEffect( () => {
     // call for current question
     const hostname = window.location.pathname.substring(window.location.pathname.indexOf('-')+1)
@@ -55,34 +62,20 @@ const User = ({ userId }) => {
 
   }, [])
 
-  const printState = () => {
-    console.log('\n-----------------\nCURRENT STATE\n-----------------')
-    console.log('Host:',host)
-    console.log('question text', question)
-    console.table('choices',choices)
-    console.log('answerText',answerText)
-    console.log('userWasCorrect', userWasCorrect)
-    console.log('userChoice', userChoice)
-    console.log('userChoiceText',userChoiceText)
-    console.log('qNum ', qNum)
-    console.log('time ', time)
-    console.log('page we are on:',whereAreWe)
-  }
-
   const setState = r => {
     /*
       Function & Variable Farm
     */
-    const putPersistentIntoState = () => {
-      setHost(persist.host)
-      setQNum(persist.qNum)
-      setQuestion(persist.question)
-      setChoices(persist.choices)
-      setAnswerText(persist.answerText)
-      setUserChoice(persist.userChoice)
-      setUserChoiceText(persist.userChoiceText)
-      setTime(persist.time)
-      setWhereAreWe(persist.whereAreWe)
+    const putPersistentIntoState = (p = persist) => {
+      setHost(p.host)
+      setQNum(p.qNum)
+      setQuestion(p.question)
+      setChoices(p.choices)
+      setAnswerText(p.answerText)
+      setUserChoice(p.userChoice)
+      setUserChoiceText(p.userChoiceText)
+      setTime(p.time)
+      setWhereAreWe(p.whereAreWe)
     }
     const findChoice = (ans = false) => {
       const answers = r.ansRcvd
@@ -102,13 +95,13 @@ const User = ({ userId }) => {
       persist.choices = r.question.choices
     }
     const checkAnswer = () => {
-      console.log("let's find out it we're right")
+      // console.log("let's find out it we're right")
       const alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
       const choice = findChoice(true)
       const choiceText = r.question.choices[alphabet.indexOf(choice)]
       persist.userChoiceText = choiceText
-      persist.userWasCorrect = r.question.answerText = choiceText
-      console.log('you were right',r.question.answerText === choiceText)
+      persist.userWasCorrect = r.question.answerText === choiceText
+      // console.log('you were right',persist.userWasCorrect)
     }
 
     /*
@@ -194,13 +187,15 @@ const User = ({ userId }) => {
           // no, we need to display the prior question & 'looks like you didn't answer'
           // or something like that
           console.log("you didn't answer")
-          persist.choices = null
-          persist.userChoice = null
-          persist.userChoiceText = null
+          persist.choices = ['','','','']
+          persist.userChoice = ''
+          persist.userChoiceText = ''
           persist.userWasCorrect = false
+          putPersistentIntoState(persist)
+          setUserWasCorrect(false)
         }
         persist.whereAreWe = 'waitScreen'
-        putPersistentIntoState()
+        putPersistentIntoState(persist)
       }
     }
     // a question must be active, but have we answered already?
@@ -235,6 +230,9 @@ const User = ({ userId }) => {
         // is this the first time we've seen this question?
         if (persist.qNum === r.qNum) {
           console.log('unanswered known question')
+          printPersist(persist)
+          printState()
+          // setWhereAreWe('questionPage')
           return // yes, nothing changed, ignore
         }
         else {
@@ -251,11 +249,165 @@ const User = ({ userId }) => {
     }
   }
 
+  /*
+    Functions
+  */
+  const printState = () => {
+    console.log('\n-----------------\nCURRENT STATE\n-----------------')
+    console.log('Host:',host)
+    console.log('question text', question)
+    console.table('choices',choices)
+    console.log('answerText',answerText)
+    console.log('userWasCorrect', userWasCorrect)
+    console.log('userChoice', userChoice)
+    console.log('userChoiceText',userChoiceText)
+    console.log('qNum ', qNum)
+    console.log('time ', time)
+    console.log('page we are on:',whereAreWe)
+  }
 
+  const printPersist = (p = persist) => {
+    console.table(p)
+  }
+
+  const submitAnswer = userChose => {
+    console.log(userChose)
+  }
+
+  const LocalRouter = () => {
+    const pages = {
+      dne: <DnePage />,
+      questionPage: <QuestionPage />,
+      answered: <AnsweredPage />,
+      gameOver: <GameOverPage />,
+      waitScreen: <WaitScreenPage />,
+      preGame: <PreGamePage />,
+    }
+    return pages[whereAreWe]
+  }
+
+  /*
+    Local components
+  */
+  const DnePage = () => {
+    return (
+      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+        <h1>DnePage</h1>
+        <div>
+          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#9800ff'}}>I couldn't find this game, and I know everything.</h1>
+          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#9800ff'}}>So you are WRONG!!!</h1>
+          <h3 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#9800ff'}}>P.S. Make sure you spelled the host's name correctly</h3>
+        </div>
+      </div>
+    )
+  }
+
+  const QuestionPage = () => {
+    return (
+      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+        <h1>QuestionPage</h1>
+        <div style={{ borderRadius: '5px', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto' }}>
+          <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/></div>
+          <div>
+            <h1 style={{ textAlign: 'center', color: 'black'}}>Question: { qNum + 1 }</h1>
+            <div style={{ padding: '10px',}}>
+              <p style={{ textAlign: 'center', color: '#9800ff' }}>{question}</p>
+              <ul>
+                <li onClick={() => submitAnswer('A')}>{choices[0]}</li>
+                <li onClick={() => submitAnswer('B')}>{choices[1]}</li>
+                <li onClick={() => submitAnswer('C')}>{choices[2]}</li>
+                <li onClick={() => submitAnswer('D')}>{choices[3]}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        {/* <Visibility /> */}
+      </div>
+    )
+  }
+
+  const AnsweredPage = () => {
+    return (
+      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+        <h1>AnsweredPage</h1>
+        <div style={{ borderRadius: '5px', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto' }}>
+          <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/></div>
+          <div>
+            <h1 style={{ textAlign: 'center', color: 'black'}}>Question: { qNum + 1 }</h1>
+            <div style={{ padding: '10px',}}>
+              <p style={{ textAlign: 'center', color: '#9800ff' }}>{question}</p>
+              <p>You chose {userChoiceText}. If you're right it's fame and fortune. If you're wrong... Let's just hope you're right.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+
+  }
+
+  const GameOverPage = () => {
+    return (
+      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+        <h1>GameOverPage</h1>
+          <div>
+            <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: 'white'}}>GAME OVER!</h1>
+            <DidUserAnswer />
+          </div>
+      </div>
+    )
+  }
+
+  const WaitScreenPage = () => {
+    return (
+      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+        <h1 onClick={()=>console.log('answerText: ',answerText,'\nuserChoiceText: ',userChoiceText,'\nuserWasCorrect: ',userWasCorrect)}>WaitScreenPage</h1>
+          <div>
+            <DidUserAnswer />
+          </div>
+      </div>
+    )
+  }
+
+  const DidUserAnswer = () =>  {
+
+    const block = []
+
+    if (userChoiceText === '') {
+      block.push(
+        <div key={1}>You didn't answer! No points for you!</div>
+      )
+    }
+    else {
+      const rightWrong = userWasCorrect? 'Right!!!' : 'Wrong!!!'
+      block.push(
+        <div key={1}>
+          <div key={2}>The answer was {answerText}</div>
+          <div key={3}>You said {userChoiceText}</div>
+          <div key={4}>You were {rightWrong}</div>
+        </div>
+      )
+    }
+    return block
+  }
+
+  const PreGamePage = () => {
+    return (
+      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+        <h1>PreGamePage</h1>
+          <div>
+            <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#9800ff'}}>This is the PREGAME! DRINK UP!</h1>
+            <h3 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#9800ff'}}>We start when I say we start</h3>
+          </div>
+      </div>
+    )
+  }
+
+  /*
+    Main screen body
+  */
   return (
     <div>
-      <button onClick={() => printState()}>Print State</button>
-      <div>User page</div>
+      <LocalRouter />
     </div>
   )
 }

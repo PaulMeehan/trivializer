@@ -3,6 +3,7 @@ import './Admin.css'
 import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI'
 import {animateScroll, Element, scroller} from "react-scroll"
+import { Link } from 'react-router-dom'
 
 const baseTimerData = {
   labels: [
@@ -30,8 +31,6 @@ const styles = {
     width: 600,
 	},
 };
-
-
 
 const GameMasterLiveGame = (props) => {
 
@@ -159,73 +158,66 @@ const GameMasterLiveGame = (props) => {
     // game is active but the last question is over
     if (!questionIsActive && (qNum === questions.length - 1)) {
       button.push(
-//  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
-
-        <div class="container">
-
-          <div className="row">
-            <div className="col md-3">
-
-              <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#gotoadmin">
+        <div className="container" key={1}>
+          <div className="row" key={2}>
+            <div className="col md-3" key={3}>
+              <button key={4} type="button" className="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#gotoadmin">
                 Back to Admin
               </button>
             </div>
-            <div className="col md-3">
-              <button type="button" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#startover">
+            <div className="col md-3" key={5}>
+              <button  key={6} type="button" className="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#startover">
                 Start Over
               </button>
             </div>
           </div>
-
-          <div class="modal fade" id="gotoadmin" tabindex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h2 class="modal-title" id="exampleModalLabel">Warning ! ! !</h2>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+          <div key={7} className="modal fade" id="gotoadmin" tabIndex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
+            <div key={8} className="modal-dialog" role="document">
+              <div key={9} className="modal-content">
+                <div key={10} className="modal-header">
+                  <h2 key={11} className="modal-title" id="exampleModalLabel">Warning ! ! !</h2>
+                  <button key={12} type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span key={13} aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
-                  <h2>If you go to the Admin Screen, you will have to restart this game.</h2>
-                  <h4>Do you want to continue to the Admin Screen?</h4>
+                <div className="modal-body" key={14}>
+                  <h2 key={15}>If you go to the Admin Screen, you will have to restart this game.</h2>
+                  <h4 key={16}>Do you want to continue to the Admin Screen?</h4>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
-                  <a id="adminAnchor"
+                <div className="modal-footer" key={16}>
+                  <button  key={17} type="button" className="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
+                  <Link key={18}
+                    to={'/admin'}
                     className='btn btn-secondary btn-lg btn-block'
-                    href="/admin"
-                  >Yes, go to Admin</a>
+                  >Yes, go to Admin</Link>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="modal fade" id="startover" tabindex="-1" role="dialog" aria-labelledby="startoverModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h2 class="modal-title" id="exampleModalLabel">Warning ! ! !</h2>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    className='btn btn-secondary btn-lg btn-block'
+          <div key={19} className="modal fade" id="startover" tabIndex="-1" role="dialog" aria-labelledby="startoverModalLabel" aria-hidden="true">
+            <div key={20} className="modal-dialog" role="document">
+              <div key={21} className="modal-content">
+                <div key={22} className="modal-header">
+                  <h2 key={23} className="modal-title" id="exampleModalLabel">Warning ! ! !</h2>
+                  <button key={24} type="button" className="close" data-dismiss="modal" aria-label="Close">
+                    <span key={25} aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
-                  <h2>If you Start Over, all player answers will be deleted.</h2>
-                  <h4>Are you sure you want to start over?</h4>
+                <div  key={26} className="modal-body">
+                  <h2 key={27}>If you Start Over, all player answers will be deleted.</h2>
+                  <h4 key={28}>Are you sure you want to start over?</h4>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
-                  <button type="button" id="btnStartOver" className='btn btn-danger btn-lg btn-block' data-dismiss="modal" onClick={() => startNextQuestion()}>
+                <div className="modal-footer" key={29}>
+                  <button key={30} type="button" className="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
+                  <button key={31} type="button" id="btnStartOver" className='btn btn-danger btn-lg btn-block' data-dismiss="modal" onClick={() => startNextQuestion()}>
                     Yes, Start Over!
                   </button>
                 </div>
               </div>
             </div>
           </div>
-
-          {/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */}
-
         </div>
       )
     }
@@ -233,17 +225,18 @@ const GameMasterLiveGame = (props) => {
     else if (gameIsActive && !questionIsActive) {
       button.push(
         <button
+          key={1}
           className="btn btn-success btn-lg btn-block"
           onClick={() => startNextQuestion()}
         >Start Next Question
         </button>
-
       )
     }
     // current question is live
     else if (gameIsActive && questionIsActive) {
       button.push(
         <button
+          key={1}
           className="btn btn-danger btn-lg btn-block"
           onClick={()=> endQuestion()}
         >End Current Question</button>
@@ -253,6 +246,7 @@ const GameMasterLiveGame = (props) => {
     else if (!gameIsActive) {
       button.push(
         <button
+          key={1}
           className="btn btn-success btn-lg btn-block"
           onClick={() => startNextQuestion()}
         >Start Game
@@ -269,28 +263,28 @@ const GameMasterLiveGame = (props) => {
       const activeQuestion = i === qNum && gameIsActive && questionIsActive
       const currentQuestion = i === qNum
       qstns.push(
-        <div>
-          <Element name={"scrollElement" + i}></Element>
-          { currentQuestion ? <h2>Current Question</h2> : "" }
-          <div className={ currentQuestion ? "row border p-3 notDeadQuestion mb-3" : "row border p-3 mb-3 deadQuestion" }>
-              <div className="col-md-1">
-                <h1>{i + 1}.</h1>
+        <div key={i*100}>
+          <Element name={"scrollElement" + i} key={i*100+1}></Element>
+          { currentQuestion ? <h2 key={i*100+15}>Current Question</h2> : "" }
+          <div  key={i*100+2} className={ currentQuestion ? "row border p-3 notDeadQuestion mb-3" : "row border p-3 mb-3 deadQuestion" }>
+              <div className="col-md-1" key={i*100+3}>
+                <h1 key={i*100+4}>{i + 1}.</h1>
               </div>
-              <div className="col-md-3">
-                <h4>{q.question}</h4>
+              <div className="col-md-3"  key={i*100+5}>
+                <h4  key={i*100+6}>{q.question}</h4>
               </div>
-              <div className="col-md-5">
-                <h4>A. {q.choices[0]}</h4>
-                <h4>B. {q.choices[1]}</h4>
-                <h4>C. {q.choices[2]}</h4>
-                <h4>D. {q.choices[3]}</h4>
+              <div className="col-md-5"  key={i*100+7}>
+                <h4 key={i*100+8}>A. {q.choices[0]}</h4>
+                <h4 key={i*100+9}>B. {q.choices[1]}</h4>
+                <h4 key={i*100+10}>C. {q.choices[2]}</h4>
+                <h4 key={i*100+11}>D. {q.choices[3]}</h4>
               </div>
-              <div className="col-md-3">
-                {(currentQuestion && !activeQuestion) ? (<h4>This question has ended</h4>) 
-                  : 
-                  (currentQuestion && activeQuestion) ? (<h2>LIVE</h2>) : "" }
+              <div className="col-md-3" key={i*100+12}>
+                {(currentQuestion && !activeQuestion) ? (<h4 key={i*100+13}>This question has ended</h4>)
+                  :
+                  (currentQuestion && activeQuestion) ? (<h2 key={i*100+14}>LIVE</h2>) : "" }
               </div>
-        </div>
+          </div>
         </div>
       )
     }
@@ -312,15 +306,12 @@ const GameMasterLiveGame = (props) => {
       containerId: "questionsFrame"
     });
   }
-  
-  
- 
 
   const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
         {
           legend: {
             display: false,
-          },  
+          },
           responsive: true,
           maintainAspectRatio: true,
         }
@@ -347,11 +338,12 @@ const GameMasterLiveGame = (props) => {
           />
 
           <h4 className="mt-4">Live game at</h4>
-          <a href={`trivializer.com/play/${props.username}`} target="_blank"><h4 className="white">{`  trivializer.com/play/${props.username}`}</h4></a>
-          
-          {/* <button onClick={() => triggerScroll(2)}>Trigger Scroll</button> */}
-          {/* <button onClick={() => printState()}>PrintState</button>
-          {time} */}
+          <Link
+            to={`/play-${props.username}`}
+          >
+            <h4 className="white">{`  trivializer.com/play-${props.username}`}</h4>
+          </Link>
+          {time}
 
         </div>
         <div className="col-md-1"></div>
@@ -361,56 +353,8 @@ const GameMasterLiveGame = (props) => {
           </div>
         </div>
       </div> {/* close row */}
-      
     </div>
   )
 }
 
 export default GameMasterLiveGame;
-
-  // const baseTimerData = {
-  //   labels: [
-  //     'Time Remaining',
-  //   ],
-  //   datasets: [
-  //     {
-  //       data: [
-  //         180, // what's left
-  //         0 // what's elapsed
-  //       ],
-  //       backgroundColor: [
-  //         "#34edaf",
-  //         "#ed4634"
-  //       ]
-  //     }
-  //   ],
-  //   options: {
-  //     responsive: true
-  //   }
-  // }
-  // const decrementTimer = () => {
-  //   console.log("decrement run");
-  //   if (timerData.datasets[0].data[0] > 0) {
-  //     let currentTime = [timerData.datasets[0].data[0],timerData.datasets[0].data[1]];
-  //     currentTime = [(currentTime[0] - 1),(currentTime[1] + 1)]
-  //     setTimerData(
-  //       {
-  //         datasets: [
-  //           {
-  //             data: currentTime,
-  //             backgroundColor: [
-  //               "#34edaf",
-  //               "#ed4634"
-  //             ]
-  //           }
-  //         ],
-  //         options: {
-  //             responsive: true
-  //         }
-  //       }
-  //     )
-  //   }
-  // }
-  // const timerControl = () => {
-  //   const timerInterval = setInterval(decrementTimer,1000);
-  // }
