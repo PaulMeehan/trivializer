@@ -6,6 +6,8 @@ import {Element, scroller} from "react-scroll"
 // import {animateScroll} from "react-scroll"
 import { Link } from 'react-router-dom';
 
+console.log("Last edit: 20190519 4:06pm BH")
+
 const baseTimerData = {
   labels: [
     'Time Remaining',
@@ -36,11 +38,14 @@ const GameMasterLiveGame = (props) => {
   const [time, setTime] = useState()
   const [timer, setTimer] = useState()
   const [timerData, setTimerData] = useState(baseTimerData); // TODO: stop using fake data
+  const [ajaxResponseRcvd, setAjaxResponseRcvd] = useState(false);
 
   // onload
   useEffect( () => {
     gameAPI.getQuestions()
     .then(res => {
+      console.log("\n\n\nres.data from getQuestions():")
+      console.log(res.data)
       const x = res.data
       if (x.isActive && x.gameActive) {
         updateState(res,true)
@@ -48,6 +53,7 @@ const GameMasterLiveGame = (props) => {
       } else {
         updateState(res)
       }
+      setAjaxResponseRcvd(true)
     })
     .catch(err => console.log(err))
   },[])
@@ -323,7 +329,8 @@ const GameMasterLiveGame = (props) => {
 
   return(
     <div className="container">
-      <ControllButton />
+      { (ajaxResponseRcvd) ? <ControllButton /> : "" }
+      {/* <ControllButton /> */}
       <div className="row">
         <div className="col-md-4 mt-3 text-center">
 
@@ -343,7 +350,8 @@ const GameMasterLiveGame = (props) => {
         <div className="col-md-1"></div>
         <div className="col-md-7 mt-3">
           <div className="container" id="questionsFrame">
-            <DrawQuestions />
+          { (ajaxResponseRcvd) ? <DrawQuestions /> : "" }
+            {/* <DrawQuestions /> */}
           </div>
         </div>
       </div> {/* close row */}
