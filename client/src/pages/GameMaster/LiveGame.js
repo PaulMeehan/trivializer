@@ -44,6 +44,8 @@ const GameMasterLiveGame = (props) => {
   useEffect( () => {
     gameAPI.getQuestions()
     .then(res => {
+      console.log("\n\n\nres.data from getQuestions():")
+      console.log(res.data)
       const x = res.data
       if (x.isActive && x.gameActive) {
         updateState(res,true)
