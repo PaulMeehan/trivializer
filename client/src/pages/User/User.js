@@ -1,31 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI';
 import Pusher from 'pusher-js';
 import Visibility from '../../components/Visibility/Visibility.js';
 
 
 const User = ({ userId }) => {
-  /*
-    State & Session mem
-  */
 
-  const [host, setHost] = useState()
-  const [qNum, setQNum] = useState()
-  const [question, setQuestion] = useState()
-  const [choices, setChoices] = useState()
-  const [answerText, setAnswerText] = useState()
-  const [userChoice, setUserChoice] = useState()
-  const [userChoiceText, setUserChoiceText] = useState()
-  const [userWasCorrect, setUserWasCorrect] = useState()
-  const [time, setTime] = useState()
-  const [whereAreWe, setWhereAreWe] = useState('preGame')
-  const [userDidAnswer, setUserDidAnswer] = useState()
   // need persist memory because for some reason
   // the state variables get reset when pusher sends
   // data into setState
   const persist = {
-    host: 'Bob',
     qNum: -1,
     question: '',
     choices: ['','','',''],
@@ -34,19 +20,64 @@ const User = ({ userId }) => {
     userChoiceText: '',
     userWasCorrect: '',
     time: 180,
-    timer: '',
+    timer: null,
     whereAreWe: 'preGame',
-    userDidAnswer: false
+    userDidAnswer: false,
+    timerData: '',
+    timerStarted: false,
+    pieOptions: {
+      legend: {
+        display: false,
+      },
+      responsive: true,
+      maintainAspectRatio: true,
+    },
+    baseTimerData: {
+      labels: [
+        'Time Remaining',
+      ],
+      datasets: [
+        {
+          data: [
+            180, // what's left
+            0 // what's elapsed
+          ],
+          backgroundColor: [
+            "#34edaf",
+            "#ed4634"
+          ]
+        }
+      ],
+      options: {
+        responsive: true
+      }
+    }
   }
+
+  /*
+    State & Session mem
+  */
+  const [qNum, setQNum] = useState()
+  const [question, setQuestion] = useState()
+  const [choices, setChoices] = useState()
+  const [answerText, setAnswerText] = useState()
+  const [userChoice, setUserChoice] = useState()
+  const [userChoiceText, setUserChoiceText] = useState()
+  const [userWasCorrect, setUserWasCorrect] = useState()
+  const [time, setTime] = useState()
+  const [timer, setTimer] = useState(false)
+  const [stateTimer, setStateTimer] = useState()
+  const [whereAreWe, setWhereAreWe] = useState('preGame')
+  const [timerData, setTimerData] = useState(persist.baseTimerData) // TODO: stop using fake data
+  const [pieOptions, setPieOptions] = useState(persist.pieOptions)
 
   /*
     onLoad & setState logic (where the magic happens)
   */
   useEffect( () => {
     // call for current question
-    const hostname = window.location.pathname.substring(window.location.pathname.indexOf('-')+1)
-    setHost(hostname)
-    gameAPI.getCurrentQuestion(hostname)
+    const host = window.location.pathname.substring(window.location.pathname.indexOf('-')+1)
+    gameAPI.getCurrentQuestion(host)
     .then(res => {
       setState(res.data)
     })
@@ -57,7 +88,7 @@ const User = ({ userId }) => {
       forceTLS: true
     })
     const game = pusher.subscribe('game-question')
-    game.bind(hostname, setState)
+    game.bind(host, setState)
 
   }, [])
 
@@ -66,7 +97,6 @@ const User = ({ userId }) => {
       Function & Variable Farm
     */
     const putPersistentIntoState = (p = persist) => {
-      setHost(p.host)
       setQNum(p.qNum)
       setQuestion(p.question)
       setChoices(p.choices)
@@ -99,7 +129,9 @@ const User = ({ userId }) => {
       const choice = findChoice(true)
       const choiceText = r.question.choices[alphabet.indexOf(choice)]
       persist.userChoiceText = choiceText
+      console.log(r.question.answerText === choiceText)
       persist.userWasCorrect = r.question.answerText === choiceText
+      setUserWasCorrect(persist.userWasCorrect)
       // console.log('you were right',persist.userWasCorrect)
     }
 
@@ -213,6 +245,7 @@ const User = ({ userId }) => {
         persist.question = r.question.question
         persist.choices = r.question.choices
         persist.whereAreWe = 'answered'
+        checkAnswer()
         putPersistentIntoState()
         return
       }
@@ -253,7 +286,6 @@ const User = ({ userId }) => {
   */
   const printState = () => {
     console.log('\n-----------------\nCURRENT STATE\n-----------------')
-    console.log('Host:',host)
     console.log('question text', question)
     console.table('choices',choices)
     console.log('answerText',answerText)
@@ -270,22 +302,52 @@ const User = ({ userId }) => {
   }
 
   const submitAnswer = userChose => {
-    const hostname = window.location.pathname.substring(window.location.pathname.indexOf('-')+1)
-    gameAPI.submitAnswer(hostname, qNum, userChose)
+    clearInterval(persist.timer)
+    const host = window.location.pathname.substring(window.location.pathname.indexOf('-')+1)
+    gameAPI.submitAnswer(host, qNum, userChose)
     .then(res => setState(res.data))
     .catch(err => console.log(err))
   }
 
-  const LocalRouter = () => {
-    const pages = {
-      dne: <DnePage />,
-      questionPage: <QuestionPage />,
-      answered: <AnsweredPage />,
-      gameOver: <GameOverPage />,
-      waitScreen: <WaitScreenPage />,
-      preGame: <PreGamePage />,
-    }
-    return pages[whereAreWe]
+  const gameTimer = (startTime = false) => {
+    let elapsed = 0
+    startTime = startTime || time || 180
+    const t = setInterval(() => {
+      elapsed++
+      let remaining = startTime - elapsed
+      persist.time = remaining
+      setTime(remaining)
+      setTimerData({
+        labels: [
+          'Time Remaining',
+        ],
+        datasets: [
+          {
+            data: [
+              startTime-elapsed, // what's left
+              elapsed // what's elapsed
+            ],
+            backgroundColor: [
+              "#34edaf",
+              "#ed4634"
+            ]
+          }
+        ],
+        options: {
+          responsive: true
+        }
+      })
+      if (startTime <= elapsed) {
+        clearInterval(t)
+        clearInterval(persist.timer)
+        clearInterval(timer)
+        clearInterval(stateTimer)
+        persist.whereAreWe = 'waitScreen'
+        setWhereAreWe(persist.whereAreWe)
+      }
+    }, 1000)
+    // persist.timer = t
+    setStateTimer(t)
   }
 
   /*
@@ -294,26 +356,38 @@ const User = ({ userId }) => {
   const DnePage = () => {
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <h1>DnePage</h1>
         <div>
-          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#9800ff'}}>I couldn't find this game, and I know everything.</h1>
-          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#9800ff'}}>So you are WRONG!!!</h1>
-          <h3 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#9800ff'}}>P.S. Make sure you spelled the host's name correctly</h3>
+          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center'}}>I couldn't find this game, and I know everything.</h1>
+          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center'}}>So you are WRONG!!!</h1>
+          <h3 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center'}}>P.S. Make sure you spelled the host's name correctly</h3>
         </div>
       </div>
     )
   }
 
   const QuestionPage = () => {
+    if (!timer) {
+      setTimer(true)
+      console.log('here')
+      gameTimer(time)
+    }
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <h1>QuestionPage</h1>
-        <div style={{ borderRadius: '5px', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto' }}>
-          <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/></div>
+        <div style={{ borderRadius: '5px', margin: 'auto', maxWidth: "420px", height: 'auto' }}>
+          <div style={{ display: 'block', width: '25%', margin: 'auto' }}>
+            {time}
+            <Pie
+              data = {timerData}
+              options = {pieOptions}
+              redraw = {false}
+              width = {200}
+          />
+
+          </div>
           <div>
-            <h1 style={{ textAlign: 'center', color: 'black'}}>Question: { qNum + 1 }</h1>
+            <h1 style={{ textAlign: 'center'}}>Question: { qNum + 1 }</h1>
             <div style={{ padding: '10px',}}>
-              <p style={{ textAlign: 'center', color: '#9800ff' }}>{question}</p>
+              <p style={{ textAlign: 'center'}}>{question}</p>
               <button
                 className="btn btn-success btn-large btn-block mb-4"
                 onClick={() => submitAnswer('A')}
@@ -342,14 +416,15 @@ const User = ({ userId }) => {
   const AnsweredPage = () => {
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <h1>AnsweredPage</h1>
-        <div style={{ borderRadius: '5px', margin: 'auto', backgroundColor: '#eee', maxWidth: "420px", height: 'auto' }}>
-          <div style={{ display: 'block', width: '25%', margin: 'auto' }}><img src="https://img.icons8.com/color/96/000000/alarm-clock.png" alt=""/></div>
+        <div style={{ borderRadius: '5px', margin: 'auto', maxWidth: "420px", height: 'auto' }}>
           <div>
-            <h1 style={{ textAlign: 'center', color: 'black'}}>Question: { qNum + 1 }</h1>
+            <h1 style={{ textAlign: 'center'}}>Question: { qNum + 1 }</h1>
             <div style={{ padding: '10px',}}>
-              <p style={{ textAlign: 'center', color: '#9800ff' }}>{question}</p>
-              <p>You chose {userChoiceText}. If you're right it's fame and fortune. If you're wrong... Let's just hope you're right.</p>
+              <h3 style={{ textAlign: 'center'}}>{question}</h3>
+              <p>You chose "{userChoiceText}"".</p>
+              <p>If you're right it's FAME and FORTUNE. If you're wrong...</p>
+              <p>Well, I guess you just don't get any points.</p>
+              <p>Either way, sit tight and we'll find out</p>
             </div>
           </div>
         </div>
@@ -361,21 +436,32 @@ const User = ({ userId }) => {
   const GameOverPage = () => {
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <h1>GameOverPage</h1>
-          <div>
-            <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: 'white'}}>GAME OVER!</h1>
-            <DidUserAnswer />
-          </div>
+        <div>
+          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: 'white'}}>GAME OVER!</h1>
+          <DidUserAnswer />
+        </div>
       </div>
     )
   }
 
   const WaitScreenPage = () => {
+    clearInterval(persist.timer)
+    setTimer(false)
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <h1 onClick={()=>console.log('answerText: ',answerText,'\nuserChoiceText: ',userChoiceText,'\nuserWasCorrect: ',userWasCorrect)}>WaitScreenPage</h1>
+        <div>
+          <DidUserAnswer />
+        </div>
+      </div>
+    )
+  }
+
+  const PreGamePage = () => {
+    return (
+      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
           <div>
-            <DidUserAnswer />
+            <h1 style={{ padding: '15px', fontFamily: 'Bangers', textAlign: 'center'}}>This is the PREGAME! DRINK UP!</h1>
+            <h3 style={{ padding: '15px', fontFamily: 'Bangers', textAlign: 'center'}}>We start when I say we start</h3>
           </div>
       </div>
     )
@@ -391,11 +477,11 @@ const User = ({ userId }) => {
       )
     }
     else {
-      const rightWrong = userWasCorrect? 'Right!!!' : 'Wrong!!!'
+      const rightWrong = answerText === userChoiceText? 'Right!!!' : 'Wrong!!!'
       block.push(
         <div key={1}>
-          <div key={2}>The answer was {answerText}</div>
-          <div key={3}>You said {userChoiceText}</div>
+          <div key={3}>You chose : "{userChoiceText}"</div>
+          <div key={2}>The answer was : "{answerText}"</div>
           <div key={4}>You were {rightWrong}</div>
         </div>
       )
@@ -403,23 +489,25 @@ const User = ({ userId }) => {
     return block
   }
 
-  const PreGamePage = () => {
-    return (
-      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <h1>PreGamePage</h1>
-          <div>
-            <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#9800ff'}}>This is the PREGAME! DRINK UP!</h1>
-            <h3 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#9800ff'}}>We start when I say we start</h3>
-          </div>
-      </div>
-    )
+  const LocalRouter = () => {
+    const pages = {
+      dne: <DnePage />,
+      questionPage: <QuestionPage />,
+      answered: <AnsweredPage />,
+      gameOver: <GameOverPage />,
+      waitScreen: <WaitScreenPage />,
+      preGame: <PreGamePage />,
+    }
+    return pages[whereAreWe]
   }
+
 
   /*
     Main screen body
   */
   return (
     <div>
+      <button onClick={() => printState()}>Print State</button>
       <LocalRouter />
     </div>
   )
