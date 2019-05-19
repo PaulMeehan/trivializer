@@ -70,7 +70,10 @@ const GameMasterLiveGame = (props) => {
     setQNum(x.qNum)
     setQuestionIsActive(x.isActive)
     setGameIsActive(x.gameActive)
-    if (!ignoreTime) setTime(parseInt(x.game[x.qNum].time))
+    console.log("in updateState")
+    console.log(x)
+    console.log("x.qNum=" + x.qNum)
+    if ((!ignoreTime) && (qNum >= 0)) setTime(parseInt(x.game[x.qNum].time))
   }
 
   const gameTimer = (startTime = false) => {
