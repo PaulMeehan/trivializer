@@ -68,3 +68,6 @@ h2, h3 {
     height: 70vh;
     overflow: auto;
 }
+.lastOf:nth-last-child(1) {
+    margin-bottom: 0px !important;
+}

@@ -4,6 +4,8 @@ import AdminGameDiv from "../../components/Admin/AdminGameDiv";
 import gameAPI from '../../utils/gameAPI'
 import { Link } from 'react-router-dom';
 
+console.log("last updated by BH 20190519 11:24")
+
 const defaultQuestionTime = 180
 
 const GameMasterAdmin = () => {
@@ -15,19 +17,23 @@ const GameMasterAdmin = () => {
   const [newA3, setNewA3] = useState();
   const [newA4, setNewA4] = useState();
   const [newCorrect, setNewCorrect] = useState();
-  const [questionCount, setQuestionCount] = useState();
+  const [questionCount, setQuestionCount] = useState(false);
+  const [firstAjaxReturned, setFirstAjaxReturned] = useState(false);
 
   useEffect(() => {
     gameAPI.getQuestions()
       .then(function(res) {
         setQuestions(res.data.game)
         setQuestionCount(res.data.game.length -1)
+        setFirstAjaxReturned(true)
       })
       .catch(err => console.log(err))
   }, [])
 
   const deleteQuestion = id => {
-    const tempQuestions = [...questions]
+    // const tempQuestions = [...questions]
+    const tempQuestions = questions && questions.length > 0 ? [...questions] : [];
+
     setQuestions(tempQuestions.splice(id,1))
     gameAPI.setQuestions(tempQuestions)
       .then(function(res) {
@@ -50,14 +56,19 @@ const GameMasterAdmin = () => {
   }
 
   const addQuestion = () => {
+    console.log ("In addQuestion");
+    console.log (newCorrect);
     if (!newCorrect) return
-    const tempQuestions = [...questions]
+    console.log(tempQuestions)
+    // const tempQuestions = [...questions]
+    const tempQuestions = questions && questions.length > 0 ? [...questions] : [];
     const newQuestion = {
       question: newQ,
       choices: [newA1, newA2, newA3, newA4],
       answer: newCorrect,
       time: defaultQuestionTime
     }
+    console.log(tempQuestions, newQuestion)
     tempQuestions.push(newQuestion)
     gameAPI.setQuestions(tempQuestions)
       .then(function(res) {
@@ -131,8 +142,10 @@ const GameMasterAdmin = () => {
           <div className="border p-3 m-0 mb-5">
               <div className="container">
 
-                { (questions[questionCount]) ?
-
+                { 
+                // TERNARY (DETERMINING IF questionCount HAS BEEN UPDATED)
+                (questionCount === false) ? <h1>No Question Count</h1> : 
+                
                 <AdminGameDiv
                   realQNumber = {questionCount}
                   qNumber = {questionCount + 1}
@@ -145,12 +158,11 @@ const GameMasterAdmin = () => {
                   correct = {questions[questionCount].answer}
                   deleteQuestion = {deleteQuestion}
                 />
-
-                :
-
-                ""
-
+                
                 }
+                
+
+
 
                 {/* <div className="row border mt-3 p-3">
                   <div className="col-md-1">

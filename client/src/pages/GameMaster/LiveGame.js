@@ -3,7 +3,7 @@ import './Admin.css'
 import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI'
 import {animateScroll, Element, scroller} from "react-scroll"
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 const baseTimerData = {
   labels: [
@@ -113,10 +113,6 @@ const GameMasterLiveGame = (props) => {
     .then(res => {
       updateState(res)
       gameTimer()
-      // res.data.qNum
-      // triggerScroll(2)
-      // add logic here to grab current question #, tack that on to the element name, and trigger the scroll function
-      // triggerScroll(res.data.qNum);
     })
     .catch(err => console.log(err))
   }
@@ -125,7 +121,7 @@ const GameMasterLiveGame = (props) => {
     clearInterval(timer)
     // reset the time on this question first, then call endQuestion
     let time, q = qNum - 1
-    if (qNum - 1 <= 0) q = qNum + 1
+    if (qNum - 1 < 0) q = qNum + 1
     if (questions.length <= 1) time = 180
     else {
       time = questions[q].time
@@ -154,6 +150,8 @@ const GameMasterLiveGame = (props) => {
   }
 
   const ControllButton = () => {
+    console.log ("in ControllButton")
+    console.log (questions)
     const button = []
     // game is active but the last question is over
     if (!questionIsActive && (qNum === questions.length - 1)) {
@@ -194,8 +192,6 @@ const GameMasterLiveGame = (props) => {
               </div>
             </div>
           </div>
-
-                    className='btn btn-secondary btn-lg btn-block'
           <div key={19} className="modal fade" id="startover" tabIndex="-1" role="dialog" aria-labelledby="startoverModalLabel" aria-hidden="true">
             <div key={20} className="modal-dialog" role="document">
               <div key={21} className="modal-content">
@@ -257,6 +253,9 @@ const GameMasterLiveGame = (props) => {
   }
 
   const DrawQuestions = () => {
+    console.log("in DrawQuestions")
+
+    console.log(questions)
     const qstns = []
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i]
@@ -293,8 +292,8 @@ const GameMasterLiveGame = (props) => {
 
   const triggerScroll = (elementID) => {
     scroller.scrollTo('scrollElement'+elementID, {
-      duration: 1500,
-      delay: 100,
+      duration: 750,
+      delay: 10,
       smooth: true,
       containerId: 'questionsFrame',
       offset: -200, // Scrolls to element + 50 pixels down the page
@@ -337,14 +336,10 @@ const GameMasterLiveGame = (props) => {
             width = {200}
           />
 
-          <h4 className="mt-4">Live game at</h4>
-          <Link
-            to={`/play-${props.username}`}
-          >
-            <h4 className="white">{`  trivializer.com/play-${props.username}`}</h4>
-          </Link>
-          {time}
-
+          <h4 className="mt-4">Live game links:</h4>
+          <Link to={`/play-${props.username}`} target="_blank"><h4 className="white">{`  trivializer.com/play-${props.username}`}</h4></Link>
+          <Link to="/board-question" target="_blank"><h4 className="white">trivializer.com/board-question</h4></Link>
+          <Link to="/statsboard" target="_blank"><h4 className="white">trivializer.com/statsboard</h4></Link>
         </div>
         <div className="col-md-1"></div>
         <div className="col-md-7 mt-3">

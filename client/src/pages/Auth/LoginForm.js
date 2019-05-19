@@ -39,7 +39,7 @@ class LoginForm extends Component {
           <Row>
             <Col size="md-3"></Col>
             <Col size="md-6">
-							<div class="text-center mb-3">
+							<div className="text-center mb-3">
 								<img src="/trivializer-logo.png" className="logo"/>	
 							</div>
               <Card title="Login to Trivializer">
