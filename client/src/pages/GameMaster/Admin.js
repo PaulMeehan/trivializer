@@ -65,7 +65,7 @@ const GameMasterAdmin = () => {
     console.log ("In addQuestion");
     console.log (newCorrect);
     if (!newCorrect) return
-    console.log(tempQuestions)
+    // console.log(tempQuestions)
     // const tempQuestions = [...questions]
     let tempQuestions = questions && questions.length > 0 ? [...questions] : [];
     const newQuestion = {
