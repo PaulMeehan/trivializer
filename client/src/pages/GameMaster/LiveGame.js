@@ -42,7 +42,6 @@ const GameMasterLiveGame = (props) => {
   const [timer, setTimer] = useState()
   const [timerData, setTimerData] = useState(baseTimerData); // TODO: stop using fake data
 
-  
 
   // onload
   useEffect( () => {
@@ -324,14 +323,13 @@ const GameMasterLiveGame = (props) => {
   return(
     <div className="container">
       <h4>Live game at
-        <a href={`trivializer.com/play/${props.username}`} target="_blank">{`  trivializer.com/play/${props.username}`}</a>
+        <div >{`  trivializer.com/play-${props.username}`}</div>
       </h4>
       <div style={styles.tempHolderDiv}>
         <Pie
           data = {timerData}
         />
       </div>
-      
       <button onClick={() => printState()}>PrintState</button>
       {time}
       <div className="row mt-4">
