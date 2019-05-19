@@ -6,7 +6,7 @@ import {Element, scroller} from "react-scroll"
 // import {animateScroll} from "react-scroll"
 import { Link } from 'react-router-dom';
 
-console.log("Last edit: 20190519 3:50pm BH")
+console.log("Last edit: 20190519 4:06pm BH")
 
 const baseTimerData = {
   labels: [
@@ -44,6 +44,8 @@ const GameMasterLiveGame = (props) => {
   useEffect( () => {
     gameAPI.getQuestions()
     .then(res => {
+      console.log("\n\n\nres.data from getQuestions():")
+      console.log(res.data)
       const x = res.data
       if (x.isActive && x.gameActive) {
         updateState(res,true)
