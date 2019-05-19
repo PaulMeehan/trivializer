@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef } from 'react'
 import './Admin.css'
 import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI'
+import {animateScroll, Element, scroller} from "react-scroll"
 
 const baseTimerData = {
   labels: [
@@ -26,7 +27,7 @@ const baseTimerData = {
 
 const styles = {
 	tempHolderDiv: {
-    width: 400,
+    width: 600,
 	},
 };
 
@@ -42,7 +43,6 @@ const GameMasterLiveGame = (props) => {
   const [timer, setTimer] = useState()
   const [timerData, setTimerData] = useState(baseTimerData); // TODO: stop using fake data
 
-
   // onload
   useEffect( () => {
     gameAPI.getQuestions()
@@ -57,6 +57,10 @@ const GameMasterLiveGame = (props) => {
     })
     .catch(err => console.log(err))
   },[])
+
+  useEffect( () => {
+    triggerScroll(qNum);
+  },[qNum])
 
   const updateState = (res, ignoreTime = false) => {
     const x = res.data
@@ -110,6 +114,10 @@ const GameMasterLiveGame = (props) => {
     .then(res => {
       updateState(res)
       gameTimer()
+      // res.data.qNum
+      // triggerScroll(2)
+      // add logic here to grab current question #, tack that on to the element name, and trigger the scroll function
+      // triggerScroll(res.data.qNum);
     })
     .catch(err => console.log(err))
   }
@@ -262,27 +270,26 @@ const GameMasterLiveGame = (props) => {
       const currentQuestion = i === qNum
       qstns.push(
         <div>
-          <div className={ currentQuestion ? "row border mt-3 p-3" : "row border mt-3 p-3 deadQuestion" }>
-            <div className="col-md-1">
-              <h1>{i + 1}.</h1>
-            </div>
-            <div className="col-md-3">
-              <h4>{q.question}</h4>
-            </div>
-            <div className="col-md-3">
-              <h4>A. {q.choices[0]}</h4>
-              <h4>B. {q.choices[1]}</h4>
-              <h4>C. {q.choices[2]}</h4>
-              <h4>D. {q.choices[3]}</h4>
-            </div>
-            <div className="col-md-2">
-              {(currentQuestion && !activeQuestion) ? (<div>This question has ended</div>) : (<div></div>)}
-            </div>
-            <div className={ activeQuestion ? "col-md-3" : "col-md-3 hidden" }>
-              {/* <Pie
-                data= {timerData}
-              /> */}
-            </div>
+          <Element name={"scrollElement" + i}></Element>
+          { currentQuestion ? <h2>Current Question</h2> : "" }
+          <div className={ currentQuestion ? "row border p-3 notDeadQuestion mb-3" : "row border p-3 mb-3 deadQuestion" }>
+              <div className="col-md-1">
+                <h1>{i + 1}.</h1>
+              </div>
+              <div className="col-md-3">
+                <h4>{q.question}</h4>
+              </div>
+              <div className="col-md-5">
+                <h4>A. {q.choices[0]}</h4>
+                <h4>B. {q.choices[1]}</h4>
+                <h4>C. {q.choices[2]}</h4>
+                <h4>D. {q.choices[3]}</h4>
+              </div>
+              <div className="col-md-3">
+                {(currentQuestion && !activeQuestion) ? (<h4>This question has ended</h4>) 
+                  : 
+                  (currentQuestion && activeQuestion) ? (<h2>LIVE</h2>) : "" }
+              </div>
         </div>
         </div>
       )
@@ -290,56 +297,71 @@ const GameMasterLiveGame = (props) => {
     return qstns
   }
 
-  // BRANDON'S CHART.JS TIMER MESS
+  const triggerScroll = (elementID) => {
+    scroller.scrollTo('scrollElement'+elementID, {
+      duration: 1500,
+      delay: 100,
+      smooth: true,
+      containerId: 'questionsFrame',
+      offset: -200, // Scrolls to element + 50 pixels down the page
+    })
+  }
 
+  const scrollToTop = () => {
+    animateScroll.scrollToTop({
+      containerId: "questionsFrame"
+    });
+  }
   
-  // const decrementTimer = () => {
-  //   console.log("decrement run");
-  //   if (timerData.datasets[0].data[0] > 0) {
-  //     let currentTime = [timerData.datasets[0].data[0],timerData.datasets[0].data[1]];
-  //     currentTime = [(currentTime[0] - 1),(currentTime[1] + 1)]
-  //     setTimerData(
-  //       {
-  //         datasets: [
-  //           {
-  //             data: currentTime,
-  //             backgroundColor: [
-  //               "#34edaf",
-  //               "#ed4634"
-  //             ]
-  //           }
-  //         ],
-  //         options: {
-  //             responsive: true
-  //         }
-  //       }
-  //     )
-  //   }
-  // }
-  // const timerControl = () => {
-  //   const timerInterval = setInterval(decrementTimer,1000);
-  // }
+  
+ 
+
+  const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
+        {
+          legend: {
+            display: false,
+          },  
+          responsive: true,
+          maintainAspectRatio: true,
+        }
+    );
+
+  const scrollToBottom = () => {
+    animateScroll.scrollToBottom({
+      containerId: "questionsFrame"
+    });
+  }
 
   return(
     <div className="container">
-      <h4>Live game at
-        <div >{`  trivializer.com/play-${props.username}`}</div>
-      </h4>
-      <div style={styles.tempHolderDiv}>
-        <Pie
-          data = {timerData}
-        />
-      </div>
-      <button onClick={() => printState()}>PrintState</button>
-      {time}
-      <div className="row mt-4">
-        <div className="col-md-12">
-          <div className="container">
-            <ControllButton />
+      <ControllButton />
+      <div className="row">
+        <div className="col-md-4 mt-3 text-center">
+
+          <h3>Time Left:</h3>
+
+          <Pie
+            data = {timerData}
+            options = {pieOptions}
+            width = {200}
+          />
+
+          <h4 className="mt-4">Live game at</h4>
+          <a href={`trivializer.com/play/${props.username}`} target="_blank"><h4 className="white">{`  trivializer.com/play/${props.username}`}</h4></a>
+          
+          {/* <button onClick={() => triggerScroll(2)}>Trigger Scroll</button> */}
+          {/* <button onClick={() => printState()}>PrintState</button>
+          {time} */}
+
+        </div>
+        <div className="col-md-1"></div>
+        <div className="col-md-7 mt-3">
+          <div className="container" id="questionsFrame">
             <DrawQuestions />
           </div>
         </div>
-      </div>
+      </div> {/* close row */}
+      
     </div>
   )
 }
