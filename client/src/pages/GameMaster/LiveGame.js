@@ -6,7 +6,7 @@ import {Element, scroller} from "react-scroll"
 // import {animateScroll} from "react-scroll"
 import { Link } from 'react-router-dom';
 
-console.log("Last edit: 20190519 3:50pm BH")
+console.log("Last edit: 20190519 4:06pm BH")
 
 const baseTimerData = {
   labels: [
