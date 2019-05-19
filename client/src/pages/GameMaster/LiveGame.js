@@ -152,6 +152,7 @@ const GameMasterLiveGame = (props) => {
 
   const ControllButton = () => {
     console.log ("in ControllButton")
+    console.log('LOGGED IN?????????????? ', this.state.loggedIn)
     console.log (questions)
     const button = []
     // game is active but the last question is over
@@ -264,6 +265,8 @@ const GameMasterLiveGame = (props) => {
 
   const DrawQuestions = () => {
     console.log("in DrawQuestions")
+    console.log('LOGGED IN?????????????? ', this.state.loggedIn)
+
     console.log(questions)
     const qstns = []
     for (let i = 0; i < questions.length; i++) {
