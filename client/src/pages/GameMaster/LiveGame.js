@@ -1,9 +1,12 @@
-import React, {useState, useEffect, useRef } from 'react'
+import React, {useState, useEffect} from 'react'
 import './Admin.css'
 import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI'
-import {animateScroll, Element, scroller} from "react-scroll"
+import {Element, scroller} from "react-scroll"
+// import {animateScroll} from "react-scroll"
 import { Link } from 'react-router-dom';
+
+console.log("Last edit: 20190519 3:50pm BH")
 
 const baseTimerData = {
   labels: [
@@ -26,12 +29,6 @@ const baseTimerData = {
   }
 }
 
-const styles = {
-	tempHolderDiv: {
-    width: 600,
-	},
-};
-
 const GameMasterLiveGame = (props) => {
 
   const [questions, setQuestions] = useState([])
@@ -41,6 +38,7 @@ const GameMasterLiveGame = (props) => {
   const [time, setTime] = useState()
   const [timer, setTimer] = useState()
   const [timerData, setTimerData] = useState(baseTimerData); // TODO: stop using fake data
+  const [ajaxResponseRcvd, setAjaxResponseRcvd] = useState(false);
 
   // onload
   useEffect( () => {
@@ -53,6 +51,7 @@ const GameMasterLiveGame = (props) => {
       } else {
         updateState(res)
       }
+      setAjaxResponseRcvd(true)
     })
     .catch(err => console.log(err))
   },[])
@@ -139,15 +138,15 @@ const GameMasterLiveGame = (props) => {
     })
   }
 
-  const printState = () => {
-    console.log('questions')
-    console.table(questions)
-    console.log('gameIsActive', gameIsActive)
-    console.log('questionIsActive', questionIsActive)
-    console.log('qNum ', qNum)
-    console.log('time ', time)
-    console.log('timer ', timer)
-  }
+  // const printState = () => {
+  //   console.log('questions')
+  //   console.table(questions)
+  //   console.log('gameIsActive', gameIsActive)
+  //   console.log('questionIsActive', questionIsActive)
+  //   console.log('qNum ', qNum)
+  //   console.log('time ', time)
+  //   console.log('timer ', timer)
+  // }
 
   const ControllButton = () => {
     console.log ("in ControllButton")
@@ -300,11 +299,11 @@ const GameMasterLiveGame = (props) => {
     })
   }
 
-  const scrollToTop = () => {
-    animateScroll.scrollToTop({
-      containerId: "questionsFrame"
-    });
-  }
+  // const scrollToTop = () => {
+  //   animateScroll.scrollToTop({
+  //     containerId: "questionsFrame"
+  //   });
+  // }
 
   const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
         {
@@ -316,15 +315,16 @@ const GameMasterLiveGame = (props) => {
         }
     );
 
-  const scrollToBottom = () => {
-    animateScroll.scrollToBottom({
-      containerId: "questionsFrame"
-    });
-  }
+  // const scrollToBottom = () => {
+  //   animateScroll.scrollToBottom({
+  //     containerId: "questionsFrame"
+  //   });
+  // }
 
   return(
     <div className="container">
-      <ControllButton />
+      { (ajaxResponseRcvd) ? <ControllButton /> : "" }
+      {/* <ControllButton /> */}
       <div className="row">
         <div className="col-md-4 mt-3 text-center">
 
@@ -344,7 +344,8 @@ const GameMasterLiveGame = (props) => {
         <div className="col-md-1"></div>
         <div className="col-md-7 mt-3">
           <div className="container" id="questionsFrame">
-            <DrawQuestions />
+          { (ajaxResponseRcvd) ? <DrawQuestions /> : "" }
+            {/* <DrawQuestions /> */}
           </div>
         </div>
       </div> {/* close row */}
