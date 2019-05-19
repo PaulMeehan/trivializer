@@ -127,7 +127,7 @@ const GameMasterLiveGame = (props) => {
     clearInterval(timer)
     // reset the time on this question first, then call endQuestion
     let time, q = qNum - 1
-    if (qNum - 1 <= 0) q = qNum + 1
+    if (qNum - 1 < 0) q = qNum + 1
     if (questions.length <= 1) time = 180
     else {
       time = questions[q].time
@@ -156,67 +156,71 @@ const GameMasterLiveGame = (props) => {
   }
 
   const ControllButton = () => {
+    console.log ("in ControllButton")
+    console.log (questions)
     const button = []
     // game is active but the last question is over
     if (!questionIsActive && (qNum === questions.length - 1)) {
       button.push(
 //  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
 
-        <div class="container">
+        <div className="container" key="x">
 
-          <div className="row">
+          <div className="row" key="a">
             <div className="col md-3">
 
-              <button type="button" class="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#gotoadmin">
+              <button type="button" className="btn btn-success btn-lg btn-block" data-toggle="modal" data-target="#gotoadmin">
                 Back to Admin
               </button>
             </div>
             <div className="col md-3">
-              <button type="button" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#startover">
+              <button type="button" className="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#startover">
                 Start Over
               </button>
             </div>
           </div>
 
-          <div class="modal fade" id="gotoadmin" tabindex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h2 class="modal-title" id="exampleModalLabel">Warning ! ! !</h2>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <div key="1" className="modal" data-backdrop="false" id="gotoadmin" tabIndex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h2 className="modal-title" id="exampleModalLabel">Warning ! ! !</h2>
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
+                <div className="modal-body">
                   <h2>If you go to the Admin Screen, you will have to restart this game.</h2>
                   <h4>Do you want to continue to the Admin Screen?</h4>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
-                  <a id="adminAnchor"
-                    className='btn btn-secondary btn-lg btn-block'
-                    href="/admin"
-                  >Yes, go to Admin</a>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
+                  <Link to={`/admin`} id="adminAnchor" 
+                    className="btn btn-secondary btn-lg btn-block"
+                    // data-dismiss="modal"
+                    >
+                      Yes, go to Admin
+                  </Link>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="modal fade" id="startover" tabindex="-1" role="dialog" aria-labelledby="startoverModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h2 class="modal-title" id="exampleModalLabel">Warning ! ! !</h2>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <div key="2" className="modal" id="startover" tabIndex="-1" role="dialog" aria-labelledby="startoverModalLabel" aria-hidden="true">
+            <div className="modal-dialog" role="document">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h2 className="modal-title" id="exampleModalLabel">Warning ! ! !</h2>
+                  <button type="button" className="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
+                <div className="modal-body">
                   <h2>If you Start Over, all player answers will be deleted.</h2>
                   <h4>Are you sure you want to start over?</h4>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
                   <button type="button" id="btnStartOver" className='btn btn-danger btn-lg btn-block' data-dismiss="modal" onClick={() => startNextQuestion()}>
                     Yes, Start Over!
                   </button>
@@ -233,7 +237,7 @@ const GameMasterLiveGame = (props) => {
     // game has started but question is over
     else if (gameIsActive && !questionIsActive) {
       button.push(
-        <button
+        <button key="a"
           className="btn btn-success btn-lg btn-block"
           onClick={() => startNextQuestion()}
         >Start Next Question
@@ -244,7 +248,7 @@ const GameMasterLiveGame = (props) => {
     // current question is live
     else if (gameIsActive && questionIsActive) {
       button.push(
-        <button
+        <button key="b"
           className="btn btn-danger btn-lg btn-block"
           onClick={()=> endQuestion()}
         >End Current Question</button>
@@ -253,7 +257,7 @@ const GameMasterLiveGame = (props) => {
     // game has not started
     else if (!gameIsActive) {
       button.push(
-        <button
+        <button key="c"
           className="btn btn-success btn-lg btn-block"
           onClick={() => startNextQuestion()}
         >Start Game
@@ -264,13 +268,16 @@ const GameMasterLiveGame = (props) => {
   }
 
   const DrawQuestions = () => {
+    console.log("in DrawQuestions")
+
+    console.log(questions)
     const qstns = []
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i]
       const activeQuestion = i === qNum && gameIsActive && questionIsActive
       const currentQuestion = i === qNum
       qstns.push(
-        <div>
+        <div key={i.toString()}>
           <Element name={"scrollElement" + i}></Element>
           {/* { currentQuestion ? <h2>Current Question</h2> : "" } */}
           <div className={ currentQuestion ? "row border p-3 notDeadQuestion mb-3 lastOf" : "row border p-3 mb-3 deadQuestion lastOf" }>
