@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import LoginForm from './pages/Auth/LoginForm';
 import SignupForm from './pages/Auth/SignupForm';
 import Nav from "./components/Nav";
+import PlayerNav from "./components/Nav/PlayerNav"
 import Books from './pages/Books';
 import Detail from "./pages/Detail";
 import NoMatch from "./pages/NoMatch";
@@ -77,7 +78,7 @@ class App extends Component {
 			<div className="App">
         { this.state.loggedIn && (
           <div>
-            { (window.location.pathname.toLowerCase() === "/user") ? ("") : <Nav user={this.state.user} logout={this.logout} />  }
+            { ( window.location.pathname.toLowerCase().startsWith('/play') ) ? <PlayerNav user={this.state.user} logout={this.logout} /> : <Nav user={this.state.user} logout={this.logout} />  }
 						{/* <Nav user={this.state.user} logout={this.logout}/> */}
             <div className="main-view">
               <Switch>
@@ -90,7 +91,7 @@ class App extends Component {
 								<Route exact path="/admin" component={GameMasterAdmin} />
 								<Route exact path="/statsboard" component={StatsBoard} />
 								<Route exact path="/board-question" component={() => <BoardQuestion userID={this.state.user.username}/>} />
-                <Route path='/play*' component={() => <User userId={this.state.user.username}/>} />
+                <Route path='/play*' component={() => <User userId={this.state.user.username} logout={this.logout}/>} />
                 <Route component={NoMatch} />
               </Switch>
             </div>

@@ -6,7 +6,7 @@ import Pusher from 'pusher-js';
 import Visibility from '../../components/Visibility/Visibility.js';
 
 
-const User = ({ userId }) => {
+const User = ({ userId, logout }) => {
 
   // need persist memory because for some reason
   // the state variables get reset when pusher sends
@@ -507,8 +507,11 @@ const User = ({ userId }) => {
   */
   return (
     <div>
-      <button onClick={() => printState()}>Print State</button>
+      {/* <button onClick={() => printState()}>Print State</button> */}
       <LocalRouter />
+      <div className="border border-bottom-0 border-left-0 border-right-0 m-3 p-3 text-center">
+        <Link to="#" className="logout" onClick={logout}>[Logout]</Link>
+      </div>
     </div>
   )
 }
