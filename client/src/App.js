@@ -24,7 +24,7 @@ import GameMasterAdmin from "./pages/GameMaster/Admin";
 import GameMasterLiveGame from "./pages/GameMaster/LiveGame";
 import StatsBoard from "./pages/BigBoard/StatsBoard";
 import BoardQuestion from "./pages/BigBoard/BoardQuestion";
-import User from "./pages/playGame/playGame";
+import User from "./pages/User/User";
 import LandingPage from './pages/LandingPage'
 
 
