@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Pie, Bar} from "react-chartjs-2";
+// import {Pie, Bar} from "react-chartjs-2";
 import '../../pages/BigBoard/BigBoard.css';
 import LiveQuestion from "../../components/BigBoard/LiveQuestion";
 import PostQuestion from '../../components/BigBoard/PostQuestion';
@@ -78,7 +78,7 @@ const BoardQuestion = (props) => {
 
     const [ajaxReturned, setAjaxReturned] = useState(false); // set this to "notLoaded" by default so we can use this to suppress rendering until the DB call returns
     const [timerData, setTimerData] = useState(fakeTimerData); // TODO: stop using fake data
-    const [timesUp, setTimesUp] = useState(false);
+    // const [timesUp, setTimesUp] = useState(false);
     const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
         {
             responsive: true,
@@ -296,7 +296,7 @@ const BoardQuestion = (props) => {
                                 ans3 = {boardBlob.question.choices[2]}
                                 ans4 = {boardBlob.question.choices[3]}
                                 ansRcvd = {boardBlob.ansRcvd}
-                                timesUp = {timesUp} // TODO: need to update this one
+                                // timesUp = {timesUp} // TODO: need to update this one
                                 timerData = {timerData} // TODO: need to update this one
                                 timerControl = {timerControl} // TODO: need to update this one
                                 question = {boardBlob.question}

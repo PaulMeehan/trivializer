@@ -27,7 +27,8 @@ return (
         </div>
 
         <div className="liveTimer">
-            { !props.timesUp ? <h2 className="text-center">Time Remaining:</h2> : <h2 className="text-center mb-4">Time's Up!!!</h2> }
+            {/* { !props.timesUp ? <h2 className="text-center">Time Remaining:</h2> : <h2 className="text-center mb-4">Time's Up!!!</h2> } */}
+            <h2 className="text-center">Time Remaining:</h2>
             {/* <h2 className="text-center mb-4">Time Remaining:</h2> */}
             {/* <div id="pieHolder"> */}
                 {/* { !timesUp ? <Pie data = {timerData} options = {pieOptions} /> : <h2 className="text-center">Time's Up!</h2> } */}
