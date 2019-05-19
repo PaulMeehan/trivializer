@@ -3,3 +3,13 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+label {
+  color: #000000;
+}
+
+.fiddle {
+  margin-top: .2em;
+}
+
+ul.nav a:hover { color: #fff !important; }

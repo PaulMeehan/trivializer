@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {HorizontalBar, defaults} from "react-chartjs-2";
 import axios from 'axios';
 import './BigBoard.css';
+import gameAPI from '../../utils/gameAPI'
 
 // defaults.global.defaultFontFamily = "'PT Sans', sans-serif"
 // defaults.global.defaultFontColor = 'white';
@@ -131,6 +132,12 @@ const StatsBoard = () => {
     useEffect( () => {
         console.log("useEffect() triggered");
         // getStats()
+        gameAPI.getScoreBoard()
+            .then(function(res){
+                console.log("\n\ngetScoreBoard() Response:")
+                console.log(res.data)
+                setStatsBlob(res.data)
+            })
 
     },[])
 

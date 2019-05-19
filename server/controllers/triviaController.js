@@ -57,6 +57,7 @@ const prepCurrentGameQuestion = (questions, answers) => {
 
   // answers need to be [[teamName1,answer], [teamName2,answer], etc...]
   q.ansRcvd = a
+  console.log("**\n**\n**\n a = " + a + "\n**\n**\n**")
 
   // barData.labels prep
   const labels = []
@@ -65,25 +66,33 @@ const prepCurrentGameQuestion = (questions, answers) => {
   q.barData.labels = labels
 
   // barData.datasets.data & barData.datasets.backgroundColor prep
-  q.barData.datasets = {}
-  const data = []
-  const colors = []
+  q.barData.datasets = []
+  const datasetsInnerObject = {
+    data: [],
+    backgroundColor: [],
+  }
+  // const data = []
+  // const colors = []
+  console.log("**\n**\n**\n q.question.choices.length = " + q.question.choices.length + "\n**\n**\n**")
   for (let i = 0; i < q.question.choices.length; i++) {
-
+    console.log("\n\ndatasets FOR loop, trip " + i)
     // background colors
     let color = '#ed4634'
     if (alphabet[i] === q.question.answer) color = '#34edaf'
-    colors.push(color)
+    datasetsInnerObject.backgroundColor.push(color)
 
     // data - tally count of each answer
+    let count = 0
     for (let j in a)  {
-      let count = 0
+      console.log("datasets score tally FOR loop, trip " + j)
+      console.log("a length = " + a.length)
       if (a[j][1] === alphabet[i]) count++
-      data.push(count)
     }
+    datasetsInnerObject.data.push(count)
   }
-  q.barData.datasets.data = data
-  q.barData.datasets.backgroundColor = colors
+  q.barData.datasets[0] = datasetsInnerObject;
+  // q.barData.datasets.data = data
+  // q.barData.datasets.backgroundColor = colors
   // finished - return q
   return q
 }
@@ -280,6 +289,7 @@ module.exports = {
       .then(answered => {
         db.GameResponse.find({ hostName: host })
         .then(answers => {
+          console.log("**\n**\n**\n active response sent \n**\n**\n**")
           res.json(prepCurrentGameQuestion(game, answers))
         })
       })
@@ -306,12 +316,18 @@ module.exports = {
     const _id = req.user._id
     db.GameResponse.find({ hostName })
     .then(responses => {
+      console.log("\n**\n**\n** responses object")
+      console.log(responses)
+      console.log("\n**\n**\n**")
       const labels = [], data = [], backGroundColor = []
       let max = 0
       // make labels (teamNames)
       for (let i in responses) {
         if (labels.indexOf(responses[i].playerName) === -1) labels.push(responses[i].playerName)
       }
+      console.log("\n**\n**\n** labels array")
+      console.log(labels)
+      console.log("\n**\n**\n**")
       // tally team scores
       for (let i in labels) {
         let teamScore = 0
@@ -334,23 +350,60 @@ module.exports = {
       .then(game => {
         game = prepCurrentGameQuestion(game)
         const response = {
-          labels: labels,
-          datasets: [
-            { data: data },
-            { backgroundColor: backGroundColor }
-          ],
-          options: {
-            responsive: true,
-            scales : {
+          barOptions: {
+            legend: {
+                display: false, // static value
+            },
+            responsive: true, // static value
+            maintainAspectRatio: false, // static value
+            scales: {
               xAxes: [{
-                ticks:  {
-                  beginAtZero: true,
-                  min: 0,
-                  max: game.game.length
+                position: "top", // static value
+                ticks: {
+                  beginAtZero: true, // static value
+                  min: 0, // static value
+                  max: game.game.length, // THIS VALUE NEEDS TO BE SET TO THE TOTAL # OF QUESTIONS FOR THE GAME!!
+                  fontColor: "#ffffff", // static value
+                  fontSize: 30, // static value
+                  stepSize: 1, // static value
+                },
+                gridLines: {
+                  color: "#ffffff" // static value
+                }
+              }],
+              yAxes: [{
+                ticks: {
+                  fontColor: "#ffffff", // static value
+                  fontSize: 30, // static value
+                  fontFamily: "'Bangers', sans-serif" // static value
+                },
+                gridLines: {
+                  color: "#ffffff" // static value
                 }
               }]
             }
+          },
+          answerData: {
+            labels: labels,
+            datasets: [
+              {
+                data: data,
+                backgroundColor: backGroundColor
+              }
+            ]
           }
+          // options: {
+          //   responsive: true,
+          //   scales : {
+          //     xAxes: [{
+          //       ticks:  {
+          //         beginAtZero: true,
+          //         min: 0,
+          //         max: game.game.length
+          //       }
+          //     }]
+          //   }
+          // }
         }
         res.json(response)
       })

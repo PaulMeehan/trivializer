@@ -73,3 +73,8 @@ h4.firstCorrect {
     margin-right: 5%;
     padding: 20px
 }
+
+.whiteLink, .whiteLink:hover {
+    color: #fff;
+    text-decoration: underline;
+  }

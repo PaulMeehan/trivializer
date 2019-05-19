@@ -12,14 +12,14 @@ const Nav = (props) => {
 		greeting = (
 			<Fragment>
 				Welcome back, <strong>{props.user.firstName}</strong>
-        - <Link to="#" className="logout" onClick={props.logout}>Logout</Link>
+        &nbsp; <Link to="#" className="logout" onClick={props.logout}>[Logout]</Link>
 			</Fragment>
 		)
 	} else if (props.user.username) {
 		greeting = (
 			<Fragment>
 				Welcome back, <strong>{props.user.username} </strong>
-        - <Link to="#" className="logout" onClick={props.logout}>Logout</Link>
+        &nbsp; <Link to="#" className="logout" onClick={props.logout}>[Logout]</Link>
 			</Fragment>
 		)
   }
@@ -32,11 +32,11 @@ const Nav = (props) => {
     linkLocation = "/board-question";
     greeting = "";
   } else if (window.location.pathname.toLowerCase() === "/board-question") {
-    location = props.user.username
+    location = "by\xa0\xa0\xa0" + props.user.username
     linkLocation = "/statsboard";
     greeting = "";
-  } else if (window.location.pathname.toLowerCase() === "/live-game") {
-    location = "YOUR GAME IS LIVE!!!"
+  } else if (window.location.pathname.toLowerCase() === "/live-game" || "/admin") {
+    location = "by\xa0\xa0\xa0" + props.user.username
     linkLocation = "#";
   }
 
