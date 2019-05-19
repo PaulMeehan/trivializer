@@ -64,7 +64,7 @@ class SignupForm extends Component {
           <Col size="md-3"></Col>
           <Col size="md-6">
             <div className="text-center mb-3">
-              <img src="/trivializer-logo.png" className="logo"/>	
+              <img src="/trivializer-logo.png" alt="Trivializer" className="logo"/>	
             </div>
             <Card title="Register for Trivializer">
               <form style={{marginTop: 10}}>

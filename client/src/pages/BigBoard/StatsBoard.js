@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import {HorizontalBar, defaults} from "react-chartjs-2";
-import axios from 'axios';
+import {HorizontalBar} from "react-chartjs-2";
+// import axios from 'axios';
 import './BigBoard.css';
 import gameAPI from '../../utils/gameAPI'
 
@@ -162,7 +162,7 @@ const StatsBoard = () => {
     //     console.log(answerData.options);
     // }
 
-    const getStats = () => { // pull questions from DB
+    // const getStats = () => { // pull questions from DB
         // /api/scoreboard
         // GET request
 
@@ -181,7 +181,7 @@ const StatsBoard = () => {
         // setAnswerData(fakeAnswerData);
         
 
-    }
+    // }
 
     useEffect( () => {
         console.log("useEffect() triggered");

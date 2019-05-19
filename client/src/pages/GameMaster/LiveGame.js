@@ -1,8 +1,9 @@
-import React, {useState, useEffect, useRef } from 'react'
+import React, {useState, useEffect} from 'react'
 import './Admin.css'
 import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI'
-import {animateScroll, Element, scroller} from "react-scroll"
+import {Element, scroller} from "react-scroll"
+// import {animateScroll} from "react-scroll"
 import { Link } from 'react-router-dom';
 
 const baseTimerData = {
@@ -25,12 +26,6 @@ const baseTimerData = {
     responsive: true
   }
 }
-
-const styles = {
-	tempHolderDiv: {
-    width: 600,
-	},
-};
 
 const GameMasterLiveGame = (props) => {
 
@@ -139,15 +134,15 @@ const GameMasterLiveGame = (props) => {
     })
   }
 
-  const printState = () => {
-    console.log('questions')
-    console.table(questions)
-    console.log('gameIsActive', gameIsActive)
-    console.log('questionIsActive', questionIsActive)
-    console.log('qNum ', qNum)
-    console.log('time ', time)
-    console.log('timer ', timer)
-  }
+  // const printState = () => {
+  //   console.log('questions')
+  //   console.table(questions)
+  //   console.log('gameIsActive', gameIsActive)
+  //   console.log('questionIsActive', questionIsActive)
+  //   console.log('qNum ', qNum)
+  //   console.log('time ', time)
+  //   console.log('timer ', timer)
+  // }
 
   const ControllButton = () => {
     console.log ("in ControllButton")
@@ -300,11 +295,11 @@ const GameMasterLiveGame = (props) => {
     })
   }
 
-  const scrollToTop = () => {
-    animateScroll.scrollToTop({
-      containerId: "questionsFrame"
-    });
-  }
+  // const scrollToTop = () => {
+  //   animateScroll.scrollToTop({
+  //     containerId: "questionsFrame"
+  //   });
+  // }
 
   const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
         {
@@ -316,11 +311,11 @@ const GameMasterLiveGame = (props) => {
         }
     );
 
-  const scrollToBottom = () => {
-    animateScroll.scrollToBottom({
-      containerId: "questionsFrame"
-    });
-  }
+  // const scrollToBottom = () => {
+  //   animateScroll.scrollToBottom({
+  //     containerId: "questionsFrame"
+  //   });
+  // }
 
   return(
     <div className="container">
