@@ -59,7 +59,7 @@ class LandingPage extends React.Component {
               >
               </input>
               <Link 
-                to={`/play/${this.state.game}`}
+                to={`/play-${this.state.game}`}
                 className="btn btn-success btn-large"
               >
                 <h1 className="fiddle">Play a Game</h1>
