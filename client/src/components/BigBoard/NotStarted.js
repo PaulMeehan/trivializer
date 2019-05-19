@@ -26,9 +26,9 @@ return (
                     <div className="col-md-4 border text-center">
                         <h2 className="text-center">HOW TO PLAY</h2>
                         <p>Using your mobile device, scan this QR code:</p>
-                        <QRCode value={"http://trivializer.com/play/" + props.userID} />
+                        <QRCode value={"http://trivializer.com/play-" + props.userID} />
                         <p className="mt-3">or go to:</p>
-                        <Link className="whiteLink" to={"http://trivializer.com/play/" + props.userID}><h3>{"http://trivializer.com/play/" + props.userID}</h3></Link>
+                        <Link className="whiteLink" to={"/play-" + props.userID}><h3>{"http://trivializer.com/play-" + props.userID}</h3></Link>
                     </div>
                     <div className="col-md-1"></div>
                 </div>

@@ -58,7 +58,7 @@ class LandingPage extends React.Component {
                 onChange={(e) => this.handleInputChange(e)}
               >
               </input>
-              <Link 
+              <Link
                 to={`/play-${this.state.game}`}
                 className="btn btn-success btn-large"
               >

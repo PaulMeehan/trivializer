@@ -57,7 +57,6 @@ const User = ({ userId }) => {
       forceTLS: true
     })
     const game = pusher.subscribe('game-question')
-    // TODO: change the binding to hostname from window.location.href
     game.bind(hostname, setState)
 
   }, [])
@@ -271,7 +270,10 @@ const User = ({ userId }) => {
   }
 
   const submitAnswer = userChose => {
-    console.log(userChose)
+    const hostname = window.location.pathname.substring(window.location.pathname.indexOf('-')+1)
+    gameAPI.submitAnswer(hostname, qNum, userChose)
+    .then(res => setState(res.data))
+    .catch(err => console.log(err))
   }
 
   const LocalRouter = () => {
@@ -312,12 +314,23 @@ const User = ({ userId }) => {
             <h1 style={{ textAlign: 'center', color: 'black'}}>Question: { qNum + 1 }</h1>
             <div style={{ padding: '10px',}}>
               <p style={{ textAlign: 'center', color: '#9800ff' }}>{question}</p>
-              <ul>
-                <li onClick={() => submitAnswer('A')}>{choices[0]}</li>
-                <li onClick={() => submitAnswer('B')}>{choices[1]}</li>
-                <li onClick={() => submitAnswer('C')}>{choices[2]}</li>
-                <li onClick={() => submitAnswer('D')}>{choices[3]}</li>
-              </ul>
+              <button
+                className="btn btn-success btn-large btn-block mb-4"
+                onClick={() => submitAnswer('A')}
+              >{choices[0]}</button>
+              <button
+                className="btn btn-success btn-large btn-block mb-4"
+                onClick={() => submitAnswer('B')}
+              >{choices[1]}</button>
+              <button
+                className="btn btn-success btn-large btn-block mb-4"
+                onClick={() => submitAnswer('C')}
+              >{choices[2]}</button>
+              <button
+                className="btn btn-success btn-large btn-block mb-4"
+                onClick={() => submitAnswer('D')}
+              >{choices[3]}</button>
+
             </div>
           </div>
         </div>
