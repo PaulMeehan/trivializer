@@ -38,9 +38,9 @@ return (
                     options = {props.pieOptions}
                 />
             {/* </div> */}
-            <button 
+            {/* <button 
                 onClick={() => props.timerControl()}
-            >Decrement Counter</button>
+            >Decrement Counter</button> */}
         </div>
 
     </div>

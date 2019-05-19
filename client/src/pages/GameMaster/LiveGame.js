@@ -3,6 +3,7 @@ import './Admin.css'
 import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI'
 import {animateScroll, Element, scroller} from "react-scroll"
+import { Link } from 'react-router-dom';
 
 const baseTimerData = {
   labels: [
@@ -271,8 +272,8 @@ const GameMasterLiveGame = (props) => {
       qstns.push(
         <div>
           <Element name={"scrollElement" + i}></Element>
-          { currentQuestion ? <h2>Current Question</h2> : "" }
-          <div className={ currentQuestion ? "row border p-3 notDeadQuestion mb-3" : "row border p-3 mb-3 deadQuestion" }>
+          {/* { currentQuestion ? <h2>Current Question</h2> : "" } */}
+          <div className={ currentQuestion ? "row border p-3 notDeadQuestion mb-3 lastOf" : "row border p-3 mb-3 deadQuestion lastOf" }>
               <div className="col-md-1">
                 <h1>{i + 1}.</h1>
               </div>
@@ -299,8 +300,8 @@ const GameMasterLiveGame = (props) => {
 
   const triggerScroll = (elementID) => {
     scroller.scrollTo('scrollElement'+elementID, {
-      duration: 1500,
-      delay: 100,
+      duration: 750,
+      delay: 10,
       smooth: true,
       containerId: 'questionsFrame',
       offset: -200, // Scrolls to element + 50 pixels down the page
@@ -346,8 +347,10 @@ const GameMasterLiveGame = (props) => {
             width = {200}
           />
 
-          <h4 className="mt-4">Live game at</h4>
-          <a href={`trivializer.com/play/${props.username}`} target="_blank"><h4 className="white">{`  trivializer.com/play/${props.username}`}</h4></a>
+          <h4 className="mt-4">Live game links:</h4>
+          <Link to={`/play/${props.username}`} target="_blank"><h4 className="white">{`  trivializer.com/play/${props.username}`}</h4></Link>
+          <Link to="/board-question" target="_blank"><h4 className="white">trivializer.com/board-question</h4></Link>
+          <Link to="/statsboard" target="_blank"><h4 className="white">trivializer.com/statsboard</h4></Link>
           
           {/* <button onClick={() => triggerScroll(2)}>Trigger Scroll</button> */}
           {/* <button onClick={() => printState()}>PrintState</button>
