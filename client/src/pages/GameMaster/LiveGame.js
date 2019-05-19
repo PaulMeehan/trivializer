@@ -34,22 +34,20 @@ const styles = {
 
 const GameMasterLiveGame = (props) => {
 
-  const [questions, setQuestions] = React.useState([])
+  const [questions, setQuestions] = useState([])
   const [qNum,setQNum] = useState()
-  const [questionIsActive,setQuestionIsActive] = useState()
+  const [questionIsActive, setQuestionIsActive] = useState()
   const [gameIsActive, setGameIsActive] = useState()
   const [time, setTime] = useState()
   const [timer, setTimer] = useState()
   const [timerData, setTimerData] = useState(baseTimerData); // TODO: stop using fake data
 
-  
 
   // onload
   useEffect( () => {
     gameAPI.getQuestions()
     .then(res => {
       const x = res.data
-      // updateState(res)
       if (x.isActive && x.gameActive) {
         updateState(res,true)
         gameTimer(x.game[x.qNum].time)
@@ -74,8 +72,9 @@ const GameMasterLiveGame = (props) => {
     startTime = startTime || time || questions[0].time
     const t = setInterval(() => {
       elapsed++
-      setTime(startTime - elapsed)
-      gameAPI.setTime(startTime - elapsed)
+      let remaining = startTime - elapsed
+      setTime(remaining)
+      gameAPI.setTime(remaining)
       if (startTime === elapsed) {
         clearInterval(t)
         endQuestion()
@@ -324,14 +323,13 @@ const GameMasterLiveGame = (props) => {
   return(
     <div className="container">
       <h4>Live game at
-        <a href={`trivializer.com/play/${props.username}`} target="_blank">{`  trivializer.com/play/${props.username}`}</a>
+        <div >{`  trivializer.com/play-${props.username}`}</div>
       </h4>
       <div style={styles.tempHolderDiv}>
         <Pie
           data = {timerData}
         />
       </div>
-      
       <button onClick={() => printState()}>PrintState</button>
       {time}
       <div className="row mt-4">
