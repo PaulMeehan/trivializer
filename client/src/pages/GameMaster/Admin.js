@@ -4,7 +4,7 @@ import AdminGameDiv from "../../components/Admin/AdminGameDiv";
 import gameAPI from '../../utils/gameAPI'
 import { Link } from 'react-router-dom';
 
-console.log("last updated by BH 20190519 11:24")
+console.log("last updated by BH 20190519 12:53")
 
 const defaultQuestionTime = 180
 
