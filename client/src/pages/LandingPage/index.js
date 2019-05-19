@@ -42,7 +42,7 @@ class LandingPage extends React.Component {
 
         <div className="row mt-5">
           <div className="col-md-12">
-            <Link to="/admin" className="btn btn-large btn-block btn-success"><h1>Host a Game</h1></Link>
+            <Link to="/admin" className="btn btn-large btn-block btn-success"><h1 className="fiddle">Host a Game</h1></Link>
             <h1 className="text-center m-5">- OR -</h1>
 
             <div className="input-group mb-3">
@@ -58,16 +58,12 @@ class LandingPage extends React.Component {
                 onChange={(e) => this.handleInputChange(e)}
               >
               </input>
-              {/* <a
-                href={`/play/${this.state.game}`}
-                className="btn btn-success btn-large"
-                type="button"
-              ><h1>Play a Game</h1></a> */}
-              <Link
+              <Link 
                 to={`/play/${this.state.game}`}
                 className="btn btn-success btn-large"
-                type="button"
-              ><h1>Play a Game</h1></Link>
+              >
+                <h1 className="fiddle">Play a Game</h1>
+              </Link>
             </div>
 
           </div>

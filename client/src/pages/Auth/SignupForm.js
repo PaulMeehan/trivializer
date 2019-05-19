@@ -5,6 +5,12 @@ import { Card } from '../../components/Card';
 import { Input, FormBtn } from '../../components/Form';
 import AUTH from '../../utils/AUTH';
 
+const styles = {
+	blackText: {
+    color: "#000000"
+	},
+};
+
 class SignupForm extends Component {
 
 	constructor() {
@@ -57,9 +63,12 @@ class SignupForm extends Component {
         <Row>
           <Col size="md-3"></Col>
           <Col size="md-6">
-            <Card title="Register for React Reading List">
+            <div class="text-center mb-3">
+              <img src="/trivializer-logo.png" className="logo"/>	
+            </div>
+            <Card title="Register for Trivializer">
               <form style={{marginTop: 10}}>
-                <label htmlFor="username">First name: </label>
+                <label htmlFor="username" style={styles.blackText}>First name: </label>
                 <Input
                   type="text"
                   name="firstName"
