@@ -117,6 +117,8 @@ const GameMasterLiveGame = (props) => {
   }
 
   const endQuestion = () => {
+    console.log("in endQuestion")
+    console.log(questions)
     clearInterval(timer)
     // reset the time on this question first, then call endQuestion
     let time, q = qNum - 1
@@ -149,6 +151,8 @@ const GameMasterLiveGame = (props) => {
   }
 
   const ControllButton = () => {
+    console.log ("in ControllButton")
+    console.log (questions)
     const button = []
     // game is active but the last question is over
     if (!questionIsActive && (qNum === questions.length - 1)) {
@@ -259,6 +263,8 @@ const GameMasterLiveGame = (props) => {
   }
 
   const DrawQuestions = () => {
+    console.log("in DrawQuestions")
+    console.log(questions)
     const qstns = []
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i]
