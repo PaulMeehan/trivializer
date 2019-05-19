@@ -53,7 +53,9 @@ const GameMasterLiveGame = (props) => {
   },[])
 
   useEffect( () => {
-    triggerScroll(qNum);
+    if (qNum >= 0) {
+      triggerScroll(qNum);
+    }
   },[qNum])
 
   const updateState = (res, ignoreTime = false) => {
@@ -286,6 +288,8 @@ const GameMasterLiveGame = (props) => {
   }
 
   const triggerScroll = (elementID) => {
+    console.log("in triggerScroll")
+    console.log(elementID)
     scroller.scrollTo('scrollElement'+elementID, {
       duration: 750,
       delay: 10,
