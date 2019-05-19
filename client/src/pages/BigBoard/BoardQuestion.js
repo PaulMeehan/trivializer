@@ -76,6 +76,7 @@ const BoardQuestion = (props) => {
 /// ======================================================
 /// ======================================================
 
+    const [ajaxReturned, setAjaxReturned] = useState(false); // set this to "notLoaded" by default so we can use this to suppress rendering until the DB call returns
     const [timerData, setTimerData] = useState(fakeTimerData); // TODO: stop using fake data
     const [timesUp, setTimesUp] = useState(false);
     const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
@@ -143,6 +144,7 @@ const BoardQuestion = (props) => {
                 console.log('response received');
                 // console.log(res.data)
                 setBoardBlob(res.data)
+                setAjaxReturned(true) // set ajaxReturned so we can stop suppressing the render
                 // setTimerData({
                 //     datasets: [
                 //         {
@@ -271,49 +273,50 @@ const BoardQuestion = (props) => {
 
             {(boardBlob.gameActive === true) ? <h1 className="text-center mt-3 question p-3 mb-4">({boardBlob.qNum + 1}/{boardBlob.totalQ}) {boardBlob.question.question}</h1> : ""}
 
-            {(boardBlob.gameActive === false) ? 
+            {   // FIRST TERNARY: SEE IF DB HAS RESPONDED AND UPDATED STATE
+                (ajaxReturned === false) ? "" :
+                
+                    // SECOND TERNARY: SEE IF THE GAME IS ACTIVE
+                    (boardBlob.gameActive === false) ? 
 
-                // WHAT TO SHOW IF GAME IS NOT RUNNING
+                        // WHAT TO SHOW IF GAME IS NOT RUNNING
+                        <NotStarted
+                            userID = {props.userID}
+                        />                
 
-                <NotStarted
-                    userID = {props.userID}
-                />                
+                        :
 
-                :
+                        // WHAT TO SHOW IF GAME IS RUNNING
+                        // THIRD TERNARY: SEE IF QUESTION IS ACTIVE
+                        (boardBlob.isActive === true) ?
 
-                // WHAT TO SHOW IF GAME IS RUNNING
-                // START NESTED TERNARY
-                (boardBlob.isActive === true) ?
-
-                    <LiveQuestion 
-                        ans1 = {boardBlob.question.choices[0]}
-                        ans2 = {boardBlob.question.choices[1]}
-                        ans3 = {boardBlob.question.choices[2]}
-                        ans4 = {boardBlob.question.choices[3]}
-                        ansRcvd = {boardBlob.ansRcvd}
-                        timesUp = {timesUp} // TODO: need to update this one
-                        timerData = {timerData} // TODO: need to update this one
-                        timerControl = {timerControl} // TODO: need to update this one
-                        question = {boardBlob.question}
-                        qNum = {boardBlob.qNum}
-                        pieOptions = {pieOptions}
-                    />
-        
-                    :
-        
-                    <PostQuestion
-                        ans1 = {boardBlob.question.choices[0]}
-                        ans2 = {boardBlob.question.choices[1]}
-                        ans3 = {boardBlob.question.choices[2]}
-                        ans4 = {boardBlob.question.choices[3]}
-                        ansLetter = {boardBlob.question.answer}
-                        correctAnswerText = {boardBlob.question.answerText}
-                        barData = {boardBlob.barData}
-                        barOptions = {barOptions}
-                    />
-        
-                // close nested ternary
-
+                            <LiveQuestion 
+                                ans1 = {boardBlob.question.choices[0]}
+                                ans2 = {boardBlob.question.choices[1]}
+                                ans3 = {boardBlob.question.choices[2]}
+                                ans4 = {boardBlob.question.choices[3]}
+                                ansRcvd = {boardBlob.ansRcvd}
+                                timesUp = {timesUp} // TODO: need to update this one
+                                timerData = {timerData} // TODO: need to update this one
+                                timerControl = {timerControl} // TODO: need to update this one
+                                question = {boardBlob.question}
+                                qNum = {boardBlob.qNum}
+                                pieOptions = {pieOptions}
+                            />
+                
+                            :
+                
+                            <PostQuestion
+                                ans1 = {boardBlob.question.choices[0]}
+                                ans2 = {boardBlob.question.choices[1]}
+                                ans3 = {boardBlob.question.choices[2]}
+                                ans4 = {boardBlob.question.choices[3]}
+                                ansLetter = {boardBlob.question.answer}
+                                correctAnswerText = {boardBlob.question.answerText}
+                                barData = {boardBlob.barData}
+                                barOptions = {barOptions}
+                            />
+                
             } {/* close main ternary */}
                 
         </div>
