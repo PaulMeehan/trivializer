@@ -3,8 +3,8 @@ import React from "react";
 const AdminGameDiv = (props) => {
 
 return (
-    <div className="row border mt-3 p-3">
-      <div className="col-md-2">
+    <div className="row border mb-3 p-3">
+      <div className="col-md-1">
         <h1>{props.qNumber}.</h1>
       </div>
       <div className="col-md-4">
@@ -16,9 +16,10 @@ return (
         <p className={ (props.correct == "C") ? "correctAnswer" : "" }>C. {props.a3}</p>
         <p className={ (props.correct == "D") ? "correctAnswer" : "" }>D. {props.a4}</p>
       </div>
-      <div className="col-md-2">
+      <div className="col-md-3">
         <button
           onClick={() => props.deleteQuestion(props.realQNumber)}
+          className="btn btn-light"
         >Delete Question</button>
       </div>
     </div>
