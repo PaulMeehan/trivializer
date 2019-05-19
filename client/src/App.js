@@ -28,6 +28,7 @@ import User from "./pages/User/User";
 import LandingPage from './pages/LandingPage'
 
 
+
 class App extends Component {
 
   constructor() {
@@ -90,11 +91,12 @@ class App extends Component {
 						{/* <Nav user={this.state.user} logout={this.logout}/> */}
             <div className="main-view">
               <Switch>
-                <Route exact path="/" component={() => <LandingPage user={this.state.user}/>} />
+								<Route exact path="/" component={LandingPage} />
                 <Route exact path="/books" component={() => <Books user={this.state.user}/>} />
                 <Route exact path="/books/:id" component={Detail} />
 
 								{/* BH Additions (Temp): */}
+								<Route exact path="/live-game" component={() => <GameMasterLiveGame username={this.state.user.username}/>} />
 								<Route exact path="/board-welcome" component={BoardWelcome} />
 								<Route exact path="/board-multi-live" component={BoardQMultiLive} />
 								<Route exact path="/board-multi-post" component={BoardQMultiPost} />
@@ -109,7 +111,7 @@ class App extends Component {
 								<Route exact path="/statsboard" component={StatsBoard} />
 								{/* <Route exact path="/board-question" component={BoardQuestion} userID={"cheese"} /> */}
 								<Route exact path="/board-question" component={() => <BoardQuestion userID={this.state.user.username}/>} />
-								<Route exact path="/user/" component={User} />
+                <Route path='/play*' component={() => <User userId={this.state.user.username}/>} />
                 <Route component={NoMatch} />
               </Switch>
             </div>

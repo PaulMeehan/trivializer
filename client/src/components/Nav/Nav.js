@@ -27,9 +27,6 @@ const Nav = (props) => {
   let location;
   let linkLocation = "/";
 
-  console.log("window.location.pathname = ");
-  console.log(window.location.pathname);
-
   if (window.location.pathname.toLowerCase() === "/statsboard") {
     location = "Game Stats";
     linkLocation = "/board-question";
