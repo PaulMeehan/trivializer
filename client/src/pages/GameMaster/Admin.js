@@ -23,7 +23,9 @@ const GameMasterAdmin = () => {
   }, [])
 
   const deleteQuestion = id => {
-    const tempQuestions = [...questions]
+    // const tempQuestions = [...questions]
+    const tempQuestions = questions && questions.length > 0 ? [...questions] : [];
+
     setQuestions(tempQuestions.splice(id,1))
     gameAPI.setQuestions(tempQuestions)
       .then(res => setQuestions(res.data.game))
@@ -47,7 +49,8 @@ const GameMasterAdmin = () => {
     console.log (newCorrect);
     if (!newCorrect) return
     console.log(tempQuestions)
-    const tempQuestions = questions && questions.length ? [...questions] : [];
+    // const tempQuestions = [...questions]
+    const tempQuestions = questions && questions.length > 0 ? [...questions] : [];
     const newQuestion = {
       question: newQ,
       choices: [newA1, newA2, newA3, newA4],
