@@ -18,7 +18,6 @@ const GameMasterAdmin = () => {
   const [newA4, setNewA4] = useState();
   const [newCorrect, setNewCorrect] = useState();
   const [questionCount, setQuestionCount] = useState("stillEmpty");
-  const [firstAjaxReturned, setFirstAjaxReturned] = useState(false);
 
   // console.log("questions[0].question = " + questions[0].question)
 
@@ -30,7 +29,6 @@ const GameMasterAdmin = () => {
         if (res.data.game.length !== 0) {
           setQuestions(res.data.game)
           setQuestionCount(res.data.game.length -1)
-          setFirstAjaxReturned(true)
         }
       })
       .catch(err => console.log(err))
@@ -65,7 +63,7 @@ const GameMasterAdmin = () => {
     console.log ("In addQuestion");
     console.log (newCorrect);
     if (!newCorrect) return
-    console.log(tempQuestions)
+    // console.log(tempQuestions)
     // const tempQuestions = [...questions]
     let tempQuestions = questions && questions.length > 0 ? [...questions] : [];
     const newQuestion = {
