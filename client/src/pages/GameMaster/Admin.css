@@ -1,6 +1,6 @@
 .correctAnswer {
-    background-color: green;
-    color: #ffffff;
+    background-color: #33EDAF;
+    color: #000000
 }
 .deadQuestion {
     background-color: gray;
@@ -25,4 +25,19 @@
 
 #btnStartOver {
     margin-top: 0px;
+}
+
+h2, h3 {
+    margin-bottom: 0px;
+}
+
+.header {
+    background-color: #ffffff;
+    color: #961CFF;
+    padding: 10px;
+}
+
+.header h2 {
+    margin: 0px;
+    padding: 0px;
 }
