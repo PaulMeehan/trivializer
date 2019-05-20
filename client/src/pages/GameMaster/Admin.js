@@ -16,27 +16,31 @@ const GameMasterAdmin = () => {
   const [newCorrect, setNewCorrect] = useState();
 
   useEffect(() => {
-    setTimeout( () => {
-      gameAPI.getQuestions()
-      .then(res => {
-        console.log('\n***\nhere\n***')
-        console.log('res',res)
-        console.log('res.data',res.data)
-        // test whether or not we have something to draw
-        let test = res.data.hasOwnProperty('game') && res.data.game.hasOwnProperty('length')
-        if (test) test = true && res.data.game.length > 0
-        // if all tests passed then we have something to draw
-        if (test) {
-          setQuestions(res.data.game)
-        }
-        else {
-          // we don't have any data - don't try to draw anything
-          return
-        }
-      })
-      .catch(err => console.log(err))
-    }, 100)
+    loadQuestions()
   }, [])
+
+  const loadQuestions = () => {
+    gameAPI.getQuestions()
+    .then(res => {
+      console.log('\n***\nhere\n***')
+      console.log('res',res)
+      console.log('res.data',res.data)
+      if (typeof res.data === 'string') return loadQuestions()
+      // test whether or not we have something to draw
+      let test = res.data.hasOwnProperty('game') && res.data.game.hasOwnProperty('length')
+      if (test) test = true && res.data.game.length > 0
+      // if all tests passed then we have something to draw
+      if (test) {
+        setQuestions(res.data.game)
+      }
+      else {
+        // we don't have any data - don't try to draw anything
+        return
+      }
+    })
+    //<!doctype
+    .catch(err => console.log(err))
+  }
 
   const deleteQuestion = id => {
     const tempQuestions = []
