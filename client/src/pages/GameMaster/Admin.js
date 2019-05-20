@@ -18,6 +18,9 @@ const GameMasterAdmin = () => {
   useEffect(() => {
     gameAPI.getQuestions()
       .then(res => {
+        console.log('\n***\nhere\n***')
+        console.log('res',res)
+        console.log('res.data',res.data)
         // test whether or not we have something to draw
         let test = res.data.hasOwnProperty('game') && res.data.game.hasOwnProperty('length')
         if (test) test = true && res.data.game.length > 0
