@@ -310,6 +310,7 @@ const User = ({ userId, logout }) => {
   }
 
   const gameTimer = (startTime = false) => {
+    clearInterval(t) // does this stay?
     let elapsed = 0
     startTime = startTime || time || 180
     const t = setInterval(() => {
