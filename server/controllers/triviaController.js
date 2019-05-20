@@ -112,6 +112,7 @@ module.exports = {
       res.header("Cache-Control", "no-cache, no-store, must-revalidate")
       res.header("Pragma", "no-cache")
       res.header("Expires", 0)
+      res.writeHead(200,{'Content-Type': 'text/html'})
       res.json(prepQuestions(user))
     })
     .catch(err => console.log(err))
