@@ -59,7 +59,9 @@ const GameMasterLiveGame = (props) => {
   },[])
 
   useEffect( () => {
-    triggerScroll(qNum);
+    if (qNum >= 0) {
+      triggerScroll(qNum);
+    }
   },[qNum])
 
   const updateState = (res, ignoreTime = false) => {
@@ -68,7 +70,10 @@ const GameMasterLiveGame = (props) => {
     setQNum(x.qNum)
     setQuestionIsActive(x.isActive)
     setGameIsActive(x.gameActive)
-    if (!ignoreTime) setTime(parseInt(x.game[x.qNum].time))
+    console.log("in updateState")
+    console.log(x)
+    console.log("x.qNum=" + x.qNum)
+    if ((!ignoreTime) && (qNum >= 0)) setTime(parseInt(x.game[x.qNum].time))
   }
 
   const gameTimer = (startTime = false) => {
@@ -292,6 +297,8 @@ const GameMasterLiveGame = (props) => {
   }
 
   const triggerScroll = (elementID) => {
+    console.log("in triggerScroll")
+    console.log(elementID)
     scroller.scrollTo('scrollElement'+elementID, {
       duration: 750,
       delay: 10,
