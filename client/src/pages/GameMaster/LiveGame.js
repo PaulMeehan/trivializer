@@ -53,6 +53,8 @@ const GameMasterLiveGame = props => {
   useEffect( () => {
     gameAPI.getQuestions()
     .then(res => {
+      console.log('\n***\nInitial Data\n***',res)
+      console.log('\n***\nres.data\n***',res.data)
       const x = res.data
       // if there is a current live question we need to start the timer
       if (x.isActive && x.gameActive) {
