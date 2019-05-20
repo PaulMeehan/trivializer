@@ -16,7 +16,8 @@ const GameMasterAdmin = () => {
   const [newCorrect, setNewCorrect] = useState();
 
   useEffect(() => {
-    gameAPI.getQuestions()
+    setTimeout( () => {
+      gameAPI.getQuestions()
       .then(res => {
         console.log('\n***\nhere\n***')
         console.log('res',res)
@@ -34,6 +35,7 @@ const GameMasterAdmin = () => {
         }
       })
       .catch(err => console.log(err))
+    }, 100)
   }, [])
 
   const deleteQuestion = id => {
