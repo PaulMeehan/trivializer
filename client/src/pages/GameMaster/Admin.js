@@ -23,7 +23,17 @@ const GameMasterAdmin = () => {
 
   useEffect(() => {
     gameAPI.getQuestions()
-      .then(res => setQuestions(res.data.game))
+      .then(res => {
+        let test = res.data.hasOwnProperty('game') && res.data.game.hasOwnProperty('length')
+        if (test) test = true && res.data.game.length > 0
+        console.log('load test: ',test)
+        if (test) {
+          setQuestions(res.data.game)
+        }
+        else {
+          return
+        }
+      })
       .catch(err => console.log(err))
   }, [])
 
@@ -101,13 +111,23 @@ const GameMasterAdmin = () => {
 
   const DrawAdminGameDiv = last => {
     last = last || false
-    let block = [], q
+    let block = [], q, test
+
+    // test whether or not we have anything to draw
+    test = questions.hasOwnProperty('length') && questions.length > 0
+    if (!test) {
+      return <div></div>
+    }
+
+    // we have something to draw
     if (last === true) {
+      // then we only want to draw the last question added
       const qNum = Math.max(questions.length - 1, 0)
       q = questions[qNum]
       if (q) block.push(AdminGameDiv(q,qNum))
       return block
     }
+    // we want all the elements
     if (questions.length >= 0) {
       for (let i = 0; i < questions.length; i++) {
         q = questions[i]
