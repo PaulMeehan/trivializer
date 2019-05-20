@@ -3,10 +3,7 @@ import './Admin.css'
 import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI'
 import {Element, scroller} from "react-scroll"
-// import {animateScroll} from "react-scroll"
 import { Link } from 'react-router-dom';
-
-console.log("Last edit: 20190519 4:06pm BH")
 
 const baseTimerData = {
   labels: [
@@ -29,33 +26,40 @@ const baseTimerData = {
   }
 }
 
-const GameMasterLiveGame = (props) => {
+const GameMasterLiveGame = props => {
 
+  /*
+    State variables
+  */
   const [questions, setQuestions] = useState([])
   const [qNum,setQNum] = useState()
   const [questionIsActive, setQuestionIsActive] = useState()
   const [gameIsActive, setGameIsActive] = useState()
   const [time, setTime] = useState()
   const [timer, setTimer] = useState()
-  const [timerData, setTimerData] = useState(baseTimerData); // TODO: stop using fake data
-  const [ajaxResponseRcvd, setAjaxResponseRcvd] = useState(false);
+  const [timerData, setTimerData] = useState(baseTimerData)
+  const [pieOptions, setPieOptions] = useState({
+      legend: {
+        display: false,
+      },
+      responsive: true,
+      maintainAspectRatio: true,
+    }
+  )
 
-  // onload
+  /*
+    Core loading & data handling
+  */
   useEffect( () => {
     gameAPI.getQuestions()
     .then(res => {
-      console.log("\n\n\nres.data from getQuestions():")
-      console.log(res.data)
       const x = res.data
+      // if there is a current live question we need to start the timer
       if (x.isActive && x.gameActive) {
         updateState(res,true)
         gameTimer(x.game[x.qNum].time)
       } else {
         updateState(res)
-      }
-      if (res.data.game){
-        console.log("\n**\n**\n**\nDB response is properly formatted\n**\n**\n**")
-        setAjaxResponseRcvd(true);
       }
     })
     .catch(err => console.log(err))
@@ -68,16 +72,28 @@ const GameMasterLiveGame = (props) => {
   },[qNum])
 
   const updateState = (res, ignoreTime = false) => {
+    // test whether we have data & that it's good
+    let test = res.hasOwnProperty('data') && res.data.hasOwnProperty('game')
+        && res.data.game.hasOwnProperty('length') && res.data.game.length > 0
+        && res.data.hasOwnProperty('qNum') && res.data.hasOwnProperty('isActive')
+        && res.data.hasOwnProperty('gameActive')
+        && typeof res.data.qNum === 'number'
+        && typeof res.data.isActive === typeof res.data.gameActive
+        && typeof res.data.isActive === 'boolean'
+    if (!test)  return  // we don't have good data. Ignore it
+
+    // we must have good data
     const x = res.data
     setQuestions(x.game)
     setQNum(x.qNum)
     setQuestionIsActive(x.isActive)
     setGameIsActive(x.gameActive)
-    console.log("in updateState")
-    console.log(x)
-    console.log("x.qNum=" + x.qNum)
     if ((!ignoreTime) && (qNum >= 0)) setTime(parseInt(x.game[x.qNum].time))
   }
+
+  /*
+    Functions: API & functionality
+  */
 
   const gameTimer = (startTime = false) => {
     let elapsed = 0
@@ -148,19 +164,20 @@ const GameMasterLiveGame = (props) => {
     })
   }
 
-  // const printState = () => {
-  //   console.log('questions')
-  //   console.table(questions)
-  //   console.log('gameIsActive', gameIsActive)
-  //   console.log('questionIsActive', questionIsActive)
-  //   console.log('qNum ', qNum)
-  //   console.log('time ', time)
-  //   console.log('timer ', timer)
-  // }
+  const triggerScroll = (elementID) => {
+    scroller.scrollTo('scrollElement'+elementID, {
+      duration: 750,
+      delay: 10,
+      smooth: true,
+      containerId: 'questionsFrame',
+      offset: -200, // Scrolls to element + 50 pixels down the page
+    })
+  }
 
+  /*
+    Components
+  */
   const ControllButton = () => {
-    console.log ("in ControllButton")
-    console.log (questions)
     const button = []
     // game is active but the last question is over
     if (!questionIsActive && (qNum === questions.length - 1)) {
@@ -238,7 +255,7 @@ const GameMasterLiveGame = (props) => {
       )
     }
     // current question is live
-    else if (gameIsActive && questionIsActive) {
+    else if (questionIsActive) {
       button.push(
         <button
           key={1}
@@ -248,7 +265,7 @@ const GameMasterLiveGame = (props) => {
       )
     }
     // game has not started
-    else if (!gameIsActive) {
+    else if (!gameIsActive && qNum === -1) {
       button.push(
         <button
           key={1}
@@ -262,9 +279,11 @@ const GameMasterLiveGame = (props) => {
   }
 
   const DrawQuestions = () => {
-    console.log("in DrawQuestions")
+    // test whether or not we have anything to draw, if not return empty div
+    let test = questions.hasOwnProperty('length') && questions.length > 0
+    if (!test) return <div></div>
 
-    console.log(questions)
+    // we must have something to draw
     const qstns = []
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i]
@@ -299,49 +318,16 @@ const GameMasterLiveGame = (props) => {
     return qstns
   }
 
-  const triggerScroll = (elementID) => {
-    console.log("in triggerScroll")
-    console.log(elementID)
-    scroller.scrollTo('scrollElement'+elementID, {
-      duration: 750,
-      delay: 10,
-      smooth: true,
-      containerId: 'questionsFrame',
-      offset: -200, // Scrolls to element + 50 pixels down the page
-    })
-  }
-
-  // const scrollToTop = () => {
-  //   animateScroll.scrollToTop({
-  //     containerId: "questionsFrame"
-  //   });
-  // }
-
-  const [pieOptions, setPieOptions] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
-        {
-          legend: {
-            display: false,
-          },
-          responsive: true,
-          maintainAspectRatio: true,
-        }
-    );
-
-  // const scrollToBottom = () => {
-  //   animateScroll.scrollToBottom({
-  //     containerId: "questionsFrame"
-  //   });
-  // }
-
+  /*
+    Main body
+  */
   return(
     <div className="container">
-      { (ajaxResponseRcvd) ? <ControllButton /> : "" }
-      {/* <ControllButton /> */}
+      <ControllButton />
       <div className="row">
         <div className="col-md-4 mt-3 text-center">
 
           <h3>Time Left:</h3>
-
           <Pie
             data = {timerData}
             options = {pieOptions}
@@ -356,11 +342,10 @@ const GameMasterLiveGame = (props) => {
         <div className="col-md-1"></div>
         <div className="col-md-7 mt-3">
           <div className="container" id="questionsFrame">
-          { (ajaxResponseRcvd) ? <DrawQuestions /> : "" }
-            {/* <DrawQuestions /> */}
+            <DrawQuestions />
           </div>
         </div>
-      </div> {/* close row */}
+      </div>
     </div>
   )
 }

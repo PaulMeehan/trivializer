@@ -111,17 +111,29 @@ module.exports = {
   },
   addQuestion: (req, res) => {
     const _id = req.user._id
+    const hostName = req.user.username
     const questions = req.body
+    // update game & reset to start
     db.User.update( { _id }, {
       $set: {
-        game: questions
+        game: questions,
+        qNum: -1,
+        questionActive: false,
+        gameActive: false
       }
-    }).then(confirm => {
-      db.User.findOne({ _id })
+    })
+    .then(confirm => {
+      // delete all responses
+      db.GameResponse.remove({ hostName })
+      .then(confirm => {
+        db.User.findOne({ _id })
         .then(record => {
           res.json(prepQuestions(record))
         })
+        .catch(err => console.log('err'))
+      })
     })
+    .catch(err => console.log(err))
   },
   nextQuestion: (req, res) => {
     const _id = req.user._id
@@ -136,7 +148,8 @@ module.exports = {
       /*
         start game logic
       */
-      if (rec.qNum < 0) { // game is starting
+      // is game is starting?
+      if (rec.qNum < 0) {
         // set game, question to active, iterate qNum, push next question & finish
         db.User.update({ _id }, {
           $set: {
@@ -158,7 +171,8 @@ module.exports = {
           })
         })
       }
-      else if (rec.qNum === totalQuestionNumber || !user.gameActive) { // set game to inactive & push end game function
+      // is game over?
+      else if (rec.qNum === totalQuestionNumber || !user.gameActive) {
         db.User.update({ _id }, {
           $set: {
             qNum: -1,
@@ -179,7 +193,8 @@ module.exports = {
           })
         })
       }
-      else {  // we are in the middle of the game, iterate qNum & push next question
+      // we're in the midddle of the game
+      else {
         db.User.update({ _id }, { $set: {
           qNum: nextQ,
           questionActive: true
@@ -219,27 +234,31 @@ module.exports = {
     const host = req.params.host
     const qNum = req.params.qNum
     const choice = req.params.choice
+
     // make sure they haven't already answered this question
     db.GameResponse.find({ hostName: host, playerName: player, qNum: qNum })
     .then(found => {
-      if (found.length) {
-        return res.send(200)
-      }
-      // make sure the question and game are both active
-      db.User.find({ username: host })
+      // if they have - ignore this request
+      if (found.length) return res.send(200)
+      // they haven't already answered - more checking is in order
+      db.User.findOne({ username: host })
       .then(game => {
-        game = game[0]
+        // make sure the game & question are active & that the answer is for the live question
         if (!game.gameActive || !game.questionActive || qNum != game.qNum) {
           return res.send(200)
         }
-        // game & question are both active and user hasn't submitted an answer yet
-        // now check if they are right
-        if (game.game[qNum].answer === choice.toUpperCase()) {  // correct answer
-          // were they the first correct answer?
+
+        // was their answer right?
+        if (game.game[qNum].answer === choice.toUpperCase()) {
+
+          // check for other someone on this queston who got 2 points (first correct)
           db.GameResponse.find({ hostName: host, qNum: qNum, points: 2 })
           .then(someoneElse => {
+            // default  score
             let points = 1
+            // if no-one else answered though, they get 2 points
             if (someoneElse.length) points = 2
+            // record their correct response
             db.GameResponse.create({
               hostName: host,
               playerName: player,
@@ -247,6 +266,7 @@ module.exports = {
               response: choice,
               points: points
             })
+            // blast updated info
             .then(answerRecorded => {
               db.GameResponse.find({ hostName: host, qNum: qNum })
               .then(answers => {
@@ -257,7 +277,8 @@ module.exports = {
             })
           })
         }
-        else {  // incorrect answer
+        // Their answer was wrong
+        else {
           db.GameResponse.create({
             hostName: host,
             playerName: player,
@@ -265,6 +286,7 @@ module.exports = {
             response: choice,
             points: 0
           })
+          // blast updated info
           .then(answerRecorded => {
             db.GameResponse.find({ hostName: host, qNum: qNum })
             .then(answers => {
@@ -279,19 +301,15 @@ module.exports = {
   },
   getQuestion: (req, res) => {
     const host = req.params.host
-    const player = req.user.username
     // see if the question is active
     db.User.findOne({ username: host })
     .then(game => {
+      // does this game exist? if not respond appropriately
       if (!game || game.length === 0) return res.json({message: 'dne'})
-      // see if the player has answered already
-      db.GameResponse.find({ hostName: host, qNum: game.qNum, playerName: player })
-      .then(answered => {
-        db.GameResponse.find({ hostName: host })
-        .then(answers => {
-          console.log("**\n**\n**\n active response sent \n**\n**\n**")
-          res.json(prepCurrentGameQuestion(game, answers))
-        })
+      // the game exists, give them what they want
+      db.GameResponse.find({ hostName: host })
+      .then(answers => {
+        res.json(prepCurrentGameQuestion(game, answers))
       })
     })
   },
@@ -305,7 +323,7 @@ module.exports = {
         db.GameResponse.find({ hostName: host })
         .then(answers => {
           const response = prepCurrentGameQuestion(game, answers)
-          pusher.trigger('game-question', host, game)
+          pusher.trigger('game-question', host, response)
           res.json(prepQuestions(game))
         })
       })
@@ -314,20 +332,17 @@ module.exports = {
   scoreBoard: (req, res) => {
     const hostName = req.user.username
     const _id = req.user._id
+
+    // get the responses
     db.GameResponse.find({ hostName })
     .then(responses => {
-      console.log("\n**\n**\n** responses object")
-      console.log(responses)
-      console.log("\n**\n**\n**")
       const labels = [], data = [], backGroundColor = []
       let max = 0
+
       // make labels (teamNames)
       for (let i in responses) {
         if (labels.indexOf(responses[i].playerName) === -1) labels.push(responses[i].playerName)
       }
-      console.log("\n**\n**\n** labels array")
-      console.log(labels)
-      console.log("\n**\n**\n**")
       // tally team scores
       for (let i in labels) {
         let teamScore = 0
@@ -392,18 +407,6 @@ module.exports = {
               }
             ]
           }
-          // options: {
-          //   responsive: true,
-          //   scales : {
-          //     xAxes: [{
-          //       ticks:  {
-          //         beginAtZero: true,
-          //         min: 0,
-          //         max: game.game.length
-          //       }
-          //     }]
-          //   }
-          // }
         }
         res.json(response)
       })

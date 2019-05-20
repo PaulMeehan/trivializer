@@ -1,10 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './Admin.css';
-// import AdminGameDiv from "../../components/Admin/AdminGameDiv";
 import gameAPI from '../../utils/gameAPI'
 import { Link } from 'react-router-dom';
-
-console.log("last updated by BH 20190519 12:53")
 
 const defaultQuestionTime = 180
 
@@ -17,20 +14,19 @@ const GameMasterAdmin = () => {
   const [newA3, setNewA3] = useState();
   const [newA4, setNewA4] = useState();
   const [newCorrect, setNewCorrect] = useState();
-  // const [questionCount, setQuestionCount] = useState();
-
-  // console.log("questions[0].question = " + questions[0].question)
 
   useEffect(() => {
     gameAPI.getQuestions()
       .then(res => {
+        // test whether or not we have something to draw
         let test = res.data.hasOwnProperty('game') && res.data.game.hasOwnProperty('length')
         if (test) test = true && res.data.game.length > 0
-        console.log('load test: ',test)
+        // if all tests passed then we have something to draw
         if (test) {
           setQuestions(res.data.game)
         }
         else {
+          // we don't have any data - don't try to draw anything
           return
         }
       })
@@ -38,12 +34,11 @@ const GameMasterAdmin = () => {
   }, [])
 
   const deleteQuestion = id => {
-    console.log(id)
     const tempQuestions = []
+    // don't use splice - it wasn't working on when length = 1. The ghetto method doesn't break
     for (let i = 0; i < questions.length; i++) {
       if (i !== id) tempQuestions.push(questions[i])
     }
-    console.log(tempQuestions)
     setQuestions(tempQuestions)
     gameAPI.setQuestions(tempQuestions)
       .then(res => setQuestions(res.data.game))
@@ -116,23 +111,22 @@ const GameMasterAdmin = () => {
     // test whether or not we have anything to draw
     test = questions.hasOwnProperty('length') && questions.length > 0
     if (!test) {
+      // we don't - return an empty div (have to return something)
       return <div></div>
     }
-
     // we have something to draw
+
+    // check whether or not we're supposed to just draw the last element
     if (last === true) {
-      // then we only want to draw the last question added
       const qNum = Math.max(questions.length - 1, 0)
       q = questions[qNum]
       if (q) block.push(AdminGameDiv(q,qNum))
       return block
     }
-    // we want all the elements
-    if (questions.length >= 0) {
-      for (let i = 0; i < questions.length; i++) {
-        q = questions[i]
-        block.push(AdminGameDiv(q,i))
-      }
+    // Nope, we want all the elements, and we know we have at least 1
+    for (let i = 0; i < questions.length; i++) {
+      q = questions[i]
+      block.push(AdminGameDiv(q,i))
     }
     return block
   }
@@ -199,7 +193,7 @@ const GameMasterAdmin = () => {
               <div className="container">
                 {DrawAdminGameDiv(true)}
               </div>
-          </div> {/* close border wrapper div */}
+          </div>
 
           {/* All saved questions */}
           <div className="header">
@@ -209,13 +203,12 @@ const GameMasterAdmin = () => {
               <div className="container">
                 <DrawAdminGameDiv />
               </div>
-          </div> {/* close border wrapper div */}
+          </div>
 
-        </div> {/* close md-7 col */}
+        </div>
       </div>
       <div className="row border mt-4">
-        <div className="col-md-12">
-        </div>
+        <div className="col-md-12"></div>
       </div>
     </div>
   )
