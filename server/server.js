@@ -29,20 +29,20 @@ app.use(session({
 // Passport
 app.use(passport.initialize());
 app.use(passport.session()); // will call the deserializeUser
-// If its production environment!
-app.disable('etag')
+
+// Add routes, both API and view
 app.use(routes);
+// If its production environment!
 if (process.env.NODE_ENV === 'production') {
 	const path = require('path');
 	console.log('YOU ARE IN THE PRODUCTION ENV');
 	app.use(express.static(path.join(__dirname, '../client/build')));
 	app.get('/*', (req, res) => {
-		res.setHeader('Last-Modified', (new Date()).toUTCString())
-		res.sendFile(path.join(__dirname, '../client/build/index.html'))
+		// res.setHeader('Last-Modified', (new Date()).toUTCString())
+		res.sendFile(path.join(__dirname, '../build/index.html'))
 	});
 }
 
-// Add routes, both API and view
 
 // Error handler
 app.use(function(err, req, res, next) {
