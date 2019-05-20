@@ -53,7 +53,10 @@ const GameMasterLiveGame = (props) => {
       } else {
         updateState(res)
       }
-      setAjaxResponseRcvd(true)
+      if (res.data.game){
+        console.log("\n**\n**\n**\nDB response is properly formatted\n**\n**\n**")
+        setAjaxResponseRcvd(true);
+      }
     })
     .catch(err => console.log(err))
   },[])
