@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === 'production') {
 	const path = require('path');
 	console.log('YOU ARE IN THE PRODUCTION ENV');
 	app.get('/*', (req, res) => {
-		res.setHeader('Last-Modified', (new Date()).toUTCString())
+		
 		app.use(express.static(path.join(__dirname, '../client/build')));
 		res.sendFile(path.join(__dirname, '../client/build/index.html'))
 	});
