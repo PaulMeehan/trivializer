@@ -356,11 +356,12 @@ const User = ({ userId, logout }) => {
   */
   const DnePage = () => {
     return (
-      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto', backgroundColor: '#32EDAF', border: 'solid white 5px'}}>
         <div>
-          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center'}}>I couldn't find this game, and I know everything.</h1>
-          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center'}}>So you are WRONG!!!</h1>
-          <h3 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center'}}>P.S. Make sure you spelled the host's name correctly</h3>
+         {/*   */}
+          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#974BFE'}}>I couldn't find this game, and I know everything.</h1>
+          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#974BFE'}}>So you are WRONG!!!</h1>
+          <h3 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: '#974BFE'}}>P.S. Make sure you spelled the host's name correctly</h3>
         </div>
       </div>
     )
@@ -374,8 +375,8 @@ const User = ({ userId, logout }) => {
     }
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <div style={{ borderRadius: '5px', margin: 'auto', maxWidth: "420px", height: 'auto' }}>
-          <div style={{ display: 'block', width: '25%', margin: 'auto' }}>
+        <div style={{ borderRadius: '5px', margin: 'auto', maxWidth: "420px", height: 'auto',  border: 'solid white 5px' }}>
+          <div style={{ display: 'block', width: '25%', margin: 'auto'}}>
             {time}
             <Pie
               data = {timerData}
@@ -384,25 +385,25 @@ const User = ({ userId, logout }) => {
               width = {200}
           />
 
-          </div>
+          </div >
           <div>
-            <h1 style={{ textAlign: 'center'}}>Question: { qNum + 1 }</h1>
+            <h1 style={{ color: '#fe4bb3', textAlign: 'center'}}>Question: { qNum + 1 }</h1>
             <div style={{ padding: '10px',}}>
-              <p style={{ textAlign: 'center'}}>{question}</p>
+              <p style={{ color: '#fe4bb3', fontSize: '25px', textAlign: 'center'}}>{question}</p>
               <button
-                className="btn btn-success btn-large btn-block mb-4"
+                className="btn btn-success btn-large btn-block mb-4" style={{ color: '#974BFE', backgroundColor:'#32EDAF' }}
                 onClick={() => submitAnswer('A')}
               >{choices[0]}</button>
               <button
-                className="btn btn-success btn-large btn-block mb-4"
+                className="btn btn-success btn-large btn-block mb-4" style={{ color: '#974BFE', backgroundColor:'#32EDAF'}}
                 onClick={() => submitAnswer('B')}
               >{choices[1]}</button>
               <button
-                className="btn btn-success btn-large btn-block mb-4"
+                className="btn btn-success btn-large btn-block mb-4" style={{ color: '#974BFE', backgroundColor:'#32EDAF'}}
                 onClick={() => submitAnswer('C')}
               >{choices[2]}</button>
               <button
-                className="btn btn-success btn-large btn-block mb-4"
+                className="btn btn-success btn-large btn-block mb-4" style={{ color: '#974BFE', backgroundColor:'#32EDAF'}}
                 onClick={() => submitAnswer('D')}
               >{choices[3]}</button>
 
@@ -414,18 +415,19 @@ const User = ({ userId, logout }) => {
     )
   }
 
+  // This looks good
   const AnsweredPage = () => {
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
         <div style={{ borderRadius: '5px', margin: 'auto', maxWidth: "420px", height: 'auto' }}>
-          <div>
-            <h1 style={{ textAlign: 'center'}}>Question: { qNum + 1 }</h1>
+          <div style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
+            <h1 style={{ color: '#974BFE', textAlign: 'center'}}>Question: { qNum + 1 }</h1>
             <div style={{ padding: '10px',}}>
-              <h3 style={{ textAlign: 'center'}}>{question}</h3>
-              <p>You chose "{userChoiceText}"".</p>
-              <p>If you're right it's FAME and FORTUNE. If you're wrong...</p>
-              <p>Well, I guess you just don't get any points.</p>
-              <p>Either way, sit tight and we'll find out</p>
+              <h3 style={{ color: '#974BFE', textAlign: 'center'}}>{question}</h3>
+              <p style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You chose "{userChoiceText}"".</p>
+              <p style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>If you're right it's FAME and FORTUNE. If you're wrong...</p>
+              <p style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>Well, I guess you just don't get any points.</p>
+              <p style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>Either way, sit tight and we'll find out</p>
             </div>
           </div>
         </div>
@@ -437,8 +439,8 @@ const User = ({ userId, logout }) => {
   const GameOverPage = () => {
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <div>
-          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '25px', textAlign: 'center', color: 'white'}}>GAME OVER!</h1>
+        <div style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
+          <h1 style={{ padding: '15px', fontFamily: 'Bangers', fontSize: '35px', textAlign: 'center', color: '#974BFE'}}>GAME OVER!</h1>
           <DidUserAnswer />
         </div>
       </div>
@@ -460,9 +462,9 @@ const User = ({ userId, logout }) => {
   const PreGamePage = () => {
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-          <div>
-            <h1 style={{ padding: '15px', fontFamily: 'Bangers', textAlign: 'center'}}>This is the PREGAME! DRINK UP!</h1>
-            <h3 style={{ padding: '15px', fontFamily: 'Bangers', textAlign: 'center'}}>We start when I say we start</h3>
+          <div style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
+            <h1 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>This is the PREGAME! DRINK UP!</h1>
+            <h3 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>We start when I say we start</h3>
           </div>
       </div>
     )
@@ -474,16 +476,16 @@ const User = ({ userId, logout }) => {
 
     if (userChoiceText === '') {
       block.push(
-        <div key={1}>You didn't answer! No points for you!</div>
+        <div key={1} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You didn't answer! No points for you!</div>
       )
     }
     else {
       const rightWrong = answerText === userChoiceText? 'Right!!!' : 'Wrong!!!'
       block.push(
-        <div key={1}>
-          <div key={3}>You chose : "{userChoiceText}"</div>
-          <div key={2}>The answer was : "{answerText}"</div>
-          <div key={4}>You were {rightWrong}</div>
+            <div key={1}>
+            <div key={3} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You chose : "{userChoiceText}"</div>
+            <div key={2} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px'}}>The answer was : "{answerText}"</div>
+            <div key={4} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You were {rightWrong}</div>
         </div>
       )
     }
