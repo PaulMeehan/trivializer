@@ -25,7 +25,6 @@ const GameMasterAdmin = () => {
       console.log('\n***\nhere\n***')
       console.log('res',res)
       console.log('res.data',res.data)
-      if (typeof res.data === 'string') return loadQuestions()
       // test whether or not we have something to draw
       let test = res.data.hasOwnProperty('game') && res.data.game.hasOwnProperty('length')
       if (test) test = true && res.data.game.length > 0
@@ -144,6 +143,7 @@ const GameMasterAdmin = () => {
     <div className="container">
       {/* header div */}
       <div className="row">
+        <button onClick={()=>loadQuestions()}>load questions</button>
         <div className="col-md-12">
           <Link to="/live-game" className="btn btn-success btn-large btn-block mb-4"><h2>Start Your Game</h2></Link>
         </div>
