@@ -108,7 +108,10 @@ module.exports = {
     const host = req.user.username
     db.Game.findOne({ host })
     .then(user => {
-      res = fuckHeaders(res)
+      // res = fuckHeaders(res)
+      res.header("Cache-Control", "no-cache, no-store, must-revalidate")
+      res.header("Pragma", "no-cache")
+      res.header("Expires", 0)
       res.json(prepQuestions(user))
     })
     .catch(err => console.log(err))
