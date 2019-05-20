@@ -40,6 +40,7 @@
     "pusher-js": "^4.4.0",
     "qrcode.react": "^0.9.3",
     "react-chartjs-2": "^2.7.6",
-    "react-scroll": "^1.7.11"
+    "react-scroll": "^1.7.11",
+    "winston-loggly-bulk": "^3.0.1"
   }
 }
