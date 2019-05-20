@@ -91,18 +91,10 @@ const prepCurrentGameQuestion = (questions, answers) => {
   // finished - return q
   return q
 }
-const fuckHeaders = res => {
-// Disable caching for content files
-  res.header("Cache-Control", "no-cache, no-store, must-revalidate")
-  res.header("Pragma", "no-cache")
-  res.header("Expires", 0)
-  return res
-}
 
 /*
   Export / Meat & Potatoes
 */
-
 module.exports = {
   getAllGameQuestions: (req, res) => {
     const host = req.user.username

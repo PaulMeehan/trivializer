@@ -35,11 +35,6 @@ const GameMasterAdmin = () => {
       .catch(err => console.log(err))
   }, [])
 
-  const getQuestions = () => {
-    gameAPI.getQuestions()
-    .then(res => console.log(res))
-  }
-
   const deleteQuestion = id => {
     const tempQuestions = []
     // don't use splice - it wasn't working on when length = 1. The ghetto method doesn't break
@@ -142,7 +137,6 @@ const GameMasterAdmin = () => {
     <div className="container">
       {/* header div */}
       <div className="row">
-        <button onClick={() => getQuestions()}>Get Questions</button>
         <div className="col-md-12">
           <Link to="/live-game" className="btn btn-success btn-large btn-block mb-4"><h2>Start Your Game</h2></Link>
         </div>
