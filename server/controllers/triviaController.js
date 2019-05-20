@@ -16,6 +16,7 @@ const pusher = new Pusher({
   Function Farm
 */
 const prepQuestions = questions => {
+  console.log('\n-------\nSERVER prepQuestions\n---------',questions)
   const q = {}
   q.name = questions.username
   q.game = questions.game
