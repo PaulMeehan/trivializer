@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const gameResponseSchema = new Schema({
-  hostName:
+  host:
   {
     type: String,
     required: true

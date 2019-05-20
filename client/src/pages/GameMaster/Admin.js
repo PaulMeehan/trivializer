@@ -16,30 +16,22 @@ const GameMasterAdmin = () => {
   const [newCorrect, setNewCorrect] = useState();
 
   useEffect(() => {
-    loadQuestions()
-  }, [])
-
-  const loadQuestions = () => {
     gameAPI.getQuestions()
-    .then(res => {
-      console.log('\n***\nhere\n***')
-      console.log('res',res)
-      console.log('res.data',res.data)
-      // test whether or not we have something to draw
-      let test = res.data.hasOwnProperty('game') && res.data.game.hasOwnProperty('length')
-      if (test) test = true && res.data.game.length > 0
-      // if all tests passed then we have something to draw
-      if (test) {
-        setQuestions(res.data.game)
-      }
-      else {
-        // we don't have any data - don't try to draw anything
-        return
-      }
-    })
-    //<!doctype
-    .catch(err => console.log(err))
-  }
+      .then(res => {
+        // test whether or not we have something to draw
+        let test = res.data.hasOwnProperty('game') && res.data.game.hasOwnProperty('length')
+        if (test) test = true && res.data.game.length > 0
+        // if all tests passed then we have something to draw
+        if (test) {
+          setQuestions(res.data.game)
+        }
+        else {
+          // we don't have any data - don't try to draw anything
+          return
+        }
+      })
+      .catch(err => console.log(err))
+  }, [])
 
   const deleteQuestion = id => {
     const tempQuestions = []
@@ -143,7 +135,6 @@ const GameMasterAdmin = () => {
     <div className="container">
       {/* header div */}
       <div className="row">
-        <button onClick={()=>loadQuestions()}>load questions</button>
         <div className="col-md-12">
           <Link to="/live-game" className="btn btn-success btn-large btn-block mb-4"><h2>Start Your Game</h2></Link>
         </div>

@@ -2,10 +2,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const gameSchema = new Schema({
-  question: { type: String, required: true },
-  qNum: { type: Number, required: true, default: -1},
-  qActive:  { type: Boolean, required: true, default: false},
-  qTimeRemain: { type: Number, required: true, default: 0 }
+  host: { type: String, required: true },
+	game: { type:	Array, unique: false, required: false, default: [] },
+	gameActive: { type: Boolean, default: false },
+	questionActive: { type: Boolean, default: false },
+	qNum: { type: Number, default: -1 },
 });
 
 const Game = mongoose.model("Game", gameSchema);
