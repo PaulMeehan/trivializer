@@ -30,6 +30,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session()); // will call the deserializeUser
 // If its production environment!
+app.disable('etag')
 if (process.env.NODE_ENV === 'production') {
 	const path = require('path');
 	console.log('YOU ARE IN THE PRODUCTION ENV');
@@ -51,7 +52,6 @@ app.use(function(err, req, res, next) {
 });
 
 // Starting Server
-app.disable('etag')
 app.listen(PORT, () => {
   console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`);
 });
