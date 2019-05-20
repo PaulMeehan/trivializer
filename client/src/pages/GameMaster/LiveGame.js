@@ -82,9 +82,6 @@ const GameMasterLiveGame = props => {
         && typeof res.data.qNum === 'number'
         && typeof res.data.isActive === typeof res.data.gameActive
         && typeof res.data.isActive === 'boolean'
-    console.log('\n***\nupdateState\n***')
-    console.log('res: ',res)
-    console.log('res.data: ',res.data)
     if (!test)  return  console.log('bad data')// we don't have good data. Ignore it
     console.log('good data')
     // we must have good data
