@@ -373,17 +373,17 @@ const User = ({ userId, logout, props }) => {
     )
   }
 
-  const cheaterPage = (props) => {
-    console.log('props on the cheater page', window.location)
-    return (
-      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-      <div style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
-        <h1 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Cheater!</h1>
-        <h3 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Drink till you die.</h3>
-      </div>
-  </div>
-    )
-    }
+//   const cheaterPage = (props) => {
+//     console.log('props on the cheater page', window.location)
+//     return (
+//       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+//       <div style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
+//         <h1 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Cheater!</h1>
+//         <h3 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Drink till you die.</h3>
+//       </div>
+//   </div>
+//     )
+//     }
 
     // const Visibility = (props) => {
     //     console.log("Props in visibility" , props)
@@ -523,7 +523,10 @@ const User = ({ userId, logout, props }) => {
     if (userChoiceText === '') {
       block.push(
 
-        <div key={1} className="text-center"><h4 style={{ color: '#974BFE' }}>You didn't answer! No points for you!</h4></div>
+          <div style={{ backgroundColor: '#32EDAF', maxWidth: '420px', border: 'solid white 5px', borderRadius: '5px'}}> 
+        <div key={1} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '25px' }}>You didn't answer! No points for you!</div>
+        </div>
+
       )
     }
     else {
