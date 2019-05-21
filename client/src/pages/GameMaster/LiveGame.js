@@ -197,7 +197,7 @@ const GameMasterLiveGame = props => {
               </button>
             </div>
           </div>
-          <div key={7} className="modal fade" id="gotoadmin" tabIndex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
+          <div key={7} className="modal" data-backdrop="false" id="gotoadmin" tabIndex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
             <div key={8} className="modal-dialog" role="document">
               <div key={9} className="modal-content">
                 <div key={10} className="modal-header">
@@ -214,7 +214,7 @@ const GameMasterLiveGame = props => {
                   <button  key={17} type="button" className="btn btn-primary btn-lg btn-block" data-dismiss="modal">No, stay here</button>
                   <Link key={18}
                     to={'/admin'}
-                    className='btn btn-secondary btn-lg btn-block'
+                    className='btn btn-secondary btn-lg btn-block' id="adminAnchor"
                   >Yes, go to Admin</Link>
                 </div>
               </div>
