@@ -8,6 +8,8 @@ import Books from './pages/Books';
 import Detail from "./pages/Detail";
 import NoMatch from "./pages/NoMatch";
 import AUTH from './utils/AUTH';
+import MediaQuery from 'react-responsive';
+import { Link } from 'react-router-dom';
 
 // BH 20190508
 // new pages
@@ -17,6 +19,7 @@ import StatsBoard from "./pages/BigBoard/StatsBoard";
 import BoardQuestion from "./pages/BigBoard/BoardQuestion";
 import User from "./pages/User/User";
 import LandingPage from './pages/LandingPage'
+import CheaterPage from './pages/Cheater/cheater'
 
 
 
@@ -87,6 +90,7 @@ class App extends Component {
                 <Route exact path="/books/:id" component={Detail} />
 
 								{/* New Additions: */}
+								<Route exact path="/cheater" component={CheaterPage} />
 								<Route exact path="/live-game" component={() => <GameMasterLiveGame username={this.state.user.username}/>} />
 								<Route exact path="/admin" component={GameMasterAdmin} />
 								<Route exact path="/statsboard" component={StatsBoard} />
@@ -104,7 +108,12 @@ class App extends Component {
 							<Route component={() => <LoginForm login={this.login} logout={this.logout}/>} />
 						</Switch>
           </div>
-        )}
+				)}
+				<MediaQuery query="(max-width: 768px)">
+					<div className="border border-bottom-0 border-left-0 border-right-0 m-3 p-3 text-center">
+						<Link to="#" className="logout" onClick={this.logout}>[Logout]</Link>
+					</div>
+				</MediaQuery>
 			</div>
 		)
 	}

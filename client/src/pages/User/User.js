@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+// import { Link, withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI';
@@ -6,8 +7,8 @@ import Pusher from 'pusher-js';
 import Visibility from '../../components/Visibility/Visibility.js';
 
 
-const User = ({ userId, logout }) => {
-
+const User = ({ userId, logout, props }) => {
+    console.log('props on the top of user', this.props)
   // need persist memory because for some reason
   // the state variables get reset when pusher sends
   // data into setState
@@ -123,6 +124,9 @@ const User = ({ userId, logout }) => {
       persist.question = r.question.question
       persist.choices = r.question.choices
     }
+
+    
+
     const checkAnswer = () => {
       // console.log("let's find out it we're right")
       const alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
@@ -309,6 +313,8 @@ const User = ({ userId, logout }) => {
     .catch(err => console.log(err))
   }
 
+  
+
   const gameTimer = (startTime = false) => {
     clearInterval(t) // does this stay?
     let elapsed = 0
@@ -367,7 +373,45 @@ const User = ({ userId, logout }) => {
     )
   }
 
-  const QuestionPage = () => {
+  const cheaterPage = (props) => {
+    console.log('props on the cheater page', window.location)
+    return (
+      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+      <div style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
+        <h1 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Cheater!</h1>
+        <h3 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Drink till you die.</h3>
+      </div>
+  </div>
+    )
+    }
+
+    // const Visibility = (props) => {
+    //     console.log("Props in visibility" , props)
+    //     function handleVisibilityChange() {
+    //         if (document.hidden) {
+    //             console.log("Someone is cheating")
+    //             // window.location.pathname='/cheater'
+    //             persist.whereAreWe = 'cheater';
+    //             this.props.update()
+                
+    //         } else {
+    //             console.log("Everything is good, no calls")
+    //         }
+    //     }
+    
+    //     React.useEffect(() => {
+    //         console.log('hey is this working')
+    //         document.addEventListener('visibilitychange', handleVisibilityChange, false);
+    //         return () => document.removeEventListener('visibility', handleVisibilityChange)
+            
+    //     }, [])
+    
+    //     return null;
+        
+    // }
+
+  const QuestionPage = (props) => {
+      console.log("props: ", props)
     if (!timer) {
       setTimer(true)
       console.log('here')
@@ -410,7 +454,7 @@ const User = ({ userId, logout }) => {
             </div>
           </div>
         </div>
-        {/* <Visibility /> */}
+        <Visibility />
       </div>
     )
   }
@@ -452,7 +496,7 @@ const User = ({ userId, logout }) => {
     setTimer(false)
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <div>
+        <div className="text-center" style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
           <DidUserAnswer />
         </div>
       </div>
@@ -470,29 +514,32 @@ const User = ({ userId, logout }) => {
     )
   }
 
+  
+
   const DidUserAnswer = () =>  {
 
     const block = []
 
     if (userChoiceText === '') {
       block.push(
-        <div key={1} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You didn't answer! No points for you!</div>
+
+        <div key={1} className="text-center"><h4 style={{ color: '#974BFE' }}>You didn't answer! No points for you!</h4></div>
       )
     }
     else {
       const rightWrong = answerText === userChoiceText? 'Right!!!' : 'Wrong!!!'
       block.push(
-            <div key={1}>
-            <div key={3} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You chose : "{userChoiceText}"</div>
-            <div key={2} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px'}}>The answer was : "{answerText}"</div>
-            <div key={4} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You were {rightWrong}</div>
+        <div key={1} className="text-center pt-2">
+          <div key={3}><h5 style={{ color: '#974BFE' }}>You chose : "{userChoiceText}"</h5></div>
+          <div key={2}><h5 style={{ color: '#974BFE' }}>The answer was : "{answerText}"</h5></div>
+          <div key={4}><h5 style={{ color: '#974BFE' }}>You were {rightWrong}</h5></div>
         </div>
       )
     }
     return block
   }
 
-  const LocalRouter = () => {
+  const LocalRouter = (props) => {
     const pages = {
       dne: <DnePage />,
       questionPage: <QuestionPage />,
@@ -500,6 +547,7 @@ const User = ({ userId, logout }) => {
       gameOver: <GameOverPage />,
       waitScreen: <WaitScreenPage />,
       preGame: <PreGamePage />,
+    //   cheater: <cheaterPage update={ props.update } />
     }
     return pages[whereAreWe]
   }
@@ -511,12 +559,11 @@ const User = ({ userId, logout }) => {
   return (
     <div>
       {/* <button onClick={() => printState()}>Print State</button> */}
+      {/* <LocalRouter update={this.putPersistentIntoState}/> */}
       <LocalRouter />
-      <div className="border border-bottom-0 border-left-0 border-right-0 m-3 p-3 text-center">
-        <Link to="#" className="logout" onClick={logout}>[Logout]</Link>
-      </div>
     </div>
   )
 }
 
 export default User;
+// export default withRouter(User);
