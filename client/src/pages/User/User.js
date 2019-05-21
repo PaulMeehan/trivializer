@@ -496,7 +496,7 @@ const User = ({ userId, logout, props }) => {
     setTimer(false)
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <div>
+        <div className="text-center" style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
           <DidUserAnswer />
         </div>
       </div>
@@ -522,18 +522,20 @@ const User = ({ userId, logout, props }) => {
 
     if (userChoiceText === '') {
       block.push(
+
           <div style={{ backgroundColor: '#32EDAF', maxWidth: '420px', border: 'solid white 5px', borderRadius: '5px'}}> 
         <div key={1} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '25px' }}>You didn't answer! No points for you!</div>
         </div>
+
       )
     }
     else {
       const rightWrong = answerText === userChoiceText? 'Right!!!' : 'Wrong!!!'
       block.push(
-            <div key={1}>
-            <div key={3} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You chose : "{userChoiceText}"</div>
-            <div key={2} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px'}}>The answer was : "{answerText}"</div>
-            <div key={4} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You were {rightWrong}</div>
+        <div key={1} className="text-center pt-2">
+          <div key={3}><h5 style={{ color: '#974BFE' }}>You chose : "{userChoiceText}"</h5></div>
+          <div key={2}><h5 style={{ color: '#974BFE' }}>The answer was : "{answerText}"</h5></div>
+          <div key={4}><h5 style={{ color: '#974BFE' }}>You were {rightWrong}</h5></div>
         </div>
       )
     }
@@ -562,9 +564,6 @@ const User = ({ userId, logout, props }) => {
       {/* <button onClick={() => printState()}>Print State</button> */}
       {/* <LocalRouter update={this.putPersistentIntoState}/> */}
       <LocalRouter />
-      <div className="border border-bottom-0 border-left-0 border-right-0 m-3 p-3 text-center">
-        <Link to="#" className="logout" onClick={logout}>[Logout]</Link>
-      </div>
     </div>
   )
 }
