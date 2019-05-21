@@ -1,13 +1,38 @@
 import React, { useState, useEffect } from 'react';
+// import { Link, withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import {Pie} from "react-chartjs-2"
 import gameAPI from '../../utils/gameAPI';
 import Pusher from 'pusher-js';
 import Visibility from '../../components/Visibility/Visibility.js';
 
+// ========================================================================
+// ========================================================================
+// GHETTO TIMERZZZZZZZZ
+// ========================================================================
 
-const User = ({ userId, logout }) => {
+const defaultQuestionTime = 180
 
+const fakeTimerData = {
+  datasets: [
+      {
+          data: [
+              15,
+              0
+          ],
+          backgroundColor: [
+              "#34edaf",
+              "#ed4634"
+          ]
+      }
+  ]
+}
+
+// ========================================================================
+// ========================================================================
+
+const User = ({ userId, logout, props }) => {
+    console.log('props on the top of user', this.props)
   // need persist memory because for some reason
   // the state variables get reset when pusher sends
   // data into setState
@@ -71,6 +96,59 @@ const User = ({ userId, logout }) => {
   const [timerData, setTimerData] = useState(persist.baseTimerData) // TODO: stop using fake data
   const [pieOptions, setPieOptions] = useState(persist.pieOptions)
 
+
+// ========================================================================
+// ========================================================================
+// GHETTO TIMERZZZZZZZZ
+// ========================================================================
+
+const [timerDataV2, setTimerDataV2] = useState(persist.baseTimerData) // TODO: stop using fake data
+
+const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
+        {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },            
+        }
+    );
+
+    const timerControl = () => {
+      const timerInterval = setInterval(function(){
+          const host = window.location.pathname.substring(window.location.pathname.indexOf('-')+1)
+          gameAPI.getCurrentQuestion(host)
+          .then(function(res) {
+              console.log('timer API hit reponse received');
+              console.log("res.data.question.time = " + res.data.question.time)
+              // setBoardBlob(res.data)
+              setTimerDataV2({
+                  datasets: [
+                      {
+                          data: [
+                              res.data.question.time - 1,
+                              180 - res.data.question.time
+                          ],
+                          backgroundColor: [
+                              "#34edaf",
+                              "#ed4634"
+                          ]
+                      }
+                  ]
+              })
+              // timerControl()
+              // gameTimer(res.data.question.time)
+          })
+          // .then(res => setBoardBlob(res.data))
+          .catch(err => console.log(err))
+      },5000);
+  }
+
+// ========================================================================
+// ========================================================================
+
+
+
   /*
     onLoad & setState logic (where the magic happens)
   */
@@ -80,6 +158,9 @@ const User = ({ userId, logout }) => {
     gameAPI.getCurrentQuestion(host)
     .then(res => {
       setState(res.data)
+      // =========================
+      timerControl() // GHETTO TIMERZZZZZZZZ
+      // =========================
     })
     // bind pusher
     Pusher.logToConsole = false
@@ -123,6 +204,9 @@ const User = ({ userId, logout }) => {
       persist.question = r.question.question
       persist.choices = r.question.choices
     }
+
+    
+
     const checkAnswer = () => {
       // console.log("let's find out it we're right")
       const alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
@@ -309,6 +393,8 @@ const User = ({ userId, logout }) => {
     .catch(err => console.log(err))
   }
 
+  
+// NO LONGER USING gameTimer
   const gameTimer = (startTime = false) => {
     clearInterval(t) // does this stay?
     let elapsed = 0
@@ -367,23 +453,61 @@ const User = ({ userId, logout }) => {
     )
   }
 
-  const QuestionPage = () => {
-    if (!timer) {
-      setTimer(true)
-      console.log('here')
-      gameTimer(time)
-    }
+//   const cheaterPage = (props) => {
+//     console.log('props on the cheater page', window.location)
+//     return (
+//       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+//       <div style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
+//         <h1 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Cheater!</h1>
+//         <h3 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Drink till you die.</h3>
+//       </div>
+//   </div>
+//     )
+//     }
+
+    // const Visibility = (props) => {
+    //     console.log("Props in visibility" , props)
+    //     function handleVisibilityChange() {
+    //         if (document.hidden) {
+    //             console.log("Someone is cheating")
+    //             // window.location.pathname='/cheater'
+    //             persist.whereAreWe = 'cheater';
+    //             this.props.update()
+                
+    //         } else {
+    //             console.log("Everything is good, no calls")
+    //         }
+    //     }
+    
+    //     React.useEffect(() => {
+    //         console.log('hey is this working')
+    //         document.addEventListener('visibilitychange', handleVisibilityChange, false);
+    //         return () => document.removeEventListener('visibility', handleVisibilityChange)
+            
+    //     }, [])
+    
+    //     return null;
+        
+    // }
+
+  const QuestionPage = (props) => {
+      console.log("props: ", props)
+    // if (!timer) {
+    //   setTimer(true)
+    //   console.log('here')
+    //   gameTimer(time)
+    // }
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
         <div style={{ borderRadius: '5px', margin: 'auto', maxWidth: "420px", height: 'auto',  border: 'solid white 5px' }}>
           <div style={{ display: 'block', width: '25%', margin: 'auto'}}>
-            {time}
-            <Pie
-              data = {timerData}
-              options = {pieOptions}
-              redraw = {false}
+            {/* {time} */}
+            {/* <Pie
+              data = {timerDataV2}
+              options = {pieOptionsV2}
+              
               width = {200}
-          />
+          /> */}
 
           </div >
           <div>
@@ -410,7 +534,7 @@ const User = ({ userId, logout }) => {
             </div>
           </div>
         </div>
-        {/* <Visibility /> */}
+        <Visibility />
       </div>
     )
   }
@@ -452,7 +576,7 @@ const User = ({ userId, logout }) => {
     setTimer(false)
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-        <div>
+        <div className="text-center" style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
           <DidUserAnswer />
         </div>
       </div>
@@ -470,29 +594,35 @@ const User = ({ userId, logout }) => {
     )
   }
 
+  
+
   const DidUserAnswer = () =>  {
 
     const block = []
 
     if (userChoiceText === '') {
       block.push(
-        <div key={1} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You didn't answer! No points for you!</div>
+
+          <div style={{ backgroundColor: '#32EDAF', maxWidth: '420px', border: 'solid white 5px', borderRadius: '5px'}}> 
+        <div key={1} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '25px' }}>You didn't answer! No points for you!</div>
+        </div>
+
       )
     }
     else {
       const rightWrong = answerText === userChoiceText? 'Right!!!' : 'Wrong!!!'
       block.push(
-            <div key={1}>
-            <div key={3} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You chose : "{userChoiceText}"</div>
-            <div key={2} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px'}}>The answer was : "{answerText}"</div>
-            <div key={4} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '20px' }}>You were {rightWrong}</div>
+        <div key={1} className="text-center pt-2">
+          <div key={3}><h5 style={{ color: '#974BFE' }}>You chose : "{userChoiceText}"</h5></div>
+          <div key={2}><h5 style={{ color: '#974BFE' }}>The answer was : "{answerText}"</h5></div>
+          <div key={4}><h5 style={{ color: '#974BFE' }}>You were {rightWrong}</h5></div>
         </div>
       )
     }
     return block
   }
 
-  const LocalRouter = () => {
+  const LocalRouter = (props) => {
     const pages = {
       dne: <DnePage />,
       questionPage: <QuestionPage />,
@@ -500,6 +630,7 @@ const User = ({ userId, logout }) => {
       gameOver: <GameOverPage />,
       waitScreen: <WaitScreenPage />,
       preGame: <PreGamePage />,
+    //   cheater: <cheaterPage update={ props.update } />
     }
     return pages[whereAreWe]
   }
@@ -511,12 +642,25 @@ const User = ({ userId, logout }) => {
   return (
     <div>
       {/* <button onClick={() => printState()}>Print State</button> */}
+      {/* <LocalRouter update={this.putPersistentIntoState}/> */}
+      { (whereAreWe === "questionPage") ? 
+        <div style={{ height: "20vh", marginBottom: "10px"}}>
+          <Pie
+            data = {timerDataV2}
+            options = {pieOptionsV2}
+            width = {200}
+        />
+        </div>
+
+        :
+
+        ""
+
+      }
       <LocalRouter />
-      <div className="border border-bottom-0 border-left-0 border-right-0 m-3 p-3 text-center">
-        <Link to="#" className="logout" onClick={logout}>[Logout]</Link>
-      </div>
     </div>
   )
 }
 
 export default User;
+// export default withRouter(User);
