@@ -50,7 +50,7 @@ class LandingPage extends React.Component {
                 type="text"
                 className="form-control"
                 style={styles.h1Form}
-                placeholder="Type Username of Host Here"
+                placeholder="Host Username"
                 aria-label="Host Name"
                 aria-describedby="Host Name"
                 id="searchBar"
