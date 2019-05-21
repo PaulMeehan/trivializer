@@ -7,3 +7,16 @@
 .logo {
   width: 500px;
 }
+#navfix {
+  display: inline-block;
+}
+
+@media screen and (max-width: 768px) { 
+  a.navbar-brand {
+    margin: 0px;
+  }
+  h1.pageTitle {
+    display: block !important;
+    margin: auto;
+  }
+}

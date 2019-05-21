@@ -2,6 +2,7 @@ import React, { Fragment } from "react";
 import { Link } from 'react-router-dom';
 import { Col } from '../Grid';
 import './Nav.css';
+import MediaQuery from 'react-responsive';
 
 const Nav = (props) => {
   let greeting;
@@ -41,19 +42,32 @@ const Nav = (props) => {
   }
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
-      <Col size="md-9">
-        <Link to="/" className="navbar-brand"><img src="/trivializer-logo.png" alt="Trivializer" className="logo"/></Link>
-        <Link to={linkLocation}><h1 style={ {display: "inline-block" } } className="align-middle m-0 ml-4 p-0 pageTitle">{location}</h1></Link>
-      </Col>
-      {/* <Col size="md-7"></Col> */}
-      <Col size="md-3">
-        <div className="float-right">
-        {greeting}
-        {/* - <Link to="#" className="logout" onClick={props.logout}>Logout</Link> */}
+    <div>
+
+      <MediaQuery query="(max-width: 768px)">
+        <div className="text-center p-3">
+          <Link to="/" className="navbar-brand"><img src="/trivializer-logo.png" alt="Trivializer" className="logo img-fluid"/></Link>
+          <h4 className="align-middle m-0 p-0 pageTitle">{location}</h4>
         </div>
-      </Col>
-    </nav>
+      </MediaQuery>
+
+      <MediaQuery query="(min-width: 769px)">
+        <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+          <Col size="md-9">
+            <Link to="/" className="navbar-brand"><img src="/trivializer-logo.png" alt="Trivializer" className="logo img-fluid"/></Link>
+            <Link to={linkLocation}><h1 style={ {display: "inline-block" } } className="align-middle m-0 ml-4 p-0 pageTitle">{location}</h1></Link>
+          </Col>
+          {/* <Col size="md-7"></Col> */}
+          <Col size="md-3">
+            <div className="float-right">
+            {greeting}
+            {/* - <Link to="#" className="logout" onClick={props.logout}>Logout</Link> */}
+            </div>
+          </Col>
+        </nav>
+      </MediaQuery>
+
+    </div>
   )
 };
 

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Pusher from 'pusher-js'
+import MediaQuery from 'react-responsive';
 
 const styles = {
 	h1Form: {
@@ -45,26 +46,53 @@ class LandingPage extends React.Component {
             <Link to="/admin" className="btn btn-large btn-block btn-success"><h1 className="fiddle">Host a Game</h1></Link>
             <h1 className="text-center m-5">- OR -</h1>
 
-            <div className="input-group mb-3">
-              <input
-                type="text"
-                className="form-control"
-                style={styles.h1Form}
-                placeholder="Type Username of Host Here"
-                aria-label="Host Name"
-                aria-describedby="Host Name"
-                id="searchBar"
-                value={this.state.game}
-                onChange={(e) => this.handleInputChange(e)}
-              >
-              </input>
-              <Link
-                to={`/play-${this.state.game}`}
-                className="btn btn-success btn-large"
-              >
-                <h1 className="fiddle">Play a Game</h1>
-              </Link>
-            </div>
+            <MediaQuery query="(max-width: 768px)">
+              <div className="mb-3 text-center">
+                  <h4>Enter the Host's username:</h4>
+                  <input
+                    type="text"
+                    className="form-control"
+                    style={styles.h1Form}
+                    placeholder=""
+                    aria-label="Host Name"
+                    aria-describedby="Host Name"
+                    id="searchBar"
+                    value={this.state.game}
+                    onChange={(e) => this.handleInputChange(e)}
+                  >
+                  </input>
+                  <Link
+                    to={`/play-${this.state.game}`}
+                    className="btn btn-success btn-large btn-block"
+                  >
+                    <h1 className="fiddle">Play a Game</h1>
+                  </Link>
+                </div>
+            </MediaQuery>
+
+            <MediaQuery query="(min-width: 769px)">
+              <div className="input-group mb-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  style={styles.h1Form}
+                  placeholder="Type Username of Host Here"
+                  aria-label="Host Name"
+                  aria-describedby="Host Name"
+                  id="searchBar"
+                  value={this.state.game}
+                  onChange={(e) => this.handleInputChange(e)}
+                >
+                </input>
+                <Link
+                  to={`/play-${this.state.game}`}
+                  className="btn btn-success btn-large"
+                >
+                  <h1 className="fiddle">Play a Game</h1>
+                </Link>
+              </div>
+            </MediaQuery>
+            
 
           </div>
         </div>
