@@ -7,7 +7,7 @@ import NotStarted from '../../../components/BigBoard/NotStarted';
 import gameAPI from '../../../utils/gameAPI'
 import Pusher from 'pusher-js'
 
-const defaultQuestionTime = 180
+const defaultQuestionTime = 30
 
 const fakeTimerData = {
     datasets: [
@@ -129,9 +129,9 @@ const BoardQuestion = (props) => {
         // reset the time on this question first, then call endQuestion
         let time, q = boardBlob.qNum - 1
         // if (boardBlob.qNum - 1 <= 0) q = boardBlob.qNum + 1
-        // if (boardBlob.game.length <= 1) time = 180
+        // if (boardBlob.game.length <= 1) time = 30
 
-        // if (Object.keys(boardBlob.game).length <= 1) time = 180
+        // if (Object.keys(boardBlob.game).length <= 1) time = 30
 
         if(boardBlob.totalQ = 1) q=boardBlob.qNum +1
 

@@ -7,7 +7,7 @@ import NotStarted from '../../components/BigBoard/NotStarted';
 import gameAPI from '../../utils/gameAPI'
 import Pusher from 'pusher-js'
 
-const defaultQuestionTime = 180
+const defaultQuestionTime = 30
 
 const fakeTimerData = {
     datasets: [
