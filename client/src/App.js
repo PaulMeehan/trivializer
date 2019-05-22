@@ -4,8 +4,6 @@ import LoginForm from './pages/Auth/LoginForm';
 import SignupForm from './pages/Auth/SignupForm';
 import Nav from "./components/Nav";
 import PlayerNav from "./components/Nav/PlayerNav"
-import Books from './pages/Books';
-import Detail from "./pages/Detail";
 import NoMatch from "./pages/NoMatch";
 import AUTH from './utils/AUTH';
 import MediaQuery from 'react-responsive';
@@ -86,10 +84,6 @@ class App extends Component {
             <div className="main-view">
               <Switch>
 								<Route exact path="/" component={LandingPage} />
-                <Route exact path="/books" component={() => <Books user={this.state.user}/>} />
-                <Route exact path="/books/:id" component={Detail} />
-
-								{/* New Additions: */}
 								<Route exact path="/cheater" component={CheaterPage} />
 								<Route exact path="/live-game" component={() => <GameMasterLiveGame username={this.state.user.username}/>} />
 								<Route exact path="/admin" component={GameMasterAdmin} />
@@ -103,7 +97,7 @@ class App extends Component {
         )}
         { !this.state.loggedIn && (
           <div className="auth-wrapper" style={{paddingTop:40}}>
-						<Switch>						
+						<Switch>
 							<Route exact path="/signup" component={SignupForm} />
 							<Route component={() => <LoginForm login={this.login} logout={this.logout}/>} />
 						</Switch>

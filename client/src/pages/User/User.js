@@ -347,7 +347,6 @@ const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this se
         if (persist.qNum === r.qNum) {
           console.log('unanswered known question')
           printPersist(persist)
-          printState()
           // setWhereAreWe('questionPage')
           return // yes, nothing changed, ignore
         }
@@ -368,19 +367,6 @@ const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this se
   /*
     Functions
   */
-  const printState = () => {
-    console.log('\n-----------------\nCURRENT STATE\n-----------------')
-    console.log('question text', question)
-    console.table('choices',choices)
-    console.log('answerText',answerText)
-    console.log('userWasCorrect', userWasCorrect)
-    console.log('userChoice', userChoice)
-    console.log('userChoiceText',userChoiceText)
-    console.log('qNum ', qNum)
-    console.log('time ', time)
-    console.log('page we are on:',whereAreWe)
-  }
-
   const printPersist = (p = persist) => {
     console.table(p)
   }
@@ -393,7 +379,6 @@ const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this se
     .catch(err => console.log(err))
   }
 
-  
 // NO LONGER USING gameTimer
   const gameTimer = (startTime = false) => {
     clearInterval(t) // does this stay?
@@ -473,21 +458,16 @@ const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this se
     //             // window.location.pathname='/cheater'
     //             persist.whereAreWe = 'cheater';
     //             this.props.update()
-                
     //         } else {
     //             console.log("Everything is good, no calls")
     //         }
     //     }
-    
     //     React.useEffect(() => {
     //         console.log('hey is this working')
     //         document.addEventListener('visibilitychange', handleVisibilityChange, false);
     //         return () => document.removeEventListener('visibility', handleVisibilityChange)
-            
     //     }, [])
-    
     //     return null;
-        
     // }
 
   const QuestionPage = (props) => {
@@ -505,7 +485,6 @@ const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this se
             {/* <Pie
               data = {timerDataV2}
               options = {pieOptionsV2}
-              
               width = {200}
           /> */}
 
@@ -594,7 +573,6 @@ const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this se
     )
   }
 
-  
 
   const DidUserAnswer = () =>  {
 
@@ -641,9 +619,7 @@ const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this se
   */
   return (
     <div>
-      {/* <button onClick={() => printState()}>Print State</button> */}
-      {/* <LocalRouter update={this.putPersistentIntoState}/> */}
-      { (whereAreWe === "questionPage") ? 
+      { (whereAreWe === "questionPage") ?
         <div style={{ height: "20vh", marginBottom: "10px"}}>
           <Pie
             data = {timerDataV2}

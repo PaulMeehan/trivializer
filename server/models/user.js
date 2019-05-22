@@ -9,18 +9,6 @@ const userSchema = new Schema({
 	lastName: { type: String, unique: false },
   username: { type: String, unique: true, required: true },
   password: { type: String, unique: false, required: false },
-	game: { type:	Array, unique: false, required: false, default: [] },
-	gameActive: { type: Boolean, default: false },
-	questionActive: { type: Boolean, default: false },
-	qNum: { type: Number, default: -1 },
-  books: [
-    {
-      // Store ObjectIds in the array
-      type: Schema.Types.ObjectId,
-      // The ObjectIds will refer to the ids in the Book model
-      ref: "Book"
-    }
-	]
 });
 
 // Define schema methods
