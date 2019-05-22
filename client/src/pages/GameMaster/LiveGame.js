@@ -167,6 +167,10 @@ const GameMasterLiveGame = props => {
   }
 
   const triggerScroll = (elementID) => {
+    var thisElement = 0;
+    if (elementID) {
+      thisElement = elementID;
+    } 
     scroller.scrollTo('scrollElement'+elementID, {
       duration: 750,
       delay: 10,
@@ -197,7 +201,7 @@ const GameMasterLiveGame = props => {
               </button>
             </div>
           </div>
-          <div key={7} className="modal fade" id="gotoadmin" tabIndex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
+          <div key={7} className="modal fade" data-backdrop="false" id="gotoadmin" tabIndex="-1" role="dialog" aria-labelledby="gotoadminModalLabel" aria-hidden="true">
             <div key={8} className="modal-dialog" role="document">
               <div key={9} className="modal-content">
                 <div key={10} className="modal-header">
