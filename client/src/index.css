@@ -13,3 +13,7 @@ label {
 }
 
 ul.nav a:hover { color: #fff !important; }
+
+.modal-open {
+  overflow: scroll !important;
+}
