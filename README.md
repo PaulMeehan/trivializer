@@ -32,24 +32,31 @@ React Reading List App with simple Auth
 ![Screen Shot 2019-05-22 at 7 53 34 AM (1)](https://user-images.githubusercontent.com/17474969/58209174-8216ca80-7cb4-11e9-9ec2-66c11fbe65d1.png)
 <br />
 
-![Screen Shot 2019-05-22 at 7 52 47 AM](https://user-images.githubusercontent.com/17474969/58209173-8216ca80-7cb4-11e9-83d7-009ef257d37a.png)
-<br />
-
+### Gamemaster screen once trivia has begun.  Button allows the Gamemaster to end a question is all users have answered.
 ![Screen Shot 2019-05-22 at 7 54 12 AM](https://user-images.githubusercontent.com/17474969/58209166-817e3400-7cb4-11e9-935e-48804ca7f84c.png)
 <br />
+<br />
 
+## User Views
+<br />
+
+### The Pre-Game wait screen
 ![Screen Shot 2019-05-22 at 7 53 21 AM](https://user-images.githubusercontent.com/17474969/58209171-8216ca80-7cb4-11e9-8e56-884e562f61bb.png)
 <br />
 
+### Question screen
 ![Screen Shot 2019-05-22 at 7 54 22 AM](https://user-images.githubusercontent.com/17474969/58209165-817e3400-7cb4-11e9-8f9b-d3550a94f41a.png)
 <br />
 
+### Answered screen
 ![Screen Shot 2019-05-22 at 7 54 36 AM](https://user-images.githubusercontent.com/17474969/58209167-817e3400-7cb4-11e9-9c87-3b00f5cf2f3e.png)
 <br />
 
+### Answer reveal screen
 ![Screen Shot 2019-05-22 at 7 55 02 AM](https://user-images.githubusercontent.com/17474969/58209163-817e3400-7cb4-11e9-92f8-b091ded6cf88.png)
 <br />
 
+### If the program detects the player leaving the screen the are presented with a cheater message.
 ![Screen Shot 2019-05-22 at 7 54 50 AM](https://user-images.githubusercontent.com/17474969/58209164-817e3400-7cb4-11e9-950c-73d9dd40b5ad.png)
 <br />
 
