@@ -6,6 +6,30 @@ import gameAPI from '../../utils/gameAPI';
 import Pusher from 'pusher-js';
 import Visibility from '../../components/Visibility/Visibility.js';
 
+// ========================================================================
+// ========================================================================
+// GHETTO TIMERZZZZZZZZ
+// ========================================================================
+
+const defaultQuestionTime = 180
+
+const fakeTimerData = {
+  datasets: [
+      {
+          data: [
+              15,
+              0
+          ],
+          backgroundColor: [
+              "#34edaf",
+              "#ed4634"
+          ]
+      }
+  ]
+}
+
+// ========================================================================
+// ========================================================================
 
 const User = ({ userId, logout, props }) => {
     console.log('props on the top of user', this.props)
@@ -72,6 +96,59 @@ const User = ({ userId, logout, props }) => {
   const [timerData, setTimerData] = useState(persist.baseTimerData) // TODO: stop using fake data
   const [pieOptions, setPieOptions] = useState(persist.pieOptions)
 
+
+// ========================================================================
+// ========================================================================
+// GHETTO TIMERZZZZZZZZ
+// ========================================================================
+
+const [timerDataV2, setTimerDataV2] = useState(persist.baseTimerData) // TODO: stop using fake data
+
+const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this separate state object b/c answerData.options wouldn't work
+        {
+            responsive: true,
+            maintainAspectRatio: false,
+            legend: {
+              display: false,
+            },            
+        }
+    );
+
+    const timerControl = () => {
+      const timerInterval = setInterval(function(){
+          const host = window.location.pathname.substring(window.location.pathname.indexOf('-')+1)
+          gameAPI.getCurrentQuestion(host)
+          .then(function(res) {
+              console.log('timer API hit reponse received');
+              console.log("res.data.question.time = " + res.data.question.time)
+              // setBoardBlob(res.data)
+              setTimerDataV2({
+                  datasets: [
+                      {
+                          data: [
+                              res.data.question.time - 1,
+                              180 - res.data.question.time
+                          ],
+                          backgroundColor: [
+                              "#34edaf",
+                              "#ed4634"
+                          ]
+                      }
+                  ]
+              })
+              // timerControl()
+              // gameTimer(res.data.question.time)
+          })
+          // .then(res => setBoardBlob(res.data))
+          .catch(err => console.log(err))
+      },5000);
+  }
+
+// ========================================================================
+// ========================================================================
+
+
+
   /*
     onLoad & setState logic (where the magic happens)
   */
@@ -81,6 +158,9 @@ const User = ({ userId, logout, props }) => {
     gameAPI.getCurrentQuestion(host)
     .then(res => {
       setState(res.data)
+      // =========================
+      timerControl() // GHETTO TIMERZZZZZZZZ
+      // =========================
     })
     // bind pusher
     Pusher.logToConsole = false
@@ -314,7 +394,7 @@ const User = ({ userId, logout, props }) => {
   }
 
   
-
+// NO LONGER USING gameTimer
   const gameTimer = (startTime = false) => {
     clearInterval(t) // does this stay?
     let elapsed = 0
@@ -373,17 +453,17 @@ const User = ({ userId, logout, props }) => {
     )
   }
 
-  const cheaterPage = (props) => {
-    console.log('props on the cheater page', window.location)
-    return (
-      <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
-      <div style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
-        <h1 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Cheater!</h1>
-        <h3 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Drink till you die.</h3>
-      </div>
-  </div>
-    )
-    }
+//   const cheaterPage = (props) => {
+//     console.log('props on the cheater page', window.location)
+//     return (
+//       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
+//       <div style={{ backgroundColor: '#32EDAF', border: 'solid white 5px', borderRadius: '5px' }}>
+//         <h1 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Cheater!</h1>
+//         <h3 style={{ padding: '15px', fontFamily: 'Bangers', color: '#974BFE', textAlign: 'center'}}>Drink till you die.</h3>
+//       </div>
+//   </div>
+//     )
+//     }
 
     // const Visibility = (props) => {
     //     console.log("Props in visibility" , props)
@@ -412,22 +492,22 @@ const User = ({ userId, logout, props }) => {
 
   const QuestionPage = (props) => {
       console.log("props: ", props)
-    if (!timer) {
-      setTimer(true)
-      console.log('here')
-      gameTimer(time)
-    }
+    // if (!timer) {
+    //   setTimer(true)
+    //   console.log('here')
+    //   gameTimer(time)
+    // }
     return (
       <div style={{ borderRadius: '5px', maxWidth: '420px', margin: 'auto'}}>
         <div style={{ borderRadius: '5px', margin: 'auto', maxWidth: "420px", height: 'auto',  border: 'solid white 5px' }}>
           <div style={{ display: 'block', width: '25%', margin: 'auto'}}>
-            {time}
-            <Pie
-              data = {timerData}
-              options = {pieOptions}
-              redraw = {false}
+            {/* {time} */}
+            {/* <Pie
+              data = {timerDataV2}
+              options = {pieOptionsV2}
+              
               width = {200}
-          />
+          /> */}
 
           </div >
           <div>
@@ -523,7 +603,10 @@ const User = ({ userId, logout, props }) => {
     if (userChoiceText === '') {
       block.push(
 
-        <div key={1} className="text-center"><h4 style={{ color: '#974BFE' }}>You didn't answer! No points for you!</h4></div>
+          <div style={{ backgroundColor: '#32EDAF', maxWidth: '420px', border: 'solid white 5px', borderRadius: '5px'}}> 
+        <div key={1} style={{ textAlign: 'center', margin: '5px', color: '#974BFE', fontFamily: 'Lato', fontSize: '25px' }}>You didn't answer! No points for you!</div>
+        </div>
+
       )
     }
     else {
@@ -560,6 +643,20 @@ const User = ({ userId, logout, props }) => {
     <div>
       {/* <button onClick={() => printState()}>Print State</button> */}
       {/* <LocalRouter update={this.putPersistentIntoState}/> */}
+      { (whereAreWe === "questionPage") ? 
+        <div style={{ height: "20vh", marginBottom: "10px"}}>
+          <Pie
+            data = {timerDataV2}
+            options = {pieOptionsV2}
+            width = {200}
+        />
+        </div>
+
+        :
+
+        ""
+
+      }
       <LocalRouter />
     </div>
   )
