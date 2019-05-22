@@ -1,5 +1,7 @@
-# Trivializer
-React Reading List App with simple Auth
+
+<img width="806" alt="Screen Shot 2019-05-22 at 5 54 52 PM" src="https://user-images.githubusercontent.com/17474969/58211697-bbeacf80-7cba-11e9-9711-990b955db3cf.png">
+
+## Overview:
 
 ## Technologies Used: 
 <ul>
