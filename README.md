@@ -3,7 +3,13 @@
 <br />
 <br />
 
-## Overview:
+## Overview: 
+<br />
+Bar trivia is all the rage.  Trivializer aims to streamline the process.  Gamemasters can write and store all of their questions in one place, and teams/players only need their to use their phones to play. 
+<br />
+### Check out the live site here: <br />
+https://trivializer.com
+
 
 <br />
 <br />
@@ -75,8 +81,16 @@
 
 ### Screen allow Gamemaster to see the current team scores.
 <img width="1366" alt="Screen Shot 2019-05-22 at 5 21 57 PM" src="https://user-images.githubusercontent.com/17474969/58209985-25b4aa80-7cb6-11e9-9410-fa71371f5a00.png">
+<br />
+<br />
 
-
+## Trivializer is the brainchild of:
+<ul>
+	<li>Paul Meehan</li>
+	<li>Brandon Howell</li>
+	<li>Dave Paquette</li>
+	<li>Brendan Howell</li>
+</ul>
 
 
 
