@@ -9,7 +9,6 @@ Bar trivia is all the rage.  Trivializer aims to streamline the process.  Gamema
 <br />
 
 ### Check out the live site here: 
-<br />
 https://trivializer.com
 
 
