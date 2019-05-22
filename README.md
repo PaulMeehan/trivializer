@@ -15,17 +15,20 @@ React Reading List App with simple Auth
 
 
 ## Walkthrough:
-<br />
-### After login the user is presented with a choice to host a game or join a game
+
+### After login the user is presented with a choice to host a game or join a game.
 ![Screen Shot 2019-05-22 at 7 52 18 AM](https://user-images.githubusercontent.com/17474969/58209170-8216ca80-7cb4-11e9-88c9-d172bd053bca.png)
 <br />
 
+### Selecting "Host a Game" takes the user to a page where they can generate questions for the game.
 ![Screen Shot 2019-05-22 at 7 52 31 AM](https://user-images.githubusercontent.com/17474969/58209172-8216ca80-7cb4-11e9-83de-30b44601fa0d.png)
 <br />
 
+### Selecting "Start Game" takes the user to the Gamemaster screen.
 ![Screen Shot 2019-05-22 at 7 54 01 AM](https://user-images.githubusercontent.com/17474969/58209169-8216ca80-7cb4-11e9-925e-c48b71540b5d.png)
 <br />
 
+### Gamemaster screen that provides a QR code for players to join the game and states the rules.
 ![Screen Shot 2019-05-22 at 7 53 34 AM (1)](https://user-images.githubusercontent.com/17474969/58209174-8216ca80-7cb4-11e9-9ec2-66c11fbe65d1.png)
 <br />
 
