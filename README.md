@@ -7,7 +7,9 @@
 <br />
 Bar trivia is all the rage.  Trivializer aims to streamline the process.  Gamemasters can write and store all of their questions in one place, and teams/players only need their to use their phones to play. 
 <br />
-### Check out the live site here: <br />
+
+### Check out the live site here: 
+<br />
 https://trivializer.com
 
 
