@@ -11,7 +11,7 @@ import Visibility from '../../components/Visibility/Visibility.js';
 // GHETTO TIMERZZZZZZZZ
 // ========================================================================
 
-const defaultQuestionTime = 180
+const defaultQuestionTime = 30
 
 const fakeTimerData = {
   datasets: [
@@ -44,7 +44,7 @@ const User = ({ userId, logout, props }) => {
     userChoice: '',
     userChoiceText: '',
     userWasCorrect: '',
-    time: 180,
+    time: 30,
     timer: null,
     whereAreWe: 'preGame',
     userDidAnswer: false,
@@ -64,7 +64,7 @@ const User = ({ userId, logout, props }) => {
       datasets: [
         {
           data: [
-            180, // what's left
+            30, // what's left
             0 // what's elapsed
           ],
           backgroundColor: [
@@ -127,7 +127,7 @@ const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this se
                       {
                           data: [
                               res.data.question.time - 1,
-                              180 - res.data.question.time
+                              30 - res.data.question.time
                           ],
                           backgroundColor: [
                               "#34edaf",
@@ -398,7 +398,7 @@ const [pieOptionsV2, setPieOptionsV2] = useState( // TODO: had to create this se
   const gameTimer = (startTime = false) => {
     clearInterval(t) // does this stay?
     let elapsed = 0
-    startTime = startTime || time || 180
+    startTime = startTime || time || 30
     const t = setInterval(() => {
       elapsed++
       let remaining = startTime - elapsed

@@ -8,7 +8,7 @@ import gameAPI from '../../utils/gameAPI'
 import Pusher from 'pusher-js'
 
 
-const defaultQuestionTime = 180
+const defaultQuestionTime = 30
 
 const fakeTimerData = {
     datasets: [
@@ -247,7 +247,7 @@ const BoardQuestion = (props) => {
                         {
                             data: [
                                 res.data.question.time - 1,
-                                180 - res.data.question.time
+                                30 - res.data.question.time
                             ],
                             backgroundColor: [
                                 "#34edaf",

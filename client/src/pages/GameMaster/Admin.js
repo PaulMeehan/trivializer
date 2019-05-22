@@ -3,7 +3,7 @@ import './Admin.css';
 import gameAPI from '../../utils/gameAPI'
 import { Link } from 'react-router-dom';
 
-const defaultQuestionTime = 180
+const defaultQuestionTime = 30
 
 const GameMasterAdmin = () => {
 

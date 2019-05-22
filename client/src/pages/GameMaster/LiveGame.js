@@ -12,7 +12,7 @@ const baseTimerData = {
   datasets: [
     {
       data: [
-        180, // what's left
+        30, // what's left
         0 // what's elapsed
       ],
       backgroundColor: [
@@ -149,7 +149,7 @@ const GameMasterLiveGame = props => {
     // reset the time on this question first, then call endQuestion
     let time, q = qNum - 1
     if (qNum - 1 < 0) q = qNum + 1
-    if (questions.length <= 1) time = 180
+    if (questions.length <= 1) time = 30
     else {
       time = questions[q].time
     }
