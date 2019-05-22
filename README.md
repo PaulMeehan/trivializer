@@ -37,8 +37,7 @@ React Reading List App with simple Auth
 <br />
 <br />
 
-## User Views
-<br />
+## User Views:
 
 ### The Pre-Game wait screen
 ![Screen Shot 2019-05-22 at 7 53 21 AM](https://user-images.githubusercontent.com/17474969/58209171-8216ca80-7cb4-11e9-8e56-884e562f61bb.png)
@@ -59,10 +58,14 @@ React Reading List App with simple Auth
 ### If the program detects the player leaving the screen the are presented with a cheater message.
 ![Screen Shot 2019-05-22 at 7 54 50 AM](https://user-images.githubusercontent.com/17474969/58209164-817e3400-7cb4-11e9-950c-73d9dd40b5ad.png)
 <br />
+<br />
 
+## Gamemaster Views
+### Screen allows players to see how many teams selected each answer
 ![Screen Shot 2019-05-22 at 7 55 23 AM](https://user-images.githubusercontent.com/17474969/58209162-817e3400-7cb4-11e9-8686-641ca074ca24.png)
 <br />
 
+### Screen allow Gamemaster to see the current team scores.
 <img width="1366" alt="Screen Shot 2019-05-22 at 5 21 57 PM" src="https://user-images.githubusercontent.com/17474969/58209985-25b4aa80-7cb6-11e9-9410-fa71371f5a00.png">
 
 
