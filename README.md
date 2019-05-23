@@ -48,7 +48,7 @@ https://trivializer.com
 ![Screen Shot 2019-05-22 at 7 53 34 AM (1)](https://user-images.githubusercontent.com/17474969/58209174-8216ca80-7cb4-11e9-9ec2-66c11fbe65d1.png)
 <br />
 
-### Gamemaster screen once trivia has begun.  Button allows the Gamemaster to end a question is all users have answered.
+### Gamemaster screen once trivia has begun.  Button allows the Gamemaster to end a question if all users have answered.
 ![Screen Shot 2019-05-22 at 7 54 12 AM](https://user-images.githubusercontent.com/17474969/58209166-817e3400-7cb4-11e9-935e-48804ca7f84c.png)
 <br />
 <br />
