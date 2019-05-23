@@ -71,17 +71,17 @@ https://trivializer.com
 ![Screen Shot 2019-05-22 at 7 55 02 AM](https://user-images.githubusercontent.com/17474969/58209163-817e3400-7cb4-11e9-92f8-b091ded6cf88.png)
 <br />
 
-### If the program detects the player leaving the screen the are presented with a cheater message.
+### If the program detects the player leaving the screen they are presented with a cheater message.
 ![Screen Shot 2019-05-22 at 7 54 50 AM](https://user-images.githubusercontent.com/17474969/58209164-817e3400-7cb4-11e9-950c-73d9dd40b5ad.png)
 <br />
 <br />
 
-## Gamemaster Views
+## Gamemaster Views:
 ### Screen allows players to see how many teams selected each answer
 ![Screen Shot 2019-05-22 at 7 55 23 AM](https://user-images.githubusercontent.com/17474969/58209162-817e3400-7cb4-11e9-8686-641ca074ca24.png)
 <br />
 
-### Screen allow Gamemaster to see the current team scores.
+### Screen allows Gamemaster to see the current team scores.
 <img width="1366" alt="Screen Shot 2019-05-22 at 5 21 57 PM" src="https://user-images.githubusercontent.com/17474969/58209985-25b4aa80-7cb6-11e9-9410-fa71371f5a00.png">
 <br />
 <br />
