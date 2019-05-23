@@ -70,6 +70,41 @@ const StatsBoard = () => {
     );
 
 
+    const updatedBarOptions = {
+        legend: {
+            display: false, // static value
+        },
+        responsive: true, // static value
+        maintainAspectRatio: false, // static value
+        scales: {
+            xAxes: [{
+                position: "top", // static value
+                ticks: {
+                    beginAtZero: true, // static value
+                    min: 0, // static value
+                    fontColor: "#ffffff", // static value
+                    fontSize: 30, // static value
+                    stepSize: 1, // static value
+                },
+                gridLines: {
+                    color: "#ffffff" // static value
+                }      
+            }],
+            yAxes: [{
+                ticks: {
+                    fontColor: "#ffffff", // static value
+                    fontSize: 30, // static value
+                    fontFamily: "'Bangers', sans-serif" // static value
+                },
+                gridLines: {
+                    color: "#ffffff" // static value
+                } 
+            }]
+        }
+    }
+
+
+
     // SAVED COPY OF WHAT A POPULATED statsBlob LOOKS LIKE
     // const [statsBlob, setStatsBlob] = useState(
     //     {
@@ -205,7 +240,7 @@ const StatsBoard = () => {
                 data={statsBlob.answerData} 
                 height = {window.innerHeight * .8}
                 // options = {answerData.options} // TODO: why doesn't this work?
-                options={statsBlob.barOptions}
+                options={updatedBarOptions}
             />
 
         </div>
