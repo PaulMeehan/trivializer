@@ -88,10 +88,10 @@ https://trivializer.com
 
 ## Trivializer is the brainchild of:
 <ul>
-	<li>Paul Meehan</li>
-	<li>Brandon Howell</li>
-	<li>Dave Paquette</li>
-	<li>Brendan Howell</li>
+	<li>Paul Meehan (PaulMeehan)</li>
+	<li>Brandon Howell (tbrandonhowell)</li>
+	<li>Dave Paquette (hankatola)</li>
+	<li>Brendan Howell (bhowell841)</li>
 </ul>
 
 
